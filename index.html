@@ -120,6 +120,16 @@ label{font-weight:600;font-size:14.5px;display:block;margin:10px 0 4px}
 .paper th{background:#e8ecff}.paper .meta td:first-child{font-weight:700;width:30%;background:#f6f7fb}
 .paper ul{margin:4px 0 10px;padding-left:22px}.paper p{white-space:pre-line;max-width:none}
 .paper .ln{border-bottom:1px solid #999;height:28px}
+.uap{max-width:860px;margin:0 auto 16px;border:1px solid var(--line,#ccd);border-radius:16px;padding:16px 18px;background:light-dark(#f7f8ff,#141833)}
+.uah{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}.uah h3{font:700 16px Onest,Arial,sans-serif;margin:0}.uac{font:600 13px 'JetBrains Mono',monospace;color:var(--accent,#3b4bff)}
+.ual{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0}.ual>span{font-size:13px;opacity:.8}
+.uap .chip{border-radius:999px;padding:6px 12px;font-size:13px;border:1px solid var(--line,#ccd);background:transparent;color:inherit;cursor:pointer}.uap .chip[aria-pressed=true]{background:#1f2fbf;color:#fff;border-color:#1f2fbf}.uap .chip small{opacity:.7;margin-left:4px}
+.uat{max-height:420px;overflow:auto;display:grid;gap:12px;padding-right:4px}.uagh{font-weight:700;font-size:13.5px;margin-bottom:6px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}.uagh small{font-weight:400;opacity:.7}
+.uap .sm{padding:2px 9px;font-size:12px;border-radius:999px}
+.uai{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:transparent;border:1px solid transparent;border-radius:10px;padding:7px 8px;color:inherit;font:14px/1.45 Onest,Arial,sans-serif;cursor:pointer}.uai:hover{border-color:var(--line,#ccd)}
+.uai small{display:block;font-size:12px;opacity:.65;margin-top:2px}.uai .bx{flex:none;width:18px;height:18px;border:2px solid #1f2fbf;border-radius:5px;margin-top:2px}.uai[aria-pressed=true] .bx{background:#1f2fbf;box-shadow:inset 0 0 0 3px light-dark(#f7f8ff,#141833)}
+.uap .mut{font-size:12.5px;opacity:.7;margin:10px 0 0}
+
 .flag{display:flex;gap:10px;align-items:flex-start;background:light-dark(#fff4ef,#2a1612);border:1px solid light-dark(#ffd2c4,#5a2a20);color:var(--ink);border-radius:14px;padding:12px 14px;font-size:14px;margin-bottom:16px;max-width:860px;margin-inline:auto}
 .flag.ok{background:light-dark(#ecfbf4,#0d2a20);border-color:light-dark(#b9eed6,#1f5a43)}.flag.ok::before{background:var(--mint)}
 .tch{font:700 12.5px Onest,sans-serif;text-transform:none;color:var(--co);margin:16px 10px 2px}.tsub{font-weight:700;font-size:13.5px;color:var(--mut);margin:10px 10px 2px}
@@ -345,7 +355,7 @@ function blocksHTML(B){return B.map(b=>{
  if(b.t==='meta')return `<table class="meta">${b.rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join('')}</table>`;
  if(b.t==='table')return `<table><thead><tr>${b.head.map((h,i)=>`<th style="width:${b.w?b.w[i]/50:''}%">${esc(h)}</th>`).join('')}</tr></thead><tbody>${b.rows.map(r=>`<tr>${r.map(c=>`<td style="white-space:pre-line">${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
  if(b.t==='list')return `<ul>${b.items.map(i=>`<li>${esc(i)}</li>`).join('')}</ul>`;
- if(b.t==='lines')return '<div class="ln"></div>'.repeat(b.n||2);return ''}).join('')}
+ if(b.t==='lines')return '<div class="ln"></div>'.repeat(b.n||2);if(b.t==='web')return webSVG(b);return ''}).join('')}
 const docHTML=(title,body)=>`<!DOCTYPE html><html lang="mn"><head><meta charset="utf-8"><title>${esc(title)}</title><style>@page{size:A4;margin:18mm}body{font:12pt/1.5 Arial,sans-serif;color:#111;max-width:800px;margin:0 auto;padding:20px}h1{font-size:16pt;text-align:center}h2{font-size:12.5pt;color:#1f2fbf;margin:16px 0 6px}table{border-collapse:collapse;width:100%;margin:6px 0 10px}td,th{border:1px solid #888;padding:5px 7px;text-align:left;vertical-align:top;font-size:11pt}th{background:#e8ecff}.meta td:first-child{font-weight:700;width:30%}p{white-space:pre-line}.ln{border-bottom:1px solid #999;height:26px}.np{background:#fff4c7;padding:8px;font-family:Arial}@media print{.np{display:none}}</style></head><body><p class="np">Хэвлэхдээ Ctrl+P (Mac: Cmd+P) дарна уу.</p>${body}</body></html>`;
 /* minimal .docx writer */
 const XE=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -358,7 +368,7 @@ function wt(head,rows,w,metaStyle){
 function docxXML(B){return B.map(b=>{
  if(b.t==='h1')return wp(b.x,{b:1,sz:30,al:'center',af:200});if(b.t==='h2')return wp(b.x,{b:1,sz:24,c:'1F2FBF',bf:200,af:80});if(b.t==='p')return wp(b.x);
  if(b.t==='meta')return wt(null,b.rows,[1500,3500],true);if(b.t==='table')return wt(b.head,b.rows,b.w);
- if(b.t==='list')return b.items.map(i=>wp('•  '+i,{af:40})).join('');if(b.t==='lines')return Array(b.n||2).fill(wp('_______________________________________________________________________________',{af:120,c:'888888'})).join('');return ''}).join('')}
+ if(b.t==='list')return b.items.map(i=>wp('•  '+i,{af:40})).join('');if(b.t==='lines')return Array(b.n||2).fill(wp('_______________________________________________________________________________',{af:120,c:'888888'})).join('');if(b.t==='web')return wp('Төв ойлголт: '+b.c,{b:1,al:'center',af:60})+wt(['Салаа','Түлхүүр үг, ойлголт'],b.nodes.map(n=>[n.t,n.sub.join('\n')]),[2000,3000]);return ''}).join('')}
 async function buildDocx(B){
  const z=new JSZip();
  z.file('[Content_Types].xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>');
@@ -386,7 +396,7 @@ const HPW={ie:2,mt:1};
 function STRUCT(s,g){
  const D=OFF[s]&&OFF[s][g];
  if(D){const units=[];let cum=0;
-  D.forEach(ch=>ch.subs.forEach(sb=>sb.units.forEach(u=>{const lessons=u.lessons.map(l=>{const o={t:l.tt||l.objs.map(x=>x.t).join('; '),objs:l.objs,h:l.h,start:cum,pg:l.pg,tb:l.tb,assess:l.assess,rev:l.rev,goal:l.goal,eo:l.eo,ref:l.ref,sud:l.sud,crit:l.crit,lv:l.lv,tbm:l.tbm};cum+=l.h;return o});units.push({ch:ch.n,sub:sb.n,name:u.n,h:u.h,ref:u.ref,guide:u.guide,lessons})})));
+  D.forEach(ch=>ch.subs.forEach(sb=>sb.units.forEach(u=>{const lessons=u.lessons.map(l=>{const o={t:l.tt||l.objs.map(x=>x.t).join('; '),objs:l.objs,h:l.h,start:cum,pg:l.pg,tb:l.tb,assess:l.assess,rev:l.rev,goal:l.goal,eo:l.eo,ref:l.ref,sud:l.sud,crit:l.crit,lv:l.lv,tbm:l.tbm};cum+=l.h;return o});units.push({ch:ch.n,sub:sb.n,name:u.n,h:u.h,ref:u.ref,guide:u.guide,ut:u.ut,lessons})})));
   return{official:true,units,total:cum,hpw:HPW[s]}}
  if(s==='ie'||(s==='mt'&&!IEERR))return null;
  const units=PROG.mt[g].map((U,u)=>({ch:null,sub:null,name:U.name,h:8,lessons:U.lessons.map((t,i)=>({t,h:2,start:(u*4+i)*2,objs:[{t,ex:null}]}))}));
@@ -454,7 +464,7 @@ function mtoUnit(g,ui){const st=STRUCT('mt',g);HP=st.hpw;const u=st.units[ui];le
   ...(ob.length?[{t:'h2',x:'Суралцахуйн зорилт (хөтөлбөрөөс)'},{t:'list',items:ob}]:[]),
   {t:'h2',x:'Ээлжит хичээлийн хуваарь'},(u.lessons.some(l=>l.tbm)?{t:'table',head:['№','Ээлжит хичээлийн сэдэв','Зорилго','Цаг','Код','Сурах бичиг, х.'],rows:u.lessons.map((l,i)=>[String(n+i+1),l.t,l.goal||'',String(l.h),mtCode(l),l.tbm?l.tbm.pg:'']),w:[250,1400,2050,300,450,550]}:{t:'table',head:['№','Ээлжит хичээлийн сэдэв','Зорилго','Цаг','Код'],rows:u.lessons.map((l,i)=>[String(n+i+1),l.t,l.goal||'',String(l.h),mtCode(l)]),w:[250,1500,2450,300,500]}),
   ...(()=>{const S=[...new Map(u.lessons.filter(l=>l.sud).map(l=>[l.sud,l])).values()];if(!S.length)return[];const LV=[...new Map(S.flatMap(l=>l.lv||[]).map(x=>[x.c,x])).values()];
-   return [{t:'h2',x:'Суралцахуйн үр дүн (СҮД) ба шалгуур'},{t:'table',head:['Суралцахуйн үр дүн','Суралцахуйн үр дүнгийн шалгуур'],rows:S.map(l=>[l.sud,(l.crit||[]).join('\n')]),w:[2500,2500]},...(LV.length?[{t:'p',x:'Гүйцэтгэлийн түвшин:'},lvTable(LV)]:[]),{t:'p',x:'Эх сурвалж: '+CRIT_SRC+'.'}]})(),
+   return [{t:'h2',x:'Суралцахуйн үр дүн (СҮД) ба шалгуур'},{t:'table',head:['Суралцахуйн үр дүн','Суралцахуйн үр дүнгийн шалгуур'],rows:S.map(l=>[l.sud,(l.crit||[]).join('\n')]),w:[2500,2500]},...(LV.length?[{t:'p',x:'Шалгуур бүрийн гүйцэтгэлийн түвшний (I–IV) тодорхойлолтыг «Гүйцэтгэлийн үнэлгээ» хэсгийн рубрикт оруулсан.'}]:[]),{t:'p',x:'Эх сурвалж: '+CRIT_SRC+'.'}]})(),
   {t:'h2',x:'Үнэлгээний зорилт, шалгуур (хөтөлбөрөөс)'},{t:'list',items:[...new Set(u.lessons.flatMap(l=>crit(g,l.t+' '+(l.goal||'')+' '+l.objs.map(o=>o.t).join(' '))))]},{t:'p',x:MT_W},{t:'h2',x:'Багшийн тэмдэглэл'},{t:'lines',n:3}]}
 function mtoLesson(g,ui,li){const st=STRUCT('mt',g);HP=st.hpw;const u=st.units[ui],l=u.lessons[li];let n=li+1;for(let i=0;i<ui;i++)n+=st.units[i].lessons.length;
  const T=l.t,K=T+' '+(l.goal||'')+' '+l.objs.map(o=>o.t).join(' '),code=mtCode(l),M=l.h*40,mm=p=>Math.round(M*p)+' мин',solve=mtKind(K)==='solve',rev=/үнэлье|бататгал|дүгнэлт|давтлага/i.test(T);
@@ -472,7 +482,7 @@ function mtoLesson(g,ui,li){const st=STRUCT('mt',g);HP=st.hpw;const u=st.units[u
   ...(l.objs.length?[{t:'h2',x:'Суралцахуйн зорилт (хөтөлбөрөөс)'},{t:'p',x:l.objs.map(o=>o.t).join('\n')}]:[]),
   ...(l.sud?[{t:'h2',x:'Суралцахуйн үр дүн (СҮД)'},{t:'p',x:l.sud}]:[]),
   {t:'h2',x:'Хичээлийн зорилго'},{t:'p',x:l.goal||`Сурагч энэ хичээлээр «${T}» сэдвийг эзэмшинэ.`},
-  ...(l.crit&&l.crit.length?[{t:'h2',x:'Суралцахуйн үр дүнгийн шалгуур'},{t:'list',items:l.crit},...(l.lv&&l.lv.length?[{t:'p',x:'Гүйцэтгэлийн түвшин:'},lvTable(l.lv)]:[]),{t:'p',x:'Эх сурвалж: '+CRIT_SRC+'.'}]:[]),
+  ...(l.crit&&l.crit.length?[{t:'h2',x:'Суралцахуйн үр дүнгийн шалгуур'},{t:'list',items:l.crit},...(l.lv&&l.lv.length?[{t:'p',x:'Шалгуур бүрийн гүйцэтгэлийн түвшний (I–IV) тодорхойлолтыг «Гүйцэтгэлийн үнэлгээ» хэсгийн рубрикт оруулсан.'}]:[]),{t:'p',x:'Эх сурвалж: '+CRIT_SRC+'.'}]:[]),
   {t:'h2',x:'Үнэлгээний зорилт, шалгуур (хөтөлбөрөөс)'},{t:'list',items:crit(g,K)},
   {t:'h2',x:'Арга зүй'},{t:'p',x:rev?'Нэгж хичээлээр эзэмшсэн мэдлэг, чадварыг даалгавар, сорилоор бататгаж үнэлнэ.':solve?'Асуудал шийдвэрлэх сургалтын арга зүй: асуудлыг тодорхойлж даалгавар болгох → МХХТ ашиглан бие даан болон багаар судлах → шийдлийг хэлэлцэж МХХТ-д суурилан шийдвэрлэх → шийдвэрлэсэн асуудлыг хэлэлцэх, сайжруулах, түгээх.':'Мэдээлэл боловсруулах сургалтын арга зүй: мэдээлэл цуглуулах аргаа сонгож цуглуулах → мэдээлэл боловсруулах (зураг, бичвэр, хүснэгт, диаграмм, графикаар илэрхийлэх) → мэдээллийг хэрэглэх, бусдад танилцуулах.'},
   {t:'h2',x:'Хэрэглэгдэхүүн'},{t:'p',x:`Компьютерын лаборатори (нэг сурагчид нэг компьютер), проектор, ${mtSoft(K)}, ажлын хуудас, тарааж өгөх материал (ТӨМ), дасгал, даалгавар.`},
@@ -529,12 +539,98 @@ function ieLesson(g,ui,li){HP=2;const st=STRUCT('ie',g),u=st.units[ui],l=u.lesso
   {t:'h2',x:'9. Гэрийн даалгавар'},...(tb&&tb.hw.length?[{t:'list',items:tb.hw.map(h=>`Сурах бичиг, х. ${h.p}: ${h.t}`)},{t:'p',x:'Мөн хичээл дээр хийсэн дасгалыг гэр бүлийнхэнтэйгээ хамт давтан хийнэ.'}]:[{t:'p',x:'Хичээл дээр хийсэн дасгалыг өөрөө гурван удаа, гэр бүлийнхэнтэйгээ хамт гурван удаа хийж ирэх. (Ёс зүйн хичээлийн гэрийн даалгавар нь бичих, унших бус, өөрийгөө хянах, ажиглах, эргэцүүлэх хөнгөн дасгал байна.)'}]),
   {t:'h2',x:'10. Үнэлгээ'},{t:'p',x:'Сурагчийн эзэмшвэл зохих чадвар хэр зэрэг дадал хэвшил болж буйг ажиглалт, асуулга, ярилцлага, даалгавраар илрүүлнэ. '+IE_EVAL},
   {t:'h2',x:'Багшийн эргэцүүлэл'},{t:'lines',n:3}]}
+/* --- Үгийн сүлжээ, нэгжийн үнэлгээний даалгавар, гүйцэтгэлийн үнэлгээ --- */
+const LVL=[null,{n:'I',name:'Мэдлэг',d:'сэргээн санах, нэрлэх, тодорхойлох'},{n:'II',name:'Ойлголт',d:'тайлбарлах, жишээ гаргах, ялгах'},{n:'III',name:'Хэрэглээ',d:'хэрэглэх, гүйцэтгэх, загвараар бүтээх'},{n:'IV',name:'Шинжилгээ, бүтээлч',d:'харьцуулах, дүгнэх, үнэлэх, шинээр бүтээх'}];
+const IE_LVL=[null,{n:'I',name:'Мэдэх',d:'ойлголт, хэм хэмжээг нэрлэх, тодорхойлох'},{n:'II',name:'Ойлгох',d:'ач тус, хор уршгийг жишээгээр тайлбарлах'},{n:'III',name:'Хэрэглэх',d:'бодит нөхцөлд хэрэгжүүлэх'},{n:'IV',name:'Дадал болгох',d:'өөрийгөө үнэлж, өдөр тутам бие даан хэвшүүлэх'}];
+const lvls=s=>s==='ie'?IE_LVL:LVL;
+const shortT=(t,n=46)=>{t=String(t).trim().replace(/[,;:]+$/,'');return t.length>n?t.slice(0,n-1).replace(/\s+\S*$/,'').replace(/[,;:]+$/,'')+'…':t};
+const dfTerm=df=>{if(!df)return '';const m=df.match(/(?:ийг|ыг|г|ийн|ын)\s+([^,.;]{2,40}?)\s+(?:гэнэ|гэдэг|гэж нэрлэнэ|гэж нэрлэдэг)\.$/);return m?m[1].replace(/^(нь|бол)\s+/,'').trim():''};
+const titleParts=t=>t.replace(/[?!.]/g,'').split(/,\s*|\s+ба\s+|\s+болон\s+|\.\s*/).map(x=>x.trim()).filter(x=>x.length>2);
+function lessonTerms(s,l){const a=[];if(s==='mt'&&l.tbm){const x=dfTerm(l.tbm.df);if(x)a.push(x)}if(s==='ie'&&l.tb&&l.tb.df){const x=dfTerm(l.tb.df);if(x)a.push(x)}
+ const tp=titleParts(l.t);if(tp.length>1)a.push(...tp);return [...new Set(a.map(x=>shortT(x,34)))].slice(0,3)}
+function unitWeb(s,g,u){return {t:'web',c:u.name,nodes:u.lessons.filter(l=>!/үнэлье|бататгал|давтлага/i.test(l.t)&&!l.assess).slice(0,10).map(l=>({t:shortT(l.t,40),sub:lessonTerms(s,l).filter(x=>x!==shortT(l.t,34))}))}}
+function lessonWeb(s,g,u,li){const l=u.lessons[li],pr=u.lessons[li-1],nx=u.lessons[li+1],N=[];
+ N.push({t:'Нэгж хичээл',sub:[shortT(u.name,34)]});
+ const terms=lessonTerms(s,l);if(terms.length)N.push({t:'Түлхүүр ойлголт',sub:terms});
+ if(s==='mt'){const K=l.t+' '+(l.goal||'');N.push({t:'Хэрэгсэл',sub:[shortT(mtSoft(K),34)]});if(l.tbm)N.push({t:'Сурах бичиг',sub:[`${l.tbm.code}, х. ${l.tbm.pg}`]})}
+ else{const O=[...new Set([...(l.eo?[l.eo]:[]),...l.objs.map(o=>o.t)])].slice(0,2).map(x=>shortT(x.replace(/^[\d.]+\s*/,''),34));if(O.length)N.push({t:'Зорилт',sub:O});N.push({t:'Арга',sub:['Бодол төрүүлэх','Бодлоо хянах','Тогтмол дасгал']})}
+ if(pr)N.push({t:'Өмнөх сэдэв',sub:[shortT(pr.t,34)]});if(nx)N.push({t:'Дараах сэдэв',sub:[shortT(nx.t,34)]});
+ return {t:'web',c:shortT(l.t,44),nodes:N}}
+const webNote=s=>({t:'p',x:s==='unit'?'Үгийн сүлжээг нэгжийн эхэнд сурагчдад танилцуулж, нэгжийн төгсгөлд сурагчид өөрсдөө нөхөж гүйцээн, ойлголт хоорондын холбоог тайлбарлана.':'Хичээлийн эхэнд төв ойлголтыг самбарт бичиж, сурагчидтай хамтран салааг нөхнө; хичээлийн төгсгөлд сурагчид шинээр сурсан үгээ нэмж, холбоог тайлбарлана.'});
+const wrapW=(t,n)=>{const w=String(t).split(/\s+/),L=[];let c='';w.forEach(x=>{if((c+' '+x).trim().length>n&&c){L.push(c);c=x}else c=(c+' '+x).trim()});if(c)L.push(c);return L};
+function webSVG(b){const W=720,n=b.nodes.length,H=n>6?470:400,cx=W/2,cy=H/2,rx=W/2-118,ry=H/2-62;
+ const tx=(lines,x,y,o)=>lines.map((s,i)=>`<text x="${x}" y="${y+i*o.lh}" text-anchor="middle" font-size="${o.fs}" ${o.b?'font-weight="700"':''} fill="${o.c}">${esc(s)}</text>`).join('');
+ let lines='',nodes='';b.nodes.forEach((d,i)=>{const a=-Math.PI/2+i*2*Math.PI/n,x=cx+rx*Math.cos(a),y=cy+ry*Math.sin(a);
+  lines+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#9aa6e8" stroke-width="1.5"/>`;
+  const T=wrapW(d.t,20).slice(0,3),Sb=d.sub.flatMap(s=>wrapW(s,24)).slice(0,4),h=T.length*15+Sb.length*13+16;
+  nodes+=`<rect x="${x-92}" y="${y-h/2}" width="184" height="${h}" rx="10" fill="#eef1ff" stroke="#1f2fbf" stroke-width="1"/>`+tx(T,x,y-h/2+18,{fs:12.5,lh:15,b:1,c:'#1a2160'})+tx(Sb,x,y-h/2+18+T.length*15,{fs:11,lh:13,c:'#3d4560'})});
+ const C=wrapW(b.c,18).slice(0,4),ch=C.length*17+22;
+ return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Үгийн сүлжээ: ${esc(b.c)}" style="width:100%;height:auto;display:block;margin:6px 0 12px;font-family:Onest,Arial,sans-serif">${lines}${nodes}<ellipse cx="${cx}" cy="${cy}" rx="104" ry="${Math.max(34,ch/2+8)}" fill="#1f2fbf"/>${tx(C,cx,cy-ch/2+24,{fs:14,lh:17,b:1,c:'#fff'})}</svg>`}
+/* нэгжийн үнэлгээний даалгавар */
+function unitTasks(s,g,ui){const st=STRUCT(s,g),u=st.units[ui],L=u.lessons.filter(l=>!/үнэлье|бататгал|давтлага/i.test(l.t)&&!l.assess),out=[];
+ const tb=s==='mt'?(u.ut||[]).map(x=>({lv:x.lv,t:x.t,src:`Сурах бичиг, х. ${x.p} (${x.k})`})):L.flatMap(l=>l.tb?[...(l.tb.ex||[]).map(e=>({lv:/тайлбарла|яагаад|жишээ/i.test(e.t)?2:/дүгнэ|харьцуул|үнэл/i.test(e.t)?4:3,t:e.t,src:`Сурах бичиг, х. ${e.p} (Дасгал ${e.n})`})),...(l.tb.hw||[]).map(h=>({lv:3,t:h.t,src:`Сурах бичиг, х. ${h.p} (Гэрийн даалгавар)`}))]:[]).filter(x=>x.t&&x.t.length>20);
+ out.push(...tb);
+ const cnt=k=>out.filter(x=>x.lv===k).length,pick=(k,m)=>{const r=[];for(let i=0;i<m&&L.length;i++)r.push(L[Math.floor((i+.5)*L.length/m)%L.length]);return [...new Set(r)]};
+ const O=l=>((l.eo||(l.objs[0]&&l.objs[0].t)||l.goal||l.t)+'').replace(/^[\d.]+\s*/,'');
+ const gen=s==='mt'?{1:l=>`«${l.t}» сэдвийн гол нэр томьёог нэрлэж, тодорхойлолтыг бичнэ үү.`,2:l=>`«${l.t}» сэдвийн гол ойлголтыг өөрийн үгээр, жишээ гарган тайлбарлана уу.`,3:l=>mtKind(l.t+' '+(l.goal||''))==='solve'?`«${l.t}» сэдвийн хүрээнд өгөгдсөн бодлогыг компьютер дээр гүйцэтгэж, янз бүрийн өгөгдлөөр туршина уу.`:`«${l.t}» сэдвээр мэдээлэл цуглуулж, тохирох программ ашиглан боловсруулж, хадгална уу.`}
+  :{1:l=>`«${l.t}» хичээлээр судалсан гол ойлголтын тодорхойлолтыг бичнэ үү.`,2:l=>`«${O(l)}» нь ямар ач тустай, эс эзэмшвэл ямар хор уршигтайг жишээгээр тайлбарлана уу.`,3:l=>`«${O(l)}» чадварыг гэр бүл, анги хамт олны бодит нөхцөлд хэрэгжүүлсэн жишээгээ бичнэ үү.`};
+ [1,2,3].forEach(k=>pick(k,Math.max(0,4-cnt(k))).forEach(l=>out.push({lv:k,t:gen[k](l),src:'Загвар даалгавар'})));
+ if(cnt(4)<3){const iv=s==='mt'?[`«${u.name}» нэгжийн хүрээнд бодит амьдралын нэг асуудлыг сонгож, МХХТ ашиглан шийдвэрлэх бүтээл хийж, ангийнхандаа танилцуулна уу.`,`«${u.name}» нэгжээр судалсан арга, хэрэгслийн давуу ба сул талыг харьцуулж, хэрэглээний зөвлөмж бичнэ үү.`]
+  :[`Өөрийн өдөр тутмын үйлдлийг «${u.name}» нэгжийн ёс суртахууны хэм хэмжээтэй харьцуулан үнэлж, нэг долоо хоногийн дадал хэвшүүлэх төлөвлөгөө гаргана уу.`,`«${u.name}» нэгжээр эзэмшсэн дадлаа нэг долоо хоног тэмдэглэл хөтлөн хэрэгжүүлж, ахиц, саадаа дүгнэнэ үү.`];iv.slice(0,3-cnt(4)).forEach(t=>out.push({lv:4,t,src:'Загвар даалгавар'}))}
+ return out.map((x,i)=>({...x,id:i}))}
+const UA=LS.get('ua',{});const uaKey=(s,g,ui)=>`${s}|${g}|${ui}`;
+function uaState(s,g,ui){const k=uaKey(s,g,ui),T=unitTasks(s,g,ui);let a=UA[k];
+ if(!a||a.n!==T.length){const sel=[];[1,2,3,4].forEach(v=>T.filter(x=>x.lv===v).slice(0,2).forEach(x=>sel.push(x.id)));a=UA[k]={lv:[1,2,3,4],sel,n:T.length}}
+ return {T,a,chosen:T.filter(x=>a.lv.includes(x.lv)&&a.sel.includes(x.id)).sort((p,q)=>p.lv-q.lv)}}
+function uaBlocks(s,g,ui){const {chosen}=uaState(s,g,ui),V=lvls(s),tot=chosen.reduce((p,x)=>p+x.lv,0);
+ const B=[{t:'h2',x:'Нэгжийн үнэлгээний даалгавар'}];
+ if(!chosen.length)return [...B,{t:'p',x:'Даалгавар сонгоогүй байна. Хуудасны дээд хэсгийн «Нэгжийн үнэлгээний даалгавар сонгох» самбараас чадварын түвшин, даалгавраа сонгоно уу.'}];
+ return [...B,{t:'p',x:`Сонгосон чадварын түвшин: ${[...new Set(chosen.map(x=>x.lv))].map(v=>`${V[v].n} (${V[v].name})`).join(', ')}. Нийт ${chosen.length} даалгавар, ${tot} оноо.`},
+  {t:'table',head:['№','Даалгавар','Чадварын түвшин','Оноо','Эх сурвалж'],rows:chosen.map((x,i)=>[String(i+1),x.t,`${V[x.lv].n} — ${V[x.lv].name}`,String(x.lv),x.src]),w:[250,2650,800,350,950]},
+  {t:'table',head:['Түвшин','Чадвар','Үйл үг (жишээ)','Оноо'],rows:[1,2,3,4].map(v=>[V[v].n,V[v].name,V[v].d,String(v)]),w:[500,1300,2700,500]},
+  {t:'p',x:`Үнэлгээ: авсан оноог нийт онооны (${tot}) хувиар илэрхийлнэ. 90–100% — IV, 70–89% — III, 50–69% — II, 50%-иас доош — I түвшин.`}]}
+/* гүйцэтгэлийн үнэлгээ */
+function perfRubric(s,items){const V=lvls(s);
+ const gen=s==='mt'?c=>[`${c}: үндсэн ойлголтыг нэрлэдэг, багшийн тусламжтайгаар гүйцэтгэдэг.`,`${c}: ойлголтыг тайлбарлаж, загварын дагуу гүйцэтгэдэг.`,`${c}: бие даан зөв гүйцэтгэж, үр дүнг шалгадаг.`,`${c}: оновчтой арга сонгон бүтээлчээр гүйцэтгэж, үр дүнг дүгнэн сайжруулдаг.`]
+  :c=>[`«${c}» гэдгийн утгыг нэрлэж хэлдэг.`,`Ач тус, хор уршгийг жишээгээр тайлбарладаг.`,`Бодит нөхцөлд бусдын дэмжлэгтэйгээр хэрэгжүүлдэг.`,`Өдөр тутамд бие даан хэрэгжүүлж, дадал болгосон.`];
+ return {t:'table',head:['Шалгуур',...[1,2,3,4].map(v=>`${V[v].n} (${v} оноо)`)],rows:items.map(x=>x.L?[x.c,...x.L]:[x.c,...gen(x.c)]),w:[1200,950,950,950,950]}}
+function perfUnit(s,g,ui){const st=STRUCT(s,g),u=st.units[ui],L=u.lessons;
+ let items=[];
+ if(s==='mt'){const LV=[...new Map(L.flatMap(l=>l.lv||[]).map(x=>[x.c,x])).values()];items=LV.slice(0,5);
+  if(items.length<3){const C=[...new Set(L.flatMap(l=>l.crit||[]))].slice(0,5-items.length);items.push(...C.map(c=>({c})))}
+  if(items.length<3)items.push(...['Асуудлыг тодорхойлох, төлөвлөх','Технологийг оновчтой сонгон хэрэглэх','Үр дүнг танилцуулах, дүгнэх'].slice(0,3-items.length).map(c=>({c})))}
+ else{items=[...new Set(L.flatMap(l=>[...(l.eo?[l.eo]:[]),...l.objs.map(o=>o.t)]))].slice(0,4).map(c=>({c:c.replace(/^[\d.]+\s*/,'')}))}
+ const T=unitTasks(s,g,ui).find(x=>x.lv===4)||{t:`«${u.name}» нэгжийн хүрээнд бүтээл хийж танилцуулах.`,src:'Загвар даалгавар'};
+ const mx=items.length*4;
+ return [{t:'h2',x:'Гүйцэтгэлийн үнэлгээ'},
+  {t:'meta',rows:[['Гүйцэтгэлийн даалгавар',T.t],['Эх сурвалж',T.src],['Хэлбэр',s==='mt'?'Бие даан эсвэл 2–3 хүний багаар, компьютер ашиглан':'Бие даан, гэр бүл, анги хамт олны оролцоотойгоор'],['Бүтээгдэхүүн',s==='mt'?'Файл, бүтээл (баримт, программ, танилцуулга г.м.) ба 2–3 минутын танилцуулга':'Ажиглалтын тэмдэглэл, дадлын хүснэгт, эргэцүүллийн бичвэр'],['Хугацаа','Нэгжийн сүүлийн 1–2 хичээл'],['Үнэлэгч',s==='mt'?'Өөрийн үнэлгээ, багийн/хосын үнэлгээ, багшийн үнэлгээ':'Өөрийн үнэлгээ 20%, эцэг эх 20%, анги хамт олон 20%, багш 40%']]},
+  {t:'p',x:'Үнэлгээний шалгуур (рубрик):'},perfRubric(s,items),
+  {t:'table',head:['Нийт оноо',`${Math.ceil(mx*.9)}–${mx}`,`${Math.ceil(mx*.7)}–${Math.ceil(mx*.9)-1}`,`${Math.ceil(mx*.5)}–${Math.ceil(mx*.7)-1}`,`${Math.ceil(mx*.5)}-аас доош`],rows:[['Гүйцэтгэлийн түвшин','IV','III','II','I']],w:[1200,950,950,950,950]},
+  ...(s==='mt'&&L.some(l=>l.lv)?[{t:'p',x:'Шалгуур, түвшний тодорхойлолтыг '+CRIT_SRC+'-аас авсан.'}]:[])]}
+function perfLesson(s,g,u,li){const l=u.lessons[li];let items;
+ if(s==='mt'){items=l.lv&&l.lv.length?l.lv:(l.crit&&l.crit.length?l.crit.slice(0,3).map(c=>({c})):[{c:shortT(l.goal||l.t,80)}])}
+ else items=[...new Set([...(l.eo?[l.eo]:[]),...l.objs.map(o=>o.t)])].slice(0,3).map(c=>({c:c.replace(/^[\d.]+\s*/,'')}));
+ if(!items.length)items=[{c:shortT(l.goal||l.t,80)}];
+ return [{t:'h2',x:'Гүйцэтгэлийн үнэлгээ'},{t:'p',x:s==='mt'?'Хичээлийн даалгаврын гүйцэтгэлийг ажиглалт, бүтээгдэхүүнээр дараах шалгуураар үнэлнэ.':'Сурагчийн хэрэгжүүлэлтийг ажиглалт, ярилцлага, өөрийн үнэлгээгээр дараах шалгуураар үнэлнэ.'},perfRubric(s,items),
+  {t:'table',head:['Сурагчийн нэр',...items.map((x,i)=>`Шалгуур ${i+1}`),'Нийт','Түвшин'],rows:Array.from({length:3},()=>['',...items.map(()=>''),'','']),w:[1500,...items.map(()=>Math.floor(2700/items.length)),400,400]}]}
+function uaPanel(s,g,ui){const {T,a}=uaState(s,g,ui),V=lvls(s),sel=T.filter(x=>a.lv.includes(x.lv)&&a.sel.includes(x.id));
+ return `<section class="uap" aria-label="Нэгжийн үнэлгээний даалгавар сонгох"><div class="uah"><h3>Нэгжийн үнэлгээний даалгавар сонгох</h3><span class="uac">${sel.length} даалгавар · ${sel.reduce((p,x)=>p+x.lv,0)} оноо</span></div>
+ <div class="ual" role="group" aria-label="Чадварын түвшин"><span>Чадварын түвшин:</span>${[1,2,3,4].map(v=>`<button class="chip" data-ualv="${v}" aria-pressed="${a.lv.includes(v)}" title="${esc(V[v].d)}"><b>${V[v].n}</b> ${esc(V[v].name)} <small>${T.filter(x=>x.lv===v).length}</small></button>`).join('')}</div>
+ <div class="uat">${[1,2,3,4].filter(v=>a.lv.includes(v)).map(v=>`<div class="uag"><div class="uagh">${V[v].n} — ${esc(V[v].name)} <small>(${esc(V[v].d)})</small><button class="ghost sm" data-uaall="${v}">Бүгд</button><button class="ghost sm" data-uanone="${v}">Арилгах</button></div>${T.filter(x=>x.lv===v).map(x=>`<button class="uai" data-uat="${x.id}" aria-pressed="${a.sel.includes(x.id)}"><span class="bx" aria-hidden="true"></span><span>${esc(x.t)}<small>${esc(x.src)}</small></span></button>`).join('')||'<p class="mut">Энэ түвшинд даалгавар алга.</p>'}</div>`).join('')||'<p class="mut">Чадварын түвшин сонгоно уу.</p>'}</div>
+ <p class="mut">Сонгосон даалгаврууд доорх нэгжийн хөтөлбөрийн «Нэгжийн үнэлгээний даалгавар» хэсэгт орж, хэвлэх болон Word файлд хамт гарна.</p></section>`}
+function uaClick(d){const D=S.doc,s=S.subj,g=S.grade,{T,a}=uaState(s,g,D.u);
+ if(d.ualv){const v=+d.ualv;a.lv=a.lv.includes(v)?a.lv.filter(x=>x!==v):[...a.lv,v].sort()}
+ if(d.uat!==undefined){const i=+d.uat;a.sel=a.sel.includes(i)?a.sel.filter(x=>x!==i):[...a.sel,i]}
+ if(d.uaall){const ids=T.filter(x=>x.lv===+d.uaall).map(x=>x.id);a.sel=[...new Set([...a.sel,...ids])]}
+ if(d.uanone){const ids=new Set(T.filter(x=>x.lv===+d.uanone).map(x=>x.id));a.sel=a.sel.filter(x=>!ids.has(x))}
+ UA[uaKey(s,g,D.u)]=a;LS.set('ua',UA);const y=scrollY;render();scrollTo(0,y)}
 function curDoc(){const s=S.subj,g=S.grade,d=S.doc,st=STRUCT(s,g);if(!st)return null;const U=st.units;
  const u=Math.min(d.u,U.length-1),l=Math.min(d.l,(U[u]?.lessons.length||1)-1);let n=l+1;for(let i=0;i<u;i++)n+=U[i].lessons.length;
  const nm=x=>fname(`${SHORT[s]} ${g}-р анги ${x}`).slice(0,110);
  const O=st.official&&s==='mt';
- if(d.type==='unit')return{B:s==='ie'?ieUnit(g,u):O?mtoUnit(g,u):mtUnit(g,u),name:nm(`Нэгж ${u+1} ${U[u].name}`),crumb:`Нэгж ${u+1}`};
- if(d.type==='lesson')return{B:s==='ie'?ieLesson(g,u,l):O?mtoLesson(g,u,l):mtLesson(g,u,l),name:nm(`Хичээл ${n} ${U[u].lessons[l].t}`),crumb:`Нэгж ${u+1} · Хичээл ${n}`};
+ const ins=(B,at,add)=>{if(at<0)at=B.length;B.splice(at,0,...add);return B},h2i=(B,re,from)=>{for(let i=from??0;i<B.length;i++)if(B[i].t==='h2'&&re.test(B[i].x))return i;return -1},lastH2=B=>{for(let i=B.length-1;i>=0;i--)if(B[i].t==='h2')return i;return B.length};
+ if(d.type==='unit'){const B=s==='ie'?ieUnit(g,u):O?mtoUnit(g,u):mtUnit(g,u);ins(B,lastH2(B),[...uaBlocks(s,g,u),...perfUnit(s,g,u)]);const k=h2i(B,/Ээлжит хичээлийн хуваарь/);ins(B,k<0?lastH2(B):k+2,[{t:'h2',x:'Үгийн сүлжээ'},unitWeb(s,g,U[u]),webNote('unit')]);return{B,name:nm(`Нэгж ${u+1} ${U[u].name}`),crumb:`Нэгж ${u+1}`}}
+ if(d.type==='lesson'){const B=s==='ie'?ieLesson(g,u,l):O?mtoLesson(g,u,l):mtLesson(g,u,l);ins(B,lastH2(B),perfLesson(s,g,U[u],l));const k=s==='ie'?h2i(B,/^9\. Гэрийн|^Гэрийн даалгавар|^Үнэлгээ/):h2i(B,/^Хичээлийн явц/);ins(B,k<0?lastH2(B):k,[{t:'h2',x:'Үгийн сүлжээ'},lessonWeb(s,g,U[u],l),webNote('lesson')]);return{B,name:nm(`Хичээл ${n} ${U[u].lessons[l].t}`),crumb:`Нэгж ${u+1} · Хичээл ${n}`}}
  return{B:s==='ie'?ieYear(g):O?mtoYear(g):mtYear(g),name:nm('Жилийн төлөвлөгөө'),crumb:'Жилийн төлөвлөгөө'}}
 
 /* ================= VIEWS ================= */
@@ -596,7 +692,7 @@ function vProgram(){
  <div><div class="dbar"><span class="crumb">${esc(SHORT[s])} · ${g}-р анги · <b>${esc(D.crumb)}</b></span>
  <div class="row"><button class="ghost" id="dPrev" aria-label="Өмнөх">←</button><button class="ghost" id="dNext" aria-label="Дараах">→</button><button class="ghost" id="dPrint">Хэвлэх</button><button id="dWord">Word татах</button></div></div>
  ${!st.official?'<div class="flag">Жишээ агуулга.</div>':s==='mt'?`<div class="flag ok">Хөтөлбөр: ${esc(mtSrc(g))}. Ээлжит хичээлийн сэдэв, зорилгыг Мэдээлэл зүйн ЭХЦ-ээс авч, хөтөлбөрийн суралцахуйн зорилттой холбосон.</div>`:`<div class="flag ok">Албан ёсны хөтөлбөр: ${esc(IE_SRC)}. Суралцахуйн зорилт, тодорхойлолтыг эх баримтаас өөрчлөлтгүй, ээлжит хичээлийн сэдэв, цаг, зорилгыг ЭХЦК-ын жилийн төлөвлөлтөөс (2021) авсан.</div>`}
- <article class="paper" id="paper">${blocksHTML(D.B)}</article></div></div></div></section>`;
+ ${d.type==='unit'?uaPanel(s,g,Math.min(d.u,st.units.length-1)):''}<article class="paper" id="paper">${blocksHTML(D.B)}</article></div></div></div></section>`;
 }
 const docSeq=()=>{const st=STRUCT(S.subj,S.grade),a=[{type:'year'}];if(!st)return a;st.units.forEach((u,ui)=>{a.push({type:'unit',u:ui});u.lessons.forEach((l,li)=>a.push({type:'lesson',u:ui,l:li}))});return a};
 function stepDoc(dir){const a=docSeq(),d=S.doc,i=a.findIndex(x=>x.type===d.type&&(x.type==='year'||x.u===d.u&&(x.type==='unit'||x.l===d.l)));const nx=a[Math.max(0,Math.min(a.length-1,i+dir))];S.doc={u:0,l:0,...nx};render();$('#paper')?.scrollIntoView({block:'start'})}
@@ -878,6 +974,7 @@ document.addEventListener('click',e=>{
  if(d.role){S.role=d.role;save();render();return}
  if(d.subj){S.subj=d.subj;S.doc={type:'year',u:0,l:0};save();render();return}
  if(d.grade){S.grade=+d.grade;S.doc={type:'year',u:0,l:0};save();render();return}
+ if(d.ualv||d.uat!==undefined||d.uaall||d.uanone)return uaClick(d);
  if(d.doc){const p=d.doc.split('-');S.doc={type:p[0],u:+p[1]||0,l:+p[2]||0};render();if(innerWidth<980)$('#paper')?.scrollIntoView({block:'start'});return}
  if(t.id==='dPrev')return stepDoc(-1);if(t.id==='dNext')return stepDoc(1);
  if(t.id==='dPrint'){const D=curDoc();return D&&printDoc(D.B,D.name)}
