@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ТехЁс</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Onest:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+/* VOICE: confident, future-facing studio for a school — precise like an IDE, warm like a classroom.
+   IDEA: a silicon chip under glass — the hero is a live die you turn; the curriculum reads like a docs site with paper you print.
+   PICTURE: full-bleed night hero with a live 3D model on a glowing grid; bento tiles that move (typing, bits, quiz).
+   COLOUR and TYPE: cobalt #2f45ff lead, coral #ff5b3a spark, mint for success; night #060a22 hero; Unbounded display, Onest text, JetBrains Mono for code.
+   LAYOUT: sticky glass bar with scrolling nav + ⌘K search; hero; bento grid; docs layout (tree + paper) for programs. */
+:root{color-scheme:light dark;
+--bg:light-dark(#ffffff,#070a18);--ink:light-dark(#0b0e1a,#eef1ff);--mut:light-dark(#5b6275,#9aa3c7);
+--sur:light-dark(#f3f5fb,#0f1430);--sur2:light-dark(#e8ecf8,#161c40);--line:light-dark(#e2e6f0,#20285a);
+--pri:light-dark(#2f45ff,#7d8cff);--co:#ff5b3a;--mint:light-dark(#00a878,#2fe0a8);--night:#060a22;
+--r:20px;--sh:0 1px 0 var(--line),0 18px 40px -18px light-dark(#1b2a8a33,#000c)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:80px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Onest,"Noto Sans",system-ui,sans-serif;overflow-x:clip;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:Unbounded,Onest,sans-serif;line-height:1.08;text-wrap:balance;margin:0 0 .45em;letter-spacing:-.01em}
+h1{font-size:clamp(32px,5vw,58px);font-weight:700}h2{font-size:clamp(24px,3vw,36px);font-weight:700}h3{font-size:18px;font-weight:600}
+p{margin:0 0 .8em;max-width:68ch}a{color:var(--pri)}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.band{padding:clamp(32px,5vw,72px) max(5vw,16px)}.wrap{max-width:1240px;margin:0 auto}
+.mut{color:var(--mut)}.small{font-size:13.5px}
+/* top bar */
+header{position:sticky;top:0;z-index:30;background:light-dark(#ffffffd9,#070a18d9);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid var(--line)}
+.top{display:flex;align-items:center;gap:14px;padding:10px max(4vw,16px);max-width:1360px;margin:0 auto}
+.brand{display:flex;align-items:center;gap:10px;font:700 15px Unbounded,sans-serif;color:var(--ink);text-decoration:none;flex:none}
+nav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;flex:1;mask-image:linear-gradient(90deg,#000 92%,transparent)}
+nav::-webkit-scrollbar{display:none}
+nav a{flex:none;color:var(--mut);text-decoration:none;padding:9px 12px;border-radius:10px;font-size:14.5px;font-weight:500;min-height:40px;display:inline-flex;align-items:center}
+nav a:hover{color:var(--ink);background:var(--sur)}nav a[aria-current]{color:var(--ink);background:var(--sur2)}
+.kbtn{flex:none;display:inline-flex;align-items:center;gap:10px;background:var(--sur);border:1px solid var(--line);color:var(--mut);border-radius:12px;padding:8px 10px 8px 12px;min-height:42px;font:500 14px Onest,sans-serif;cursor:pointer}
+.kbtn kbd{font:600 12px "JetBrains Mono",monospace;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:2px 6px;color:var(--ink)}
+/* controls */
+button,.btn{font:600 15px Onest,sans-serif;border-radius:12px;border:1px solid transparent;background:var(--pri);color:#fff;padding:11px 18px;min-height:44px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;text-decoration:none;transition:transform .15s,background .15s}
+button:hover,.btn:hover{transform:translateY(-1px)}
+.ghost{background:var(--sur)!important;color:var(--ink)!important;border-color:var(--line)!important}
+.co{background:var(--co)}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--co);outline-offset:2px}
+button:disabled{opacity:.45;cursor:not-allowed;transform:none}
+input,select,textarea{font:16px Onest,sans-serif;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-height:44px;width:100%}
+textarea{min-height:90px;resize:vertical}
+label{font-weight:600;font-size:14.5px;display:block;margin:10px 0 4px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(min(100%,270px),1fr))}
+.card{background:var(--sur);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:4px 10px;border-radius:99px;background:var(--sur2);color:var(--ink)}
+.tag::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.tag.mt{color:var(--pri)}.tag.ie{color:var(--co)}
+.seg{display:inline-flex;flex-wrap:wrap;gap:4px;background:var(--sur);border:1px solid var(--line);border-radius:14px;padding:4px}
+.seg button{background:none;border:0;color:var(--mut);min-height:40px;padding:8px 14px;border-radius:10px}
+.seg button[aria-pressed=true]{background:var(--bg);color:var(--ink);box-shadow:0 1px 0 var(--line),0 4px 12px -6px #0003}
+.pins{display:flex;flex-wrap:wrap;gap:6px}
+.pins button{width:46px;height:46px;padding:0;justify-content:center;font:700 15px "JetBrains Mono",monospace;background:var(--sur);color:var(--ink);border:1px solid var(--line);border-radius:12px;position:relative}
+.pins button[aria-pressed=true]{background:var(--pri);color:#fff;border-color:var(--pri);box-shadow:0 0 0 4px light-dark(#2f45ff22,#7d8cff33)}
+/* hero */
+.hero{background:var(--night);color:#eef1ff;position:relative;overflow:hidden;isolation:isolate}
+.hero::before{content:"";position:absolute;inset:-40px;z-index:-1;background:
+ radial-gradient(60% 70% at 72% 40%,#2f45ff66,transparent 65%),radial-gradient(40% 40% at 10% 100%,#ff5b3a33,transparent 70%),
+ linear-gradient(#ffffff0d 1px,transparent 1px) 0 0/40px 40px,linear-gradient(90deg,#ffffff0d 1px,transparent 1px) 0 0/40px 40px;
+ mask-image:radial-gradient(90% 90% at 60% 40%,#000 40%,transparent);animation:drift 30s linear infinite}
+@keyframes drift{to{background-position:0 0,0 0,0 40px,40px 0}}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(20px,3vw,40px);align-items:center}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,#9fb0ff,#fff 60%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{color:#b9c2ec;font-size:18px}
+.hero .btn{background:#fff;color:var(--night)}.hero .btn.alt{background:#ffffff14;color:#fff;border-color:#ffffff2e}
+.hero .seg{background:#ffffff0f;border-color:#ffffff1f}.hero .seg button{color:#b9c2ec}.hero .seg button[aria-pressed=true]{background:#fff;color:var(--night)}
+.term{font:500 14px "JetBrains Mono",monospace;color:#9fb0ff;margin:18px 0 0}
+.term b{color:#2fe0a8;font-weight:500}.cur{display:inline-block;width:9px;height:1.05em;background:#2fe0a8;vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:26px}
+.stats div{background:#ffffff0a;border:1px solid #ffffff1a;border-radius:14px;padding:10px 12px}
+.stats b{display:block;font:700 24px "JetBrains Mono",monospace;color:#fff}.stats span{font-size:12.5px;color:#9aa3c7}
+.stage{position:relative;height:clamp(340px,46vw,540px);border-radius:28px;background:radial-gradient(80% 70% at 50% 35%,#1d2a8a,#0a1040 70%,#070b28);border:1px solid #ffffff1f;overflow:hidden;touch-action:none;box-shadow:0 40px 90px -30px #2f45ff88,inset 0 1px 0 #ffffff26}
+.stage canvas{position:absolute;inset:0;width:100%!important;height:100%!important;cursor:grab}
+.stage .hud{position:absolute;left:12px;right:12px;bottom:12px;display:flex;flex-wrap:wrap;gap:6px;pointer-events:none}.stage .hud>*{pointer-events:auto}
+.chip{background:#0a1040cc;color:#eef1ff;border:1px solid #ffffff2a;border-radius:99px;padding:7px 13px;font:600 13px Onest,sans-serif;min-height:36px;cursor:pointer;backdrop-filter:blur(8px)}
+.chip[aria-pressed=true]{background:#fff;color:var(--night)}
+.info3d{position:absolute;top:12px;left:12px;max-width:min(320px,75%);background:#070b28d9;backdrop-filter:blur(10px);color:#dfe5ff;border-radius:16px;padding:12px 14px;font-size:14px;border:1px solid #ffffff26}
+.info3d b{display:block;font:600 14.5px Unbounded,sans-serif;color:#fff;margin-bottom:4px}
+.nogl{position:absolute;inset:0;display:grid;place-items:center;color:#cfd8ff;text-align:center;padding:20px}
+/* bento */
+.bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:minmax(180px,auto);gap:14px}
+.tile{position:relative;background:var(--sur);border:1px solid var(--line);border-radius:24px;padding:22px;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;overflow:hidden;transition:transform .2s,border-color .2s}
+.tile:hover{transform:translateY(-3px);border-color:var(--pri)}
+.tile h3{margin:0}.tile p{margin:0;color:var(--mut);font-size:14.5px}
+.tile .go{margin-top:auto;font-weight:600;color:var(--pri);font-size:14.5px}
+.b2{grid-column:span 2}.r2{grid-row:span 2}
+.tile.dark{background:var(--night);color:#eef1ff;border-color:#1f2a66}.tile.dark p{color:#9aa3c7}.tile.dark .go{color:#9fb0ff}
+.mini-tl{display:grid;gap:8px;margin:10px 0}
+.mini-tl div{display:grid;grid-template-columns:96px minmax(0,1fr);gap:10px;align-items:center;font-size:14px}
+.mini-tl i{display:block;height:34px;border-radius:10px;background:linear-gradient(90deg,var(--pri),light-dark(#6b7bff,#5160ff));color:#fff;font-style:normal;font-size:13px;padding:7px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini-tl div:nth-child(2) i{background:linear-gradient(90deg,#4c5cff,#7a86ff)}.mini-tl div:nth-child(3) i{background:linear-gradient(90deg,var(--co),#ff8a5c)}.mini-tl div:nth-child(4) i{background:linear-gradient(90deg,#00a878,#2fe0a8)}
+.typer{font:500 20px "JetBrains Mono",monospace;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:14px 16px;min-height:58px}
+.typer span{color:var(--mut)}
+.bitrow{display:flex;gap:6px;margin:6px 0}.bitrow i{flex:1;aspect-ratio:1;border-radius:8px;background:#ffffff14;display:grid;place-items:center;font:700 13px "JetBrains Mono";font-style:normal;color:#9aa3c7;transition:background .3s}
+.bitrow i.on{background:var(--co);color:#fff}
+/* docs */
+.docs{display:grid;grid-template-columns:300px minmax(0,1fr);gap:28px;align-items:start}
+.side{position:sticky;top:76px;max-height:calc(100vh - 92px);overflow:auto;padding-right:6px}
+.tree{margin-top:14px;display:grid;gap:2px}
+.tree button{background:none;border:0;color:var(--ink);justify-content:flex-start;text-align:start;font-weight:500;padding:8px 10px;min-height:38px;border-radius:10px;font-size:14.5px;width:100%}
+.tree button:hover{background:var(--sur);transform:none}
+.tree button[aria-current]{background:var(--sur2);color:var(--pri)}
+.tree .u{font-weight:700;margin-top:8px}.tree .u small{color:var(--mut);font-weight:500;margin-inline-start:auto;font-family:"JetBrains Mono",monospace}
+.tree .l{padding-left:24px;color:var(--mut);font-size:14px}
+.dbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:16px;position:sticky;top:64px;z-index:5;background:var(--bg);padding:10px 0;border-bottom:1px solid var(--line)}
+.crumb{font-size:14px;color:var(--mut)}.crumb b{color:var(--ink)}
+.paper{background:#fff;color:#111;max-width:860px;margin:0 auto;padding:clamp(22px,5vw,56px);border-radius:8px;box-shadow:0 1px 0 #0000000f,0 30px 60px -30px #0b0e1a55;font:15px/1.6 Onest,Arial,sans-serif}
+.paper h1{font:700 22px Onest,Arial,sans-serif;text-align:center;margin-bottom:16px;letter-spacing:0}
+.paper h2{font:700 16px Onest,Arial,sans-serif;color:#1f2fbf;margin:20px 0 8px;letter-spacing:0}
+.paper table{border-collapse:collapse;width:100%;margin:6px 0 10px}
+.paper td,.paper th{border:1px solid #9aa0ad;padding:7px 9px;text-align:left;vertical-align:top;font-size:14px}
+.paper th{background:#e8ecff}.paper .meta td:first-child{font-weight:700;width:30%;background:#f6f7fb}
+.paper ul{margin:4px 0 10px;padding-left:22px}.paper p{white-space:pre-line;max-width:none}
+.paper .ln{border-bottom:1px solid #999;height:28px}
+.flag{display:flex;gap:10px;align-items:flex-start;background:light-dark(#fff4ef,#2a1612);border:1px solid light-dark(#ffd2c4,#5a2a20);color:var(--ink);border-radius:14px;padding:12px 14px;font-size:14px;margin-bottom:16px;max-width:860px;margin-inline:auto}
+.flag::before{content:"";flex:none;width:8px;height:8px;margin-top:7px;border-radius:50%;background:var(--co)}
+/* quiz, games */
+.q{font-size:20px;font-weight:600;margin:12px 0 14px}
+.opts{display:grid;gap:8px}
+.opts button{background:var(--bg);color:var(--ink);border:1px solid var(--line);justify-content:flex-start;text-align:start;font-weight:500}
+.opts button.right{border-color:var(--mint);background:light-dark(#e3f8f0,#0e3326)}.opts button.wrong{border-color:var(--co);background:light-dark(#fff0eb,#3a1810)}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:var(--pri);transition:width .4s}
+.meter{display:grid;grid-template-columns:minmax(0,1fr) 56px;gap:10px;align-items:center;margin:6px 0}
+.mem{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;max-width:640px}
+.mem button{min-height:92px;justify-content:center;text-align:center;font-size:14px;background:var(--night);color:transparent;border:1px solid #1f2a66}
+.mem button.up{background:var(--sur);color:var(--ink);border-color:var(--line)}.mem button.done{background:light-dark(#e3f8f0,#0e3326);color:var(--ink);border-color:var(--mint)}
+.bits{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px;max-width:640px}
+.bits button{flex-direction:column;justify-content:center;font:700 24px "JetBrains Mono",monospace;background:var(--sur);color:var(--ink);border:1px solid var(--line);padding:8px 0;min-height:78px}
+.bits button small{font:500 12px Onest;color:var(--mut)}
+.bits button[aria-pressed=true]{background:var(--co);border-color:var(--co);color:#fff}.bits button[aria-pressed=true] small{color:#fff}
+.big{font:700 clamp(36px,6vw,60px) "JetBrains Mono",monospace;color:var(--pri);line-height:1}
+.note{border-left:3px solid var(--co);background:var(--sur);padding:10px 14px;border-radius:0 12px 12px 0;font-size:14.5px}
+.empty{padding:22px;text-align:center;color:var(--mut);border:1px dashed var(--line);border-radius:16px}
+.ws li{margin:12px 0}.ws textarea{min-height:60px}
+.secthead{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;justify-content:space-between;margin-bottom:22px}
+.secthead p{margin:0}
+/* modal, palette, toast */
+.modal{position:fixed;inset:0;z-index:50;background:#030616b3;backdrop-filter:blur(4px);display:none;align-items:flex-start;justify-content:center;padding:5vh 12px;overflow:auto}
+.modal.open{display:flex}
+.sheet{background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:24px;max-width:820px;width:100%;padding:clamp(18px,3vw,32px);position:relative;box-shadow:0 30px 80px #0009}
+.sheet .x{position:absolute;top:12px;right:12px;width:44px;padding:0;justify-content:center}
+.pal{max-width:640px;padding:0;overflow:hidden}
+.pal input{border:0;border-bottom:1px solid var(--line);border-radius:0;font-size:18px;padding:18px 20px;min-height:60px;background:transparent}
+.pal input:focus-visible{outline:none}
+.pal ul{list-style:none;margin:0;padding:8px;max-height:min(60vh,460px);overflow:auto}
+.pal li button{width:100%;background:none;border:0;color:var(--ink);justify-content:flex-start;text-align:start;font-weight:500;padding:10px 12px;border-radius:10px;min-height:46px;transform:none}
+.pal li button small{margin-inline-start:auto;color:var(--mut);font-weight:500;white-space:nowrap}
+.pal li button.sel{background:var(--sur2)}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--night);color:#fff;padding:12px 18px;border-radius:14px;z-index:60;opacity:0;transition:opacity .25s;pointer-events:none;max-width:90vw;border:1px solid #1f2a66}
+.toast.on{opacity:1}
+footer{border-top:1px solid var(--line);font-size:14px;color:var(--mut)}
+#printArea{display:none}
+@media print{body.printing>*:not(#printArea){display:none!important}body.printing #printArea{display:block}body.printing .paper{box-shadow:none;padding:0;max-width:none}}
+table.plain{border-collapse:collapse;width:100%}table.plain th,table.plain td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line)}
+/* typing */
+.tlessons{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,210px),1fr));gap:8px;margin-bottom:18px}
+.tlessons button{flex-direction:column;align-items:flex-start;gap:2px;background:var(--sur);color:var(--ink);border-color:var(--line);text-align:start}
+.tlessons button small{font-weight:400;color:var(--mut);font-size:13px}
+.tlessons button[aria-pressed=true]{border-color:var(--pri);box-shadow:inset 0 0 0 1.5px var(--pri)}
+.tstats{display:flex;flex-wrap:wrap;gap:8px 22px;align-items:center;margin-bottom:12px;font-size:14.5px}
+.tstats b{font:700 22px "JetBrains Mono",monospace;color:var(--pri);margin-inline-start:6px}
+.tbox{position:relative;background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:18px 20px;font:500 clamp(19px,2.4vw,26px)/1.7 "JetBrains Mono","Noto Sans Mono",ui-monospace,monospace;min-height:130px;word-break:break-word}
+.tbox:focus-within{border-color:var(--pri);box-shadow:0 0 0 4px light-dark(#2f45ff1a,#7d8cff26)}
+.tbox:not(:focus-within)::after{content:"Энд дарж эхэлнэ үү";position:absolute;inset:0;display:grid;place-items:center;background:light-dark(#ffffffd9,#070a18d9);border-radius:15px;font:600 18px Onest,sans-serif;color:var(--pri)}
+.tbox input{position:absolute;inset:0;opacity:0;width:100%;height:100%;font-size:16px;cursor:text;border:0}
+#ttext span.d{color:var(--mut)}#ttext span.x{color:var(--co);text-decoration:underline}
+#ttext span.c{background:var(--pri);color:#fff;border-radius:4px}
+.thint{margin:10px 0 14px;font-size:15px;min-height:24px}
+.kb{display:flex;flex-direction:column;gap:5px;max-width:880px;margin:0 auto;user-select:none}
+.kr{display:flex;gap:5px}
+.k{flex:1 1 0;height:46px;border-radius:9px;display:grid;place-items:center;font:600 15px Onest,sans-serif;background:var(--fc,var(--sur));border:1px solid var(--line);color:var(--ink);position:relative;transition:transform .08s}
+.k small{font-size:11px;color:var(--mut);font-weight:500}
+.k.home::after{content:"";position:absolute;bottom:6px;width:12px;height:2px;border-radius:2px;background:currentColor;opacity:.6}
+.k.next{outline:3px solid var(--pri);outline-offset:1px;transform:translateY(-2px);z-index:1}
+.k.bad{background:var(--co);color:#fff}
+.f1{--fc:light-dark(#ffe0d8,#3d1d16)}.f2{--fc:light-dark(#fff0c2,#3a3014)}.f3{--fc:light-dark(#d4f5e8,#103326)}.f4{--fc:light-dark(#dde3ff,#1a2260)}.f5{--fc:light-dark(#eceef4,#1f2647)}
+.legend{gap:8px 16px;margin-top:12px;justify-content:center}.legend span{display:inline-flex;align-items:center;gap:6px}.legend i{width:16px;height:16px;border-radius:5px;background:var(--fc);border:1px solid var(--line)}
+[hidden]{display:none!important}
+@media(max-width:980px){.docs{grid-template-columns:minmax(0,1fr)}.side{position:static;max-height:none}.dbar{top:60px}}
+@media(max-width:900px){.hero .wrap{grid-template-columns:minmax(0,1fr)}.bento{grid-template-columns:repeat(2,minmax(0,1fr))}.kbtn span{display:none}}
+@media(max-width:600px){.bento{grid-template-columns:minmax(0,1fr)}.b2{grid-column:auto}.r2{grid-row:auto}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .mem{grid-template-columns:repeat(3,minmax(0,1fr))}.bits button{font-size:18px;min-height:64px}.k{height:36px;font-size:12px;border-radius:6px}.kr,.kb{gap:3px}.k small{display:none}
+.paper td,.paper th{font-size:12.5px;padding:5px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><div class="top">
+ <a class="brand" href="#home" aria-label="ТехЁс — нүүр"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="10" fill="#060a22"/><rect x="9" y="9" width="16" height="16" rx="3" fill="#2f45ff"/><rect x="13" y="13" width="8" height="8" rx="1.5" fill="#fff"/><g stroke="#ff5b3a" stroke-width="2" stroke-linecap="round"><path d="M13 5v3M17 5v3M21 5v3M13 26v3M17 26v3M21 26v3M5 13h3M5 17h3M5 21h3M26 13h3M26 17h3M26 21h3"/></g></svg><span>Тех<b style="color:var(--co)">Ёс</b></span></a>
+ <nav id="nav" aria-label="Үндсэн цэс"></nav>
+ <button class="kbtn" id="kOpen" aria-label="Хайх"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span>Хайх</span><kbd>⌘K</kbd></button>
+</div></header>
+<main id="app"></main>
+<div class="modal" id="modal" role="dialog" aria-modal="true"><div class="sheet"><button class="x ghost" aria-label="Хаах" data-close>✕</button><div id="mbody"></div></div></div>
+<div class="modal" id="palette" role="dialog" aria-modal="true" aria-label="Хайлт"><div class="sheet pal"><input id="pq" placeholder="Сэдэв, анги, хичээл хайх…" autocomplete="off"><ul id="pl" role="listbox"></ul></div></div>
+<div class="toast" id="toast" role="status"></div>
+<div id="printArea"></div>
+<footer class="band"><div class="wrap row" style="justify-content:space-between">
+ <span><b style="color:var(--ink)">ТехЁс</b> · Мэдээллийн технологи · Иргэний ёс зүйн боловсрол · 6–12-р анги</span><span>Багш · Сурагч · Эцэг эх</span>
+</div></footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+{
+/* ================= DATA ================= */
+const SUBJ={mt:'Мэдээллийн технологи',ie:'Иргэний ёс зүйн боловсрол'};
+const WHEN=['9–10-р сар','11–12-р сар','1–3-р сар','4–5-р сар'];
+const RAW={
+mt:{
+6:['Компьютер ба түүний бүрэлдэхүүн:Компьютерийн үндсэн хэсгүүд;Оролт, гаралтын төхөөрөмж;Үйлдлийн систем ба файл, хавтас;Гарын байрлал, зөв шивэх дадал',
+'Мэдээлэл ба кодлол:Мэдээлэл гэж юу вэ;Хоёртын тооллын систем;Зураг, дууны кодлол;Мэдээллийн хэмжих нэгж',
+'Текст боловсруулалт:Баримт бичиг үүсгэх, хадгалах;Текст форматлах;Хүснэгт, зураг оруулах;Төсөл: Миний сургууль',
+'Алгоритм ба Scratch:Алгоритм гэж юу вэ;Блок схем зурах;Scratch орчинтой танилцах;Хөдөлгөөнт түүх бүтээх'],
+7:['Интернэт ба сүлжээ:Сүлжээний төрлүүд;Интернэт хэрхэн ажилладаг вэ;Үр дүнтэй хайлт хийх;Цахим шуудан ба харилцаа',
+'Цахим аюулгүй байдал:Нууц үг ба бүртгэл хамгаалах;Хувийн мэдээллээ хамгаалах;Цахим дээрэлхэлтээс сэргийлэх;Хуурамч мэдээ таних',
+'Хүснэгт боловсруулалт:Хүснэгтийн орчин;Томьёо ба функц;График байгуулах;Өгөгдөл эрэмбэлэх, шүүх',
+'Програмчлалын үндэс:Хувьсагч;Нөхцөл шалгах;Давталт;Энгийн тоглоом бүтээх'],
+8:['Мультимедиа:Зураг боловсруулах;Дуу бичлэг хийх;Видео засварлах;Танилцуулга бэлтгэх',
+'Python-ы үндэс:Python орчин ба анхны програм;Өгөгдлийн төрөл;Нөхцөл ба давталт;Функц',
+'Өгөгдөл ба судалгаа:Өгөгдөл цуглуулах;Цахим судалгааны маягт;Өгөгдөл шинжлэх;Дүгнэлтийг дүрслэх',
+'Вэб хуудас:HTML бүтэц;Текст, зураг, холбоос;CSS загварчлал;Хувийн вэб хуудас'],
+9:['Компьютерийн сүлжээ:Сүлжээний топологи;IP хаяг ба DNS;Утасгүй сүлжээ;Сүлжээний аюулгүй байдал',
+'Алгоритм ба өгөгдлийн бүтэц:Жагсаалт ба массив;Хайлтын алгоритм;Эрэмбэлэх алгоритм;Алгоритмын үр ашиг',
+'Өгөгдлийн сан:Хүснэгт, бичлэг, талбар;Үндсэн ба гадаад түлхүүр;Асуулга бичих;Жижиг өгөгдлийн сан зохиох',
+'Төсөлт ажил:Асуудал тодорхойлох;Төлөвлөх;Хөгжүүлэх;Танилцуулж хамгаалах'],
+10:['Мэдээллийн систем:Систем гэж юу вэ;Систем шинжилгээ;UML диаграмын үндэс;Кейс: Сургуулийн систем',
+'Python ахисан шат:Жагсаалт ба толь бичиг;Файлтай ажиллах;Модуль ба сан;Алдаа боловсруулах',
+'Вэб хөгжүүлэлт:Responsive дизайн;JavaScript-ийн үндэс;DOM-той ажиллах;Интерактив хуудас',
+'Кибер аюулгүй байдал:Аюул заналын төрөл;Шифрлэлт;Хоёр шатлалт баталгаажуулалт;Цахим ул мөр'],
+11:['Объект хандалтат програмчлал:Класс ба объект;Удамшил;Капсулчлал;Жижиг төсөл',
+'Өгөгдлийн шинжлэх ухаан:Өгөгдөл цэвэрлэх;Статистикийн үндэс;Өгөгдөл дүрслэх;Таамаглал дэвшүүлэх',
+'Хиймэл оюун ухаан:Хиймэл оюун гэж юу вэ;Машин сургалт;Хиймэл оюуны ёс зүй;Өдөр тутмын хэрэглээ',
+'SQL ба өгөгдлийн сан:SELECT асуулга;WHERE ба ORDER BY;Хүснэгт холбох (JOIN);Вэбтэй холбох'],
+12:['Програм хангамжийн инженерчлэл:Хөгжүүлэлтийн мөчлөг;Agile арга зүй;Git хувилбарын хяналт;Тест хийх',
+'Үүлэн технологи ба IoT:Үүлэн үйлчилгээ;IoT төхөөрөмж;Мэдрэгч ба өгөгдөл;Төсөл: Ухаалаг гэр',
+'Дижитал эдийн засаг:Цахим худалдаа;Санхүүгийн технологи;Стартап санаа;Бизнес загвар',
+'Төгсөлтийн төсөл:Санаа сонгох;Прототип хийх;Тестлэх, сайжруулах;Хамгаалалт']},
+ie:{
+6:['Би хэн бэ:Өөрийгөө таних;Сэтгэл хөдлөлөө ойлгох;Зорилго тавих;Эрүүл амьдралын хэв маяг',
+'Гэр бүл ба найз нөхөд:Гэр бүлийн гишүүдийн үүрэг;Харилцааны соёл;Найрамдал;Зөрчлийг тайван шийдвэрлэх',
+'Сургууль ба хамт олон:Дүрэм журам яагаад хэрэгтэй вэ;Хамтын ажиллагаа;Бусдыг хүндлэх;Сайн дурын ажил',
+'Хүүхдийн эрх:Эрх гэж юу вэ;Хүүхдийн эрхийн тухай конвенц;Эрх ба үүрэг;Хүүхэд хамгаалал'],
+7:['Ёс зүй ба үнэт зүйл:Үнэт зүйл гэж юу вэ;Шударга байдал;Хариуцлага;Ёс зүйн сонголт хийх',
+'Монгол ёс заншил:Уламжлалт ёс заншил;Ахмадаа хүндлэх;Байгаль хамгаалах ёс;Соёлын өв',
+'Иргэн ба нийгэм:Иргэн гэж хэн бэ;Нийгмийн бүлгүүд;Олон янз байдал;Ялгаварлан гадуурхалтгүй байх',
+'Санхүүгийн боловсрол:Хэрэгцээ ба хүсэл;Төсөв зохиох;Хуримтлал;Ухаалаг хэрэглэгч'],
+8:['Хууль ба дэг журам:Хууль гэж юу вэ;Үндсэн хууль;Хууль сахих соёл;Өсвөр насны эрх зүйн хариуцлага',
+'Хүний эрх:Хүний эрхийн түгээмэл тунхаглал;Эрх ба эрх чөлөө;Тэгш байдал;Эрхээ хамгаалах',
+'Ардчилал:Ардчиллын зарчим;Сонгууль;Олон ургальч үзэл;Иргэний оролцоо',
+'Хэвлэл мэдээлэл:Медиа бичиг үсэг;Мэдээ шүүн тунгаах;Сурталчилгааг таних;Хариуцлагатай цахим иргэн'],
+9:['Төрийн байгуулал:Хууль тогтоох эрх мэдэл;Гүйцэтгэх эрх мэдэл;Шүүх эрх мэдэл;Орон нутгийн удирдлага',
+'Иргэний оролцоо:Төрийн бус байгууллага;Санал, өргөдөл гаргах;Олон нийтийн хэлэлцүүлэг;Төсөл: Манай орон нутаг',
+'Тогтвортой хөгжил:Тогтвортой хөгжлийн зорилго;Байгаль орчин;Ядуурал ба тэгш бус байдал;Миний оролцоо',
+'Мэргэжил сонголт:Сонирхол ба чадвар;Хөдөлмөрийн зах зээл;Ажлын байрны ёс зүй;Карьерын төлөвлөгөө'],
+10:['Нийгмийн ёс зүй:Ёс зүйн онолууд;Ёс зүйн дилемма;Мэргэжлийн ёс зүй;Шийдвэр гаргах',
+'Эрх зүйн үндэс:Эрх зүйн тогтолцоо;Иргэний эрх зүй;Эрүүгийн эрх зүй;Хөдөлмөрийн эрх зүй',
+'Эдийн засаг ба иргэн:Татвар;Хэрэглэгчийн эрх;Зээл ба өр;Санхүүгийн залилангаас сэргийлэх',
+'Дижитал иргэн:Цахим орчин дахь эрх;Хувийн нууц;Онлайн ёс зүй;Цахим ул мөр ба нэр хүнд'],
+11:['Улс төрийн тогтолцоо:Төрийн хэлбэр;Нам ба сонгуулийн тогтолцоо;Парламентын засаглал;Харьцуулсан судалгаа',
+'Олон улсын харилцаа:Нэгдсэн Үндэстний Байгууллага;Олон улсын эрх зүй;Монгол Улсын гадаад бодлого;Даяаршил',
+'Хүний эрхийн асуудал:Жендэрийн тэгш байдал;Хөгжлийн бэрхшээлтэй иргэдийн эрх;Хүүхдийн хөдөлмөр;Кейс шинжилгээ',
+'Шүүмжлэлт сэтгэлгээ:Аргумент бүтээх;Логикийн алдаа;Эх сурвалж үнэлэх;Мэтгэлцээн'],
+12:['Иргэний нийгэм:Иргэний нийгмийн үүрэг;Сайн дурын үйлс;Нийгмийн хариуцлага;Манлайлал',
+'Авлигатай тэмцэх:Авлига гэж юу вэ;Ил тод байдал;Шударга ёс;Сургуулийн санаачилга',
+'Насанд хүрэгчийн амьдрал:Хөдөлмөрийн гэрээ;Гэр бүлийн эрх зүй;Иргэний бүртгэл;Санхүүгийн төлөвлөлт',
+'Төгсөлтийн төсөл:Нийгмийн асуудал сонгох;Судалгаа хийх;Шийдэл боловсруулах;Танилцуулга']}};
+const PROG={};for(const s in RAW){PROG[s]={};for(const g in RAW[s])PROG[s][g]=RAW[s][g].map(u=>{const[n,l]=u.split(':');return{name:n,lessons:l.split(';')}})}
+
+const band=g=>g<=7?'6–7':g<=9?'8–9':'10–12';
+const BANK={
+'mt|6–7':[['Аль нь оролтын төхөөрөмж вэ?',['Принтер','Гар','Дэлгэц','Чанга яригч'],1],['1 байт хэдэн битээс тогтох вэ?',['4','8','16','1024'],1],['Хоёртын 101 тоо аравтын системд хэд вэ?',['3','5','6','101'],1],['Аль нь хамгийн найдвартай нууц үг вэ?',['123456','Bat2012','Ty7!mQ2#nuur','password'],2],['Алгоритм гэж юу вэ?',['Компьютерийн эд анги','Асуудлыг шийдэх алхмуудын дараалал','Програмын нэр','Интернэт хөтөч'],1],['A1:A5 нүдний нийлбэрийг олох томьёо аль вэ?',['=AVERAGE(A1:A5)','=SUM(A1:A5)','=MAX(A1:A5)','=COUNT(A1:A5)'],1]],
+'mt|8–9':[['HTML-д холбоос үүсгэх тэмдэглэгээ аль вэ?',['<p>','<a>','<img>','<div>'],1],['Python-д дэлгэцэнд хэвлэх команд аль вэ?',['echo','print()','write','say'],1],['Од топологийн төв төхөөрөмж эвдэрвэл юу болох вэ?',['Зөвхөн нэг компьютер тасарна','Бүх сүлжээ тасарна','Юу ч болохгүй','Хурд нэмэгдэнэ'],1],['Бичлэг бүрийг давхцалгүй ялгах талбарыг юу гэдэг вэ?',['Гадаад түлхүүр','Үндсэн түлхүүр','Шүүлтүүр','Индекс тоо'],1],['Хоёртын хайлт ямар жагсаалт дээр ажиллах вэ?',['Эрэмбэлэгдсэн','Хоосон','Зөвхөн текст','Санамсаргүй'],0],['DNS-ийн үүрэг юу вэ?',['Домэйн нэрийг IP хаяг руу хөрвүүлэх','Вирус устгах','Файл шахах','Цахилгаан хангах'],0]],
+'mt|10–12':[['Класс ба объектын хамаарал аль нь зөв бэ?',['Объект нь классын жишээ','Хоёулаа ижил','Класс нь объектын жишээ','Холбоогүй'],0],['SQL-д мөр шүүх түлхүүр үг аль вэ?',['ORDER BY','WHERE','GROUP','SELECT *'],1],['Фишинг гэж юу вэ?',['Хуурамч мессежээр нууц мэдээлэл авах','Тоног төхөөрөмж засах','Програм шинэчлэх','Сүлжээ хурдасгах'],0],['Git-д өөрчлөлтийг түүхэнд хадгалах тушаал аль вэ?',['git push','git commit','git clone','git init'],1],['Сургалтын өгөгдөл нэг талыг барьсан бол юу болох вэ?',['Загвар шударга бус дүгнэлт гаргаж болно','Илүү нарийвчлалтай болно','Нөлөө байхгүй','Хурдан ажиллана'],0],['IoT гэж юу вэ?',['Интернэтэд холбогдсон эд зүйлсийн сүлжээ','Програмчлалын хэл','Үйлдлийн систем','Вэб хөтөч'],0]],
+'ie|6–7':[['Хүүхдийн эрхийн тухай конвенцоор хэдэн нас хүртэлх хүнийг хүүхэд гэх вэ?',['14','16','18','21'],2],['Зөрчил шийдвэрлэх зөв арга аль вэ?',['Дуугаа өндөрсгөх','Бие биеэ сонсож, шийдлийг хамтдаа хайх','Үл тоомсорлох','Бусдыг буруутгах'],1],['Аль нь хэрэгцээ вэ?',['Шинэ тоглоом','Ундны ус','Брэнд гутал','Тоглоомын карт'],1],['Шударга байдал гэдэг нь…',['Үнэнээ хэлж, амлалтаа биелүүлэх','Үргэлж ялах','Алдаагаа нуух','Дуртайгаа хийх'],0],['Цахим дээрэлхэлтэд өртвөл эхлээд юу хийх вэ?',['Хариу доромжлох','Нотлох баримтаа хадгалж, итгэлтэй томоо хүнд хэлэх','Утсаа хаях','Чимээгүй байх'],1],['Ялгаварлан гадуурхалт гэж юу вэ?',['Хүнийг гарал, хүйс зэргээр нь ялгаж хандах','Ангиа сонгох','Багаар ажиллах','Санал хэлэх'],0]],
+'ie|8–9':[['Монгол Улсын одоо мөрдөж буй Үндсэн хууль хэдэн онд батлагдсан бэ?',['1924','1960','1992','2000'],2],['Хууль батлах эрх аль байгууллагад байдаг вэ?',['Засгийн газар','Улсын Их Хурал','Улсын дээд шүүх','Аймгийн Засаг дарга'],1],['Монгол Улсад сонгох эрх хэдэн наснаас эдлэх вэ?',['16','18','21','25'],1],['Хүний эрхийн түгээмэл тунхаглал хэдэн онд батлагдсан бэ?',['1945','1948','1966','1989'],1],['Хуурамч мэдээг таних эхний алхам юу вэ?',['Шууд хуваалцах','Эх сурвалжийг шалгах','Зөвхөн гарчиг унших','Сэтгэгдэл бичих'],1],['НҮБ-ын Тогтвортой хөгжлийн зорилго хэд вэ?',['8','12','17','20'],2]],
+'ie|10–12':[['Ёс зүйн дилемма гэж юу вэ?',['Хоёр ба түүнээс олон үнэт зүйл зөрчилдсөн нөхцөл','Хуулийн зүйл заалт','Математикийн бодлого','Санхүүгийн тайлан'],0],['«Хүнийг дайрах» (ad hominem) логик алдаа юу вэ?',['Аргументын оронд хүнийг нь шүүмжлэх','Хэт ерөнхийлөх','Тойрон эргэх','Эрх мэдэлд найдах'],0],['Авлига гэж юу вэ?',['Албан тушаалаа хувийн ашиг сонирхолд ашиглах','Цалин авах','Татвар төлөх','Сайн дурын ажил хийх'],0],['Монгол Улс НҮБ-д хэдэн онд элссэн бэ?',['1945','1961','1972','1990'],1],['Хөдөлмөрийн гэрээнд заавал тусгах зүйл аль вэ?',['Ажлын байр, үүрэг, цалин, ажлын цаг','Ажилтны хобби','Хоолны цэс','Найзуудын нэр'],0],['Аль нь иргэний нийгмийн байгууллага вэ?',['Төрийн бус байгууллага','Яам','Шүүх','Цагдаагийн газар'],0]]};
+
+const PAIRS={mt:[['CPU','Төв процессор'],['RAM','Шуурхай санах ой'],['URL','Вэб хаяг'],['Бит','Мэдээллийн хамгийн бага нэгж'],['HTML','Вэб хуудасны хэл'],['Алгоритм','Алхмуудын дараалал']],
+ie:[['Үндсэн хууль','Улсын дээд хууль'],['УИХ','Хууль тогтоох байгууллага'],['Эрх','Хүнд олгогдох боломж'],['Үүрэг','Хүлээх хариуцлага'],['Ардчилал','Ард түмний засаглал'],['ТББ','Төрийн бус байгууллага']]};
+const TF=[['1 килобайт нь ойролцоогоор 1024 байт.',1],['Нууц үгээ хамгийн дотны найздаа хэлэх нь аюулгүй.',0],['Хоёртын системд зөвхөн 0 ба 1 цифр хэрэглэнэ.',1],['Улсын Их Хурал шүүх эрх мэдлийг хэрэгжүүлдэг.',0],['Монгол Улсад 18 нас хүрсэн иргэн сонгох эрхтэй.',1],['Интернэтэд нийтэлсэн зургийг бүрэн устгах амархан.',0],['HTML бол програмчлалын хэл биш, тэмдэглэгээний хэл.',1],['Хүүхэд ч бас эрхтэй, үүрэгтэй.',1],['Вирусны эсрэг програм шаардлагагүй.',0],['Татвар нь нийтийн үйлчилгээг санхүүжүүлдэг.',1],['Python-д мөр бүрийн төгсгөлд заавал ; тавина.',0],['Ялгаварлан гадуурхалт нь хүний эрхийг зөрчдөг.',1]];
+
+const CASES=[
+{id:'c1',s:'mt',g:'6–9',t:'Нээлттэй үлдсэн бүртгэл',story:'Компьютерийн ангид найз чинь сошиал бүртгэлээсээ гаралгүй яваад өгчээ. Хажууд чинь хэдэн хүүхэд «нэг юм постолчихъё» гэж инээлдэж байна.',opts:['Бүртгэлээс нь гаргаад, найздаа хэлнэ','Мессежийг нь уншина','Хошигнол пост оруулна','Юу ч хийхгүй'],qs:['Найзын чинь оронд байсан бол юу мэдрэх вэ?','Энэ нөхцөлд ямар эрсдэл байна вэ?','Ангидаа ямар дүрэм тогтоох вэ?']},
+{id:'c2',s:'ie',g:'7–10',t:'Группт тарсан хариу',story:'Шалгалтын өмнөх орой ангийн чатад «хариу» гэсэн зураг тарлаа. Олонх нь хадгалж авсан бололтой.',opts:['Нээхгүй, багшид мэдэгдэнэ','Нээж хараад, хэнд ч хэлэхгүй','Бусадтай хуваалцана','Чатаас гарна'],qs:['Шударга байдал энд юу гэсэн үг вэ?','Багшид хэлэх нь «урвах» уу, хариуцлага уу?','Ийм зүйлээс урьдчилан сэргийлэх арга?']},
+{id:'c3',s:'mt',g:'7–12',t:'Гэр бүлийн чатад тарсан мэдээ',story:'Эмээ чинь «халуун ус уувал вирус устна» гэсэн бичлэгийг гэр бүлийн группт хуваалцжээ. Олон хүн «баярлалаа» гэж хариулж байна.',opts:['Найдвартай эх сурвалж эелдгээр илгээнэ','Олны өмнө «худлаа» гэж бичнэ','Тоохгүй өнгөрөөнө','Өөрөө ч хуваалцана'],qs:['Мэдээ худал эсэхийг яаж шалгах вэ?','Ахмад хүнд хэрхэн хүндэтгэлтэй тайлбарлах вэ?','Хуурамч мэдээ ямар хор хохирол учруулдаг вэ?']},
+{id:'c4',s:'ie',g:'8–12',t:'Тоглоомын талбай уу, зогсоол уу',story:'Хорооны иргэд хүүхдийн тоглоомын талбайг машины зогсоол болгох эсэхийг хэлэлцэж байна. Насанд хүрэгчдийн олонх нь зогсоолыг дэмжиж байна.',opts:['Хүүхдүүдийн санал асуулга явуулж, хуралд танилцуулна','Насанд хүрэгчдийн шийдвэрийг хүлээж авна','Цахимаар гомдол бичнэ','Хоёуланг нь хослуулах шийдэл санал болгоно'],qs:['Хүүхдийн оролцох эрх энд хэрхэн хамаарах вэ?','Олонхын шийдвэр үргэлж зөв үү?','Ямар нотолгоо цуглуулбал үг чинь хүчтэй болох вэ?']},
+{id:'c5',s:'mt',g:'9–12',t:'Хиймэл оюунаар бичсэн эссэ',story:'Ангийн нэг сурагч эссэгээ бүхэлд нь хиймэл оюуны хэрэгслээр бичүүлээд өөрийнхөөрөө өгчээ. Багш хэрэгслийн хэрэглээний дүрэм тодорхой гаргаагүй.',opts:['Хэрэглээгээ ил тод бичих дүрэм санал болгоно','Хэрэгсэл ашиглах нь бүрэн зөв','Хэрэгслийг бүрэн хориглох ёстой','Миний хамаа биш'],qs:['Хэзээ туслах хэрэгсэл, хэзээ хуулбар болох вэ?','Хиймэл оюун алдаа гаргавал хэн хариуцах вэ?','Ангийн шударга дүрэм ямар байх вэ?']},
+{id:'c6',s:'ie',g:'6–9',t:'Шинэ сурагч',story:'Ангид чинь өөр аймгаас шилжиж ирсэн сурагч аялгаараа ярьдаг тул зарим хүүхэд дуурайж шоолж байна.',opts:['Түүнтэй найзалж, шоолохыг зогсоохыг хэлнэ','Хажуугаас нь харна','Хамт инээнэ','Багшид мэдэгдэнэ'],qs:['Олон янз байдал ангид ямар давуу тал өгдөг вэ?','«Хажуугийн хүн» ямар үүрэгтэй вэ?','Ангиараа ямар алхам хийж болох вэ?']}];
+
+const WS=[
+{id:'w1',s:'mt',g:6,kind:'Ажлын хуудас',t:'Компьютерийн хэсгүүдийг нэрлэ',intro:'Хэсэг бүрийн нэр, үүргийг бич.',items:['Төв процессор (CPU) ямар үүрэгтэй вэ?','Шуурхай санах ой (RAM) ба хатуу диск хоёрын ялгаа юу вэ?','Оролтын 3 төхөөрөмж нэрлэ.','Гаралтын 3 төхөөрөмж нэрлэ.','Хэрэв гар ажиллахгүй бол ямар асуудал үүсэх вэ?']},
+{id:'w2',s:'mt',g:6,kind:'Ажлын хуудас',t:'Хоёртын тоо хөрвүүлэх',intro:'Аравтын тоог хоёртын систем рүү, хоёртыг аравтын рүү хөрвүүл.',items:['5 = ?','12 = ?','25 = ?','1010 (хоёртын) = ?','11111 (хоёртын) = ?','Өөрийн насаа хоёртоор бич.']},
+{id:'w3',s:'mt',g:7,kind:'Ажлын хуудас',t:'Нууц үгийн хүч',intro:'Нууц үг бүрийг «сул / дунд / хүчтэй» гэж үнэлээд шалтгааныг бич.',items:['bataa2010','Qwerty','M0ngol!Tal#88','Өөрийн хүчтэй нууц үг зохиох 3 дүрэм бич (жинхэнэ нууц үгээ бүү бич).']},
+{id:'w4',s:'mt',g:8,kind:'Ажлын хуудас',t:'Python гаралтыг таа',intro:'Програм дэлгэцэнд юу хэвлэхийг бич.',items:['print(3 + 4 * 2)','x = 5; print(x * x)','for i in range(3): print(i)','print("Сайн" + " уу")','if 10 > 7: print("Тийм")']},
+{id:'w5',s:'ie',g:6,kind:'Ажлын хуудас',t:'Миний эрх ба үүрэг',intro:'Эрх бүрт харгалзах үүргийг бич.',items:['Сурч боловсрох эрх → үүрэг:','Санал бодлоо илэрхийлэх эрх → үүрэг:','Амрах, тоглох эрх → үүрэг:','Хамгаалуулах эрх → үүрэг:']},
+{id:'w6',s:'ie',g:7,kind:'Ажлын хуудас',t:'Сарын төсөв',intro:'Сард 50 000 төгрөгийн халаасны мөнгө авдаг гэж төсөөлж төсвөө зохио.',items:['Хэрэгцээ (зүйл, дүн):','Хүсэл (зүйл, дүн):','Хуримтлал (дүн):','Төсвөө хэтрүүлбэл юу хийх вэ?']},
+{id:'w7',s:'ie',g:8,kind:'Ажлын хуудас',t:'Мэдээ шалгах хуудас',intro:'Сүүлд үзсэн нэг мэдээг сонгоод шалга.',items:['Эх сурвалж хэн бэ?','Огноо хэзээ вэ?','Өөр эх сурвалж мөн ингэж мэдээлсэн үү?','Гарчиг нь сэтгэл хөдлөл өдөөж байна уу?','Дүгнэлт: найдвартай юу?']},
+{id:'w8',s:'ie',g:9,kind:'Ажлын хуудас',t:'Төрийн гурван салаа',intro:'Эрх мэдэл бүрийг хэрэгжүүлэгч байгууллага, үүргийг бич.',items:['Хууль тогтоох эрх мэдэл:','Гүйцэтгэх эрх мэдэл:','Шүүх эрх мэдэл:','Эрх мэдлийг хуваарилах нь яагаад чухал вэ?']},
+{id:'h1',s:'mt',g:7,kind:'Тараах материал',t:'Цахим аюулгүй байдлын 8 дүрэм',list:['Нууц үгээ хэнд ч бүү хэл','Бүртгэл бүрт өөр нууц үг ашигла','Хоёр шатлалт баталгаажуулалт асаа','Танихгүй холбоос бүү дар','Хувийн мэдээллээ нийтэд бүү тавь','Дээрэлхэлтэд өртвөл баримтаа хадгалж томчуудад хэл','Программаа тогтмол шинэчил','Нийтлэхээсээ өмнө «үүрд үлдэнэ» гэдгийг сана']},
+{id:'h2',s:'ie',g:8,kind:'Тараах материал',t:'Хүний эрхийн үндсэн ойлголт',list:['Хүний эрх бүх хүнд төрөлхийн байдаг','Эрх хуваагдашгүй, бие биеэсээ хамааралтай','Хэнийг ч ялгаварлан гадуурхахгүй','Эрх үүрэгтэй хамт оршдог','Төр хүний эрхийг хамгаалах үүрэгтэй','Эрх зөрчигдвөл хууль, хүний эрхийн байгууллагад хандана']}];
+
+const HOME_TALK={mt:['Өнөөдөр компьютерийн ангид юу бүтээсэн бэ?','Интернэтэд ямар мэдээлэл нийтэлж болохгүй вэ?','Чиний мэддэг нэг алгоритм (жишээ нь цай чанах алхмууд) хэлээд өгөөч?'],ie:['Өнөөдөр ангидаа ямар асуудлыг хэлэлцсэн бэ?','Чи шударга бус зүйл харвал юу хийх вэ?','Манай гэр бүлийн үнэт зүйл юу гэж бодож байна?']};
+
+
+const METH={mt:['Үзүүлэн, туршилт','Дадлага ажил (компьютер дээр)','Хосоор ажиллах','Асуудал шийдвэрлэх','Төсөлт ажил','Тархины шуурга','Багаар ажиллах','Алхам алхмаар заавар'],
+ ie:['Кейс аргачлал','Хэлэлцүүлэг','Дүрд тоглох','Тархины шуурга','Мэтгэлцээн','Багаар ажиллах','Хосоор ажиллах','Төсөлт ажил']};
+
+/* ================= STATE / UTIL ================= */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const LS={get(k,d){try{const v=localStorage.getItem('ca_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('ca_'+k,JSON.stringify(v))}catch(e){}}};
+const S={subj:LS.get('subj','mt'),grade:LS.get('grade',7),role:LS.get('role','teacher'),view:'home',doc:{type:'year',u:0,l:0}};
+const save=()=>{LS.set('subj',S.subj);LS.set('grade',S.grade);LS.set('role',S.role)};
+const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('on'),2800)};
+const modal=html=>{$('#mbody').innerHTML=html;$('#modal').classList.add('open');$('#modal .x').focus()};
+const closeModal=()=>{$('#modal').classList.remove('open');$('#palette').classList.remove('open')};
+const unitNow=()=>{const m=new Date().getMonth()+1;return m>=9&&m<=10?0:m>=11?1:m<=3?2:m<=5?3:0};
+const schoolYear=()=>{const d=new Date(),y=d.getFullYear();return d.getMonth()>=7?`${y}–${y+1}`:`${y-1}–${y}`};
+const SHORT={mt:'МТ',ie:'ИЁЗБ'};
+const C={dl:null};
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ================= DOCUMENT MODEL ================= */
+/* blocks: h1 | h2 | p | meta(rows) | table(head,rows,w) | list(items) | lines(n) */
+function blocksHTML(B){return B.map(b=>{
+ if(b.t==='h1')return `<h1>${esc(b.x)}</h1>`;if(b.t==='h2')return `<h2>${esc(b.x)}</h2>`;if(b.t==='p')return `<p>${esc(b.x)}</p>`;
+ if(b.t==='meta')return `<table class="meta">${b.rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join('')}</table>`;
+ if(b.t==='table')return `<table><thead><tr>${b.head.map((h,i)=>`<th style="width:${b.w?b.w[i]/50:''}%">${esc(h)}</th>`).join('')}</tr></thead><tbody>${b.rows.map(r=>`<tr>${r.map(c=>`<td style="white-space:pre-line">${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+ if(b.t==='list')return `<ul>${b.items.map(i=>`<li>${esc(i)}</li>`).join('')}</ul>`;
+ if(b.t==='lines')return '<div class="ln"></div>'.repeat(b.n||2);return ''}).join('')}
+const docHTML=(title,body)=>`<!DOCTYPE html><html lang="mn"><head><meta charset="utf-8"><title>${esc(title)}</title><style>@page{size:A4;margin:18mm}body{font:12pt/1.5 Arial,sans-serif;color:#111;max-width:800px;margin:0 auto;padding:20px}h1{font-size:16pt;text-align:center}h2{font-size:12.5pt;color:#1f2fbf;margin:16px 0 6px}table{border-collapse:collapse;width:100%;margin:6px 0 10px}td,th{border:1px solid #888;padding:5px 7px;text-align:left;vertical-align:top;font-size:11pt}th{background:#e8ecff}.meta td:first-child{font-weight:700;width:30%}p{white-space:pre-line}.ln{border-bottom:1px solid #999;height:26px}.np{background:#fff4c7;padding:8px;font-family:Arial}@media print{.np{display:none}}</style></head><body><p class="np">Хэвлэхдээ Ctrl+P (Mac: Cmd+P) дарна уу.</p>${body}</body></html>`;
+/* minimal .docx writer */
+const XE=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const wr=(t,o={})=>`<w:r><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" w:eastAsia="Arial"/>${o.b?'<w:b/>':''}${o.c?`<w:color w:val="${o.c}"/>`:''}<w:sz w:val="${o.sz||22}"/><w:szCs w:val="${o.sz||22}"/></w:rPr><w:t xml:space="preserve">${XE(t)}</w:t></w:r>`;
+const wp=(t,o={})=>String(t??'').split('\n').map(line=>`<w:p><w:pPr>${o.al?`<w:jc w:val="${o.al}"/>`:''}<w:spacing w:before="${o.bf||0}" w:after="${o.af??80}"/></w:pPr>${wr(line,o)}</w:p>`).join('');
+function wt(head,rows,w,metaStyle){
+ const n=(head||rows[0]).length,ws=w||Array(n).fill(Math.floor(5000/n));
+ const cell=(t,i,h)=>`<w:tc><w:tcPr><w:tcW w:w="${ws[i]}" w:type="pct"/>${h||(metaStyle&&i===0)?`<w:shd w:val="clear" w:color="auto" w:fill="${h?'E8ECFF':'F4F5FA'}"/>`:''}</w:tcPr>${wp(t,{b:h||(metaStyle&&i===0),af:30,sz:21})}</w:tc>`;
+ return `<w:tbl><w:tblPr><w:tblW w:w="5000" w:type="pct"/><w:tblBorders>${['top','left','bottom','right','insideH','insideV'].map(b=>`<w:${b} w:val="single" w:sz="4" w:space="0" w:color="8A8F9C"/>`).join('')}</w:tblBorders><w:tblCellMar><w:left w:w="90" w:type="dxa"/><w:right w:w="90" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid>${ws.map(x=>`<w:gridCol w:w="${Math.round(x/5000*9354)}"/>`).join('')}</w:tblGrid>${head?`<w:tr><w:trPr><w:tblHeader/></w:trPr>${head.map((h,i)=>cell(h,i,true)).join('')}</w:tr>`:''}${rows.map(r=>`<w:tr><w:trPr><w:cantSplit/></w:trPr>${r.map((c,i)=>cell(c,i,false)).join('')}</w:tr>`).join('')}</w:tbl>${wp('',{af:60})}`}
+function docxXML(B){return B.map(b=>{
+ if(b.t==='h1')return wp(b.x,{b:1,sz:30,al:'center',af:200});if(b.t==='h2')return wp(b.x,{b:1,sz:24,c:'1F2FBF',bf:200,af:80});if(b.t==='p')return wp(b.x);
+ if(b.t==='meta')return wt(null,b.rows,[1500,3500],true);if(b.t==='table')return wt(b.head,b.rows,b.w);
+ if(b.t==='list')return b.items.map(i=>wp('•  '+i,{af:40})).join('');if(b.t==='lines')return Array(b.n||2).fill(wp('_______________________________________________________________________________',{af:120,c:'888888'})).join('');return ''}).join('')}
+async function buildDocx(B){
+ const z=new JSZip();
+ z.file('[Content_Types].xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>');
+ z.file('_rels/.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>');
+ z.file('word/document.xml',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${docxXML(B)}<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="851" w:bottom="1134" w:left="1418" w:header="709" w:footer="709" w:gutter="0"/></w:sectPr></w:body></w:document>`);
+ return z.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+}
+async function saveFile(name,data){
+ if(C.dl){try{await C.dl.save({filename:name,data});toast('Файл хадгалагдлаа');return}catch(e){const c=e&&e.code;if(c==='declined'||c==='rate_limited')return;if(c&&!['unavailable','not_granted','capability_disabled','capability_removed'].includes(c)){toast('Татаж чадсангүй');return}}}
+ try{const url=URL.createObjectURL(data instanceof Blob?data:new Blob([data],{type:'text/html'}));const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000)}catch(e){toast('Татаж чадсангүй')}
+}
+async function wordDoc(B,name){if(!window.JSZip)return toast('Word үүсгэх сан ачаалагдсангүй. Интернэт холболтоо шалгана уу.');try{saveFile(name+'.docx',await buildDocx(B))}catch(e){toast('Word файл үүсгэж чадсангүй')}}
+function printDoc(B,name){
+ let inFrame=true;try{inFrame=window.self!==window.top}catch(e){}
+ if(!inFrame){$('#printArea').innerHTML=`<div class="paper">${blocksHTML(B)}</div>`;document.body.classList.add('printing');setTimeout(()=>{window.print();document.body.classList.remove('printing')},60);return}
+ saveFile(name+'.html',docHTML(name,blocksHTML(B)));toast('Татсан файлаа нээгээд Ctrl+P дарж хэвлэнэ үү');
+}
+const fname=s=>s.replace(/[\\/:*?"<>|]+/g,'').replace(/\s+/g,' ').trim();
+
+/* ================= CURRICULUM DOCS ================= */
+function plan(s,g,u,l){
+ const U=PROG[s][g][u],T=U.lessons[l],k=u*4+l,m=METH[s][k%METH[s].length];
+ return {T,U,m,
+  zorilt:s==='mt'?`«${T}» сэдвийн үндсэн ойлголтыг тайлбарлаж, компьютер дээр дадлага хийн хэрэглэх.`:`«${T}» сэдвийн үндсэн ойлголтыг тайлбарлаж, амьдралын жишээнд дүн шинжилгээ хийн үнэлэх.`,
+  goal:`Сурагчид «${T}» сэдвийн гол ойлголтыг өөрийн үгээр тайлбарлаж, ${s==='mt'?'практик даалгавар гүйцэтгэн':'кейс, жишээн дээр ярилцан'} хэрэглэх чадвартай болно.`,
+  crit:[`«${T}» сэдвийн гол нэр томьёог зөв тайлбарласан`,s==='mt'?'Практик даалгаврыг алхам алдалгүй гүйцэтгэсэн':'Жишээ нөхцөлд үндэслэлтэй дүгнэлт хийсэн','Хос, багийн ажилд идэвхтэй, хүндэтгэлтэй оролцсон'],
+  mat:s==='mt'?'Компьютер, проектор, ажлын хуудас, сайтын «3D лаб», «Шивэх дасгал»':'Проектор, ажлын хуудас, кейсийн карт, сайтын «Кэйс» хэсэг',
+  flow:[['Сэдэлжүүлэх',`Сэдэвтэй холбоотой асуулт тавьж, өмнөх мэдлэгийг сэргээнэ. Хичээлийн зорилгыг танилцуулна.`,'Асуултад хариулж, таамаглал, туршлагаа хуваалцана.','10 мин'],
+   ['Шинэ мэдлэг',`«${T}» сэдвийн гол ойлголтыг үзүүлэн, жишээгээр тайлбарлана.`,'Тэмдэглэл хөтөлж, тодруулах асуулт асууна.','25 мин'],
+   ['Дадлага, хэрэглээ',`«${m}» аргаар даалгавар өгч, сурагчдыг чиглүүлж дэмжинэ.`,s==='mt'?'Компьютер дээр даалгавар гүйцэтгэж, үр дүнгээ хадгална.':'Багаараа кейс хэлэлцэж, дүгнэлтээ танилцуулна.','30 мин'],
+   ['Дүгнэлт, үнэлгээ','Гарах тасалбар, 3 асуулттай хурдан сорилоор ойлголтыг шалгана.','Өөрийгөө үнэлж, сурсан зүйлээ нэгтгэн хэлнэ.','15 мин']],
+  home:s==='mt'?'Сэдвээр 3 жишээ олж тэмдэглэх, сайтын шивэх дасгалаас 10 минут хийх.':'Гэр бүлийнхэнтэйгээ сэдвийн талаар ярилцаж, нэг бодит жишээ бичиж ирэх.'};
+}
+function yearBlocks(s,g){const rows=[];PROG[s][g].forEach((U,u)=>U.lessons.forEach((l,j)=>rows.push([j?'':`${u+1}. ${U.name}`,`${u*4+j+1}. ${l}`,'2',j?'':WHEN[u]])));
+ return [{t:'h1',x:'Сургалтын жилийн төлөвлөгөө'},{t:'meta',rows:[['Хичээл',SUBJ[s]],['Анги',g+'-р анги'],['Нийт цаг','32 цаг (16 сэдэв × 2 цаг)'],['Хичээлийн жил',schoolYear()],['Багш','']]},
+  {t:'h2',x:'Нэгж, ээлжит хичээлийн хуваарь'},{t:'table',head:['Нэгж','Ээлжит хичээлийн сэдэв','Цаг','Хугацаа'],rows,w:[1500,2300,450,750]},
+  {t:'h2',x:'Үнэлгээ'},{t:'p',x:'Явцын үнэлгээ: ажлын хуудас, гарах тасалбар, ажиглалт.\nНэгжийн үнэлгээ: нэгж бүрийн төгсгөлд цахим эсвэл хэвлэмэл сорил.\nУлирлын үнэлгээ: төсөлт ажил, сорил.'}]}
+function unitBlocks(s,g,u){const U=PROG[s][g][u];
+ return [{t:'h1',x:'Нэгж хөтөлбөр'},{t:'meta',rows:[['Хичээл',SUBJ[s]],['Анги',g+'-р анги'],['Нэгжийн нэр',`${u+1}. ${U.name}`],['Цаг',U.lessons.length*2+' цаг'],['Хугацаа',WHEN[u]+', '+schoolYear()],['Багш','']]},
+  {t:'h2',x:'Нэгжийн зорилго'},{t:'p',x:`«${U.name}» нэгжээр сурагчид үндсэн ойлголтыг эзэмшиж, бодит нөхцөлд хэрэглэх, хамтран ажиллах, ёс зүйтэй шийдвэр гаргах чадварт суралцана.`},
+  {t:'h2',x:'Суралцахуйн зорилт'},{t:'list',items:U.lessons.map((l,i)=>plan(s,g,u,i).zorilt)},
+  {t:'h2',x:'Ээлжит хичээлийн хуваарь'},{t:'table',head:['№','Сэдэв','Суралцахуйн зорилт','Цаг','Арга зүй','Үнэлгээ'],rows:U.lessons.map((l,i)=>{const p=plan(s,g,u,i);return [String(i+1),l,p.zorilt,'2',p.m,'Ажиглалт, ажлын хуудас']}),w:[250,1050,1650,300,950,800]},
+  {t:'h2',x:'Нэгжийн үнэлгээ'},{t:'p',x:'Нэгжийн төгсгөлд 6 асуулттай сорил (цахим эсвэл хэвлэмэл), ажлын хуудасны гүйцэтгэл, багийн ажлын танилцуулга.'},
+  {t:'h2',x:'Багшийн тэмдэглэл'},{t:'lines',n:3}]}
+function lessonBlocks(s,g,u,l){const p=plan(s,g,u,l);
+ return [{t:'h1',x:'Ээлжит хичээлийн төлөвлөгөө'},{t:'meta',rows:[['Хичээл',SUBJ[s]],['Анги',g+'-р анги'],['Нэгж',`${u+1}. ${p.U.name}`],['Сэдэв',p.T],['Цаг','2 цаг (2 × 40 минут)'],['Огноо',''],['Багш','']]},
+  {t:'h2',x:'Суралцахуйн зорилт'},{t:'p',x:p.zorilt},{t:'h2',x:'Хичээлийн зорилго'},{t:'p',x:p.goal},
+  {t:'h2',x:'Үнэлгээний шалгуур'},{t:'list',items:p.crit},{t:'h2',x:'Арга зүй'},{t:'p',x:p.m},{t:'h2',x:'Хэрэглэгдэхүүн'},{t:'p',x:p.mat},
+  {t:'h2',x:'Хичээлийн явц'},{t:'table',head:['Үе шат','Багшийн үйл ажиллагаа','Сурагчийн үйл ажиллагаа','Хугацаа'],rows:p.flow,w:[900,1750,1750,600]},
+  {t:'h2',x:'Гэрийн даалгавар'},{t:'p',x:p.home},{t:'h2',x:'Багшийн эргэцүүлэл'},{t:'lines',n:3}]}
+function curDoc(){const s=S.subj,g=S.grade,d=S.doc;
+ if(d.type==='unit')return{B:unitBlocks(s,g,d.u),name:fname(`${SHORT[s]} ${g}-р анги Нэгж ${d.u+1} ${PROG[s][g][d.u].name}`),crumb:`Нэгж ${d.u+1}`};
+ if(d.type==='lesson')return{B:lessonBlocks(s,g,d.u,d.l),name:fname(`${SHORT[s]} ${g}-р анги ${d.u+1}.${d.l+1} ${PROG[s][g][d.u].lessons[d.l]}`),crumb:`Нэгж ${d.u+1} · Хичээл ${d.u*4+d.l+1}`};
+ return{B:yearBlocks(s,g),name:fname(`${SHORT[s]} ${g}-р анги Жилийн төлөвлөгөө`),crumb:'Жилийн төлөвлөгөө'}}
+
+/* ================= VIEWS ================= */
+const VIEWS=[['home','Нүүр'],['program','Хөтөлбөр'],['test','Сорил'],['materials','Материал'],['lab','3D лаб'],['games','Тоглоом'],['typing','Шивэх дасгал'],['cases','Кэйс'],['parents','Эцэг эх']];
+const subjSeg=()=>`<div class="seg" role="group" aria-label="Хичээл">${Object.keys(SUBJ).map(k=>`<button data-subj="${k}" aria-pressed="${S.subj===k}">${SUBJ[k]}</button>`).join('')}</div>`;
+const gradePins=()=>`<div class="pins" role="group" aria-label="Анги">${[6,7,8,9,10,11,12].map(g=>`<button data-grade="${g}" aria-pressed="${S.grade==g}" aria-label="${g}-р анги">${g}</button>`).join('')}</div>`;
+const picker=()=>`<div class="row" style="margin-bottom:22px;gap:14px">${subjSeg()}${gradePins()}</div>`;
+const head=(title,sub,right='')=>`<div class="secthead"><div><h2>${title}</h2>${sub?`<p class="mut">${sub}</p>`:''}</div>${right}</div>`;
+
+function vHome(){
+ const r=S.role,g=S.grade,s=S.subj,un=unitNow(),U=PROG[s][g];
+ const acts={teacher:[['Жилийн төлөвлөгөө','program'],['Сорил хэвлэх','test'],['Ажлын хуудас','materials']],student:[['Сорил өгөх','test'],['Шивэх дасгал','typing'],['Тоглоом','games']],parent:[['Энэ сарын сэдэв','parents'],['Гэрээр ярилцах','parents'],['Кэйс','cases']]}[r];
+ const q=BANK[s+'|'+band(g)][0];
+ return `<section class="hero band"><div class="wrap">
+ <div><h1>Ухаалаг иргэн. <em>Ухаалаг технологи.</em></h1>
+ <p class="lead">Мэдээллийн технологи ба Иргэний ёс зүйн боловсролын 6–12-р ангийн цахим орчин: хөтөлбөр, ээлжит хичээл, сорил, ажлын хуудас, 3D лаб, тоглоом, кэйс.</p>
+ <div class="seg" role="group" aria-label="Би хэн бэ" style="margin:6px 0 14px">${[['teacher','Багш'],['student','Сурагч'],['parent','Эцэг эх']].map(([k,n])=>`<button data-role="${k}" aria-pressed="${r===k}">${n}</button>`).join('')}</div>
+ <div class="row">${acts.map((a,i)=>`<a class="btn ${i?'alt':''}" href="#${a[1]}">${a[0]}</a>`).join('')}</div>
+ <p class="term">&gt; анги <b>${g}</b> · хичээл <b>${SHORT[s]}</b> · нэгж <b>${un+1}</b><span class="cur"></span></p>
+ <div class="stats"><div><b>7</b><span>анги</span></div><div><b>56</b><span>нэгж</span></div><div><b>224</b><span>ээлжит хичээл</span></div><div><b>.docx</b><span>татаж засна</span></div></div></div>
+ <div class="stage" id="stageHome"></div></div></section>
+ <section class="band"><div class="wrap">
+ ${head('Бүх хэрэгсэл нэг дор',`${SUBJ[s]} · ${g}-р анги`,`<div class="row">${subjSeg()}${gradePins()}</div>`)}
+ <div class="bento">
+ <a class="tile b2 r2" href="#program"><span class="tag ${s}">Хөтөлбөр</span><h3>${g}-р ангийн бүтэн жил</h3><p>4 нэгж, 16 сэдэв, 32 цаг. Нэгж хөтөлбөр, ээлжит хичээлийн төлөвлөгөөг үзэж, хэвлэж, Word-оор татна.</p>
+  <div class="mini-tl">${U.map((x,i)=>`<div><span class="small mut">${WHEN[i]}</span><i>${esc(x.name)}</i></div>`).join('')}</div><span class="go">Хөтөлбөр нээх →</span></a>
+ <a class="tile b2" href="#typing"><span class="tag mt">Шивэх дасгал</span><h3>Арван хуруугаар шив</h3><div class="typer" id="typer"></div><span class="go">Дасгал эхлэх →</span></a>
+ <a class="tile dark" href="#games"><h3>Бинар код</h3><div class="bitrow" id="bitrow">${'<i>0</i>'.repeat(8)}</div><p id="bitval">= 0</p><span class="go">Тоглох →</span></a>
+ <a class="tile" href="#lab"><h3>3D лаб</h3><svg viewBox="0 0 120 70" style="width:100%;max-height:80px" aria-hidden="true"><path d="M60 8 108 32 60 56 12 32Z" fill="var(--pri)" opacity=".18"/><path d="M60 18 88 32 60 46 32 32Z" fill="var(--pri)"/><path d="M32 32v8l28 14v-8Z" fill="var(--pri)" opacity=".6"/><path d="M88 32v8L60 54v-8Z" fill="var(--pri)" opacity=".8"/><path d="M60 26 72 32 60 38 48 32Z" fill="#fff"/></svg><p>Компьютер, сүлжээ, төрийн бүтэц</p><span class="go">Эргүүлж үзэх →</span></a>
+ <a class="tile" href="#test"><span class="tag ${s}">Сорил</span><h3 style="font-size:15.5px;line-height:1.35">${esc(q[0])}</h3><p>${q[1].map((o,i)=>`${'АБВГ'[i]}. ${esc(o)}`).join(' · ')}</p><span class="go">Сорил өгөх →</span></a>
+ <a class="tile" href="#cases"><span class="tag ie">Кэйс</span><h3>${esc(CASES[1].t)}</h3><p>${esc(CASES[1].story.slice(0,70))}…</p><span class="go">Хэлэлцэх →</span></a>
+ <a class="tile b2" href="#materials"><span class="tag mt">Материал</span><h3>Ажлын хуудас, тараах материал</h3><p>Сурагч цахимаар бөглөнө, багш Word эсвэл хэвлэх хувилбараар татна.</p><div class="row" style="margin-top:6px">${WS.slice(0,4).map(w=>`<span class="tag ${w.s}">${esc(w.t)}</span>`).join('')}</div><span class="go">Материал үзэх →</span></a>
+ <a class="tile b2 dark" href="#parents"><h3>Эцэг эхэд</h3><p>Хүүхдийн тань энэ сард үзэж буй сэдэв: ${esc(PROG.mt[g][un].name)}, ${esc(PROG.ie[g][un].name)}. Гэрээр ярилцах асуулт, цахим аюулгүй байдлын зөвлөгөө.</p><span class="go">Дэлгэрэнгүй →</span></a>
+ <button class="tile" id="kOpen2" style="font:inherit;text-align:start;align-items:flex-start;cursor:pointer;color:inherit"><h3>Хурдан хайлт</h3><p>Ямар ч анги, сэдэв, ажлын хуудсыг секундэд олно.</p><span class="go mono">⌘K / Ctrl+K</span></button>
+ <a class="tile" href="#games"><h3>Тааруулах тоглоом</h3><p>Нэр томьёо ба тайлбарыг хосло. Үнэн үү, худал уу уралдаан.</p><span class="go">Тоглох →</span></a>
+ </div></div></section>`;
+}
+let homeTimers=[];
+function homeAnim(){
+ homeTimers.forEach(clearInterval);homeTimers=[];if(reduce)return;
+ const ty=$('#typer');if(ty){const txt='Монгол орон сайхан.';let i=0;homeTimers.push(setInterval(()=>{if(!ty.isConnected)return;i=(i+1)%(txt.length+8);const k=Math.min(i,txt.length);ty.innerHTML=esc(txt.slice(0,k))+'<span class="cur" style="background:var(--pri)"></span><span>'+esc(txt.slice(k))+'</span>'},160))}
+ const br=$('#bitrow');if(br){homeTimers.push(setInterval(()=>{if(!br.isConnected)return;const n=1+Math.floor(Math.random()*255);[...br.children].forEach((b,j)=>{const on=(n>>(7-j))&1;b.textContent=on;b.className=on?'on':''});$('#bitval').textContent='= '+n},1400))}
+}
+
+function vProgram(){
+ const s=S.subj,g=S.grade,d=S.doc,D=curDoc();
+ const cur=(t,u,l)=>d.type===t&&(t==='year'||d.u===u&&(t==='unit'||d.l===l))?'aria-current="page"':'';
+ return `<section class="band"><div class="wrap"><div class="docs">
+ <aside class="side" aria-label="Хөтөлбөрийн бүтэц">${subjSeg()}<div style="margin-top:12px">${gradePins()}</div>
+ <div class="tree"><button data-doc="year" ${cur('year')}>Жилийн төлөвлөгөө</button>
+ ${PROG[s][g].map((U,u)=>`<button class="u" data-doc="unit-${u}" ${cur('unit',u)}>${u+1}. ${esc(U.name)}<small>${U.lessons.length*2}ц</small></button>${U.lessons.map((l,i)=>`<button class="l" data-doc="lesson-${u}-${i}" ${cur('lesson',u,i)}>${u*4+i+1}. ${esc(l)}</button>`).join('')}`).join('')}</div></aside>
+ <div><div class="dbar"><span class="crumb">${esc(SHORT[s])} · ${g}-р анги · <b>${esc(D.crumb)}</b></span>
+ <div class="row"><button class="ghost" id="dPrev" aria-label="Өмнөх">←</button><button class="ghost" id="dNext" aria-label="Дараах">→</button><button class="ghost" id="dPrint">Хэвлэх</button><button id="dWord">Word татах</button></div></div>
+ <div class="flag">Жишээ агуулга. Албан ёсны хөтөлбөрийн файлыг оруулсны дараа нэгж, ээлжит хичээлийн төлөвлөгөөг агуулгаар нь шинэчилнэ.</div>
+ <article class="paper" id="paper">${blocksHTML(D.B)}</article></div></div></div></section>`;
+}
+const docSeq=()=>{const a=[{type:'year'}];for(let u=0;u<4;u++){a.push({type:'unit',u});for(let l=0;l<4;l++)a.push({type:'lesson',u,l})}return a};
+function stepDoc(dir){const a=docSeq(),d=S.doc,i=a.findIndex(x=>x.type===d.type&&(x.type==='year'||x.u===d.u&&(x.type==='unit'||x.l===d.l)));const n=a[Math.max(0,Math.min(a.length-1,i+dir))];S.doc={u:0,l:0,...n};render();$('#paper')?.scrollIntoView({block:'start'})}
+
+let quiz=null;
+const qsFor=()=>BANK[S.subj+'|'+band(S.grade)];
+function vTest(){
+ const s=S.subj,g=S.grade,qs=qsFor(),hist=LS.get('hist',[]).filter(h=>h.key===s+'|'+band(g)).slice(-4);
+ return `<section class="band"><div class="wrap">${head('Үнэлгээ, сорил',`${SUBJ[s]} · ${band(g)}-р анги`)}${picker()}
+ <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr))">
+ <div class="card"><h3>Цахим сорил</h3><p class="mut">${qs.length} асуулт · асуулт бүрт 30 секунд</p><div id="quizBox"><button id="qStart">Эхлэх</button></div></div>
+ <div class="card"><h3>Хэвлэмэл сорил</h3><p class="mut">Ижил асуултыг A4 хуудсаар, хариултын түлхүүрийн хамт. Word хувилбарыг татаж засварлаж болно.</p>
+ <div class="row"><button class="ghost" data-tdoc="0" data-fmt="print">Сорил хэвлэх</button><button data-tdoc="0" data-fmt="word">Сорил · Word</button><button class="ghost" data-tdoc="1" data-fmt="word">Түлхүүр · Word</button></div>
+ <h3 style="margin-top:20px">Миний сүүлийн оролдлого</h3>${hist.length?hist.map(h=>`<div class="meter"><div class="bar"><i style="width:${h.sc/h.n*100}%"></i></div><b class="mono">${h.sc}/${h.n}</b></div>`).join(''):'<p class="mut">Одоогоор оролдлого алга.</p>'}</div></div></div></section>`;
+}
+function runQuiz(){quiz={key:S.subj+'|'+band(S.grade),qs:[...qsFor()].sort(()=>Math.random()-.5),i:0,sc:0,t:null};showQ()}
+function showQ(){
+ const b=$('#quizBox');if(!b)return;clearInterval(quiz.t);
+ if(quiz.i>=quiz.qs.length){const n=quiz.qs.length,h=LS.get('hist',[]);h.push({key:quiz.key,sc:quiz.sc,n,at:Date.now()});LS.set('hist',h.slice(-30));
+  b.innerHTML=`<div class="big">${quiz.sc}/${n}</div><p style="margin-top:8px">${quiz.sc/n>=.8?'Маш сайн!':quiz.sc/n>=.5?'Сайн байна, дахин давтаарай.':'Хичээлээ давтаад дахин оролдоорой.'}</p><button id="qStart">Дахин эхлэх</button>`;return}
+ const [q,o,a]=quiz.qs[quiz.i];let left=30;
+ b.innerHTML=`<div class="row" style="justify-content:space-between"><span class="small mut">Асуулт ${quiz.i+1}/${quiz.qs.length}</span><b class="mono" id="qt">30</b></div><div class="bar"><i id="qb" style="width:100%"></i></div>
+ <div class="q">${esc(q)}</div><div class="opts">${o.map((x,i)=>`<button data-ans="${i}">${'АБВГ'[i]}. ${esc(x)}</button>`).join('')}</div>`;
+ quiz.t=setInterval(()=>{left--;const qt=$('#qt'),qb=$('#qb');if(!qt){clearInterval(quiz.t);return}qt.textContent=left;qb.style.width=left/30*100+'%';if(left<=0)answer(-1)},1000);quiz.a=a;
+}
+function answer(i){clearInterval(quiz.t);const bs=[...document.querySelectorAll('[data-ans]')];bs.forEach(b=>b.disabled=true);
+ bs[quiz.a]?.classList.add('right');if(i>=0&&i!==quiz.a)bs[i].classList.add('wrong');if(i===quiz.a)quiz.sc++;setTimeout(()=>{quiz.i++;showQ()},900)}
+function testBlocks(key){const s=S.subj,g=S.grade,qs=qsFor();
+ const top=[{t:'h1',x:key?'Сорилын хариултын түлхүүр':'Сорил'},{t:'meta',rows:[['Хичээл',SUBJ[s]],['Анги',band(g)+'-р анги'],...(key?[]:[['Сурагчийн нэр',''],['Огноо',''],['Оноо',`____ / ${qs.length}`]])]}];
+ return key?[...top,{t:'table',head:['№','Зөв хариулт'],rows:qs.map((q,i)=>[String(i+1),`${'АБВГ'[q[2]]}. ${q[1][q[2]]}`]),w:[600,4400]}]
+  :[...top,...qs.flatMap((q,i)=>[{t:'p',x:`${i+1}. ${q[0]}`},{t:'p',x:q[1].map((o,j)=>`${'АБВГ'[j]}. ${o}`).join('     ')}])]}
+
+function vMaterials(){
+ const s=S.subj,list=WS.filter(w=>w.s===s);
+ return `<section class="band"><div class="wrap">${head('Ажлын хуудас, тараах материал','Сурагч цахимаар бөглөнө. Багш хэвлэх эсвэл Word хувилбараар татаж засварлана.')}<div class="row" style="margin-bottom:22px">${subjSeg()}</div>
+ <div class="grid">${list.map(w=>`<div class="card" style="display:flex;flex-direction:column;gap:8px"><span class="tag ${w.s}">${esc(w.kind)} · ${w.g}-р анги</span><h3>${esc(w.t)}</h3><p class="mut small" style="margin:0">${esc(w.intro||w.list.slice(0,2).join(', ')+'…')}</p>
+ <div class="row" style="margin-top:auto"><button data-ws="${w.id}">Нээх</button><button class="ghost" data-wsdoc="${w.id}" data-fmt="print">Хэвлэх</button><button class="ghost" data-wsdoc="${w.id}" data-fmt="word">Word</button></div></div>`).join('')}</div></div></section>`;
+}
+function wsBlocks(w){return [{t:'h1',x:w.t},{t:'meta',rows:[['Хичээл',SUBJ[w.s]],['Анги',w.g+'-р анги'],...(w.list?[]:[['Нэр',''],['Огноо','']])]},...(w.list?[{t:'list',items:w.list}]:[{t:'p',x:w.intro},...w.items.flatMap((q,i)=>[{t:'p',x:`${i+1}. ${q}`},{t:'lines',n:2}])])]}
+function openWS(id){const w=WS.find(x=>x.id===id),ans=LS.get('ws_'+id,{});
+ modal(`<span class="tag ${w.s}">${esc(w.kind)} · ${w.g}-р анги</span><h2 style="margin-top:10px">${esc(w.t)}</h2>`+(w.list?`<ol class="ws">${w.list.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>`
+ :`<p>${esc(w.intro)}</p><ol class="ws">${w.items.map((q,i)=>`<li><label for="wa${i}">${esc(q)}</label><textarea id="wa${i}" data-wi="${i}">${esc(ans[i]||'')}</textarea></li>`).join('')}</ol><p class="small mut">Хариулт энэ төхөөрөмж дээр хадгалагдана.</p>`)+`<div class="row"><button class="ghost" data-wsdoc="${w.id}" data-fmt="print">Хэвлэх</button><button class="ghost" data-wsdoc="${w.id}" data-fmt="word">Word татах</button></div>`);
+ document.querySelectorAll('[data-wi]').forEach(t=>t.oninput=()=>{ans[t.dataset.wi]=t.value;LS.set('ws_'+id,ans)})}
+
+function vLab(){return `<section class="band"><div class="wrap">${head('3D интерактив лаб','Чирж эргүүлнэ, дугуйгаар ойртуулна, хэсэг дээр дарж тайлбар уншина.')}
+ <div class="seg" role="group" aria-label="Загвар" style="margin-bottom:14px">${MODELS.map((m,i)=>`<button data-model="${i}" aria-pressed="${G3.model===i}">${m.name}</button>`).join('')}</div>
+ <div class="stage" id="stageLab" style="height:clamp(380px,58vw,620px)"></div><div class="grid" style="margin-top:16px" id="labParts"></div></div></section>`}
+
+let game={tab:'mem'};
+function vGames(){return `<section class="band"><div class="wrap">${head('Идэвхжүүлэх тоглоом','Хичээлийн эхэнд сэдэлжүүлэх, төгсгөлд бататгах богино тоглоомууд.')}<div class="row" style="margin-bottom:22px">${subjSeg()}</div>
+ <div class="seg" role="group" aria-label="Тоглоом" style="margin-bottom:18px">${[['mem','Тааруулах'],['bin','Бинар код'],['tf','Үнэн үү, худал уу']].map(t=>`<button data-game="${t[0]}" aria-pressed="${game.tab===t[0]}">${t[1]}</button>`).join('')}</div><div id="gameBox"></div></div></section>`}
+function startGame(){
+ const b=$('#gameBox');if(!b)return;clearInterval(game.t);
+ if(game.tab==='mem'){const cards=PAIRS[S.subj].flatMap((p,i)=>[{k:i,t:p[0]},{k:i,t:p[1]}]).sort(()=>Math.random()-.5);game.m={cards,open:[],done:0,moves:0};
+  b.innerHTML=`<p>Нэр томьёо ба тайлбарыг хосло. <b class="mono" id="mv">0</b> нүүдэл</p><div class="mem">${cards.map((c,i)=>`<button data-mc="${i}" aria-label="Карт ${i+1}">${esc(c.t)}</button>`).join('')}</div>`}
+ else if(game.tab==='bin'){game.b={target:1+Math.floor(Math.random()*255),bits:Array(8).fill(0),lv:(game.b?.lv||0)};
+  b.innerHTML=`<p>Битүүдийг асааж, аравтын тоог хоёртын системээр бүтээ.</p><div class="row" style="gap:28px;margin-bottom:16px"><div><span class="small mut">Зорилго</span><div class="big">${game.b.target}</div></div><div><span class="small mut">Одоо</span><div class="big" style="color:var(--co)" id="bn">0</div></div><div><span class="small mut">Түвшин</span><div class="big">${game.b.lv}</div></div></div>
+  <div class="bits">${[128,64,32,16,8,4,2,1].map((v,i)=>`<button data-bit="${i}" aria-pressed="false">0<small>${v}</small></button>`).join('')}</div>`}
+ else{game.f={i:0,sc:0,left:45,list:[...TF].sort(()=>Math.random()-.5)};
+  b.innerHTML=`<div class="card" style="max-width:640px"><div class="row" style="justify-content:space-between"><span>Оноо <b class="mono" id="fs">0</b></span><span>Хугацаа <b class="mono" id="ft">45</b> сек</span></div><div class="q" id="fq"></div><div class="row"><button id="fT" style="background:var(--mint)">Үнэн</button><button id="fF" class="co">Худал</button></div></div>`;
+  showTF();game.t=setInterval(()=>{game.f.left--;const ft=$('#ft');if(!ft){clearInterval(game.t);return}ft.textContent=game.f.left;if(game.f.left<=0)endTF()},1000)}
+}
+function showTF(){const f=game.f;if(f.i>=f.list.length)return endTF();$('#fq').textContent=f.list[f.i][0]}
+function endTF(){clearInterval(game.t);const b=$('#gameBox');if(b)b.innerHTML=`<div class="big">${game.f.sc}/${game.f.list.length}</div><p style="margin-top:8px">Үнэн/худал тоглоом дууслаа.</p><button data-game="tf">Дахин тоглох</button>`}
+
+/* ================= TYPING ================= */
+const L=(s)=>s.split(' ');
+const MNK=Object.assign({Backquote:['=','+'],Digit1:['№','1'],Digit2:['-','2'],Digit3:['"','3'],Digit4:['₮','4'],Digit5:[':','5'],Digit6:['.','6'],Digit7:['_','7'],Digit8:[',','8'],Digit9:['%','9'],Digit0:['?','0'],Backslash:['\\','|'],Space:[' ',' ']},
+ ...[['Minus','е'],['Equal','щ'],['KeyQ','ф'],['KeyW','ц'],['KeyE','у'],['KeyR','ж'],['KeyT','э'],['KeyY','н'],['KeyU','г'],['KeyI','ш'],['KeyO','ү'],['KeyP','з'],['BracketLeft','к'],['BracketRight','ъ'],['KeyA','й'],['KeyS','ы'],['KeyD','б'],['KeyF','ө'],['KeyG','а'],['KeyH','х'],['KeyJ','р'],['KeyK','о'],['KeyL','л'],['Semicolon','д'],['Quote','п'],['KeyZ','я'],['KeyX','ч'],['KeyC','ё'],['KeyV','с'],['KeyB','м'],['KeyN','и'],['KeyM','т'],['Comma','ь'],['Period','в'],['Slash','ю']].map(([c,l])=>({[c]:[l,l.toUpperCase()]})));
+const ENK=Object.assign({Backquote:['`','~'],Digit1:['1','!'],Digit2:['2','@'],Digit3:['3','#'],Digit4:['4','$'],Digit5:['5','%'],Digit6:['6','^'],Digit7:['7','&'],Digit8:['8','*'],Digit9:['9','('],Digit0:['0',')'],Minus:['-','_'],Equal:['=','+'],BracketLeft:['[','{'],BracketRight:[']','}'],Backslash:['\\','|'],Semicolon:[';',':'],Quote:["'",'"'],Comma:[',','<'],Period:['.','>'],Slash:['/','?'],Space:[' ',' ']},
+ ...'qwertyuiopasdfghjklzxcvbnm'.split('').map(c=>({['Key'+c.toUpperCase()]:[c,c.toUpperCase()]})));
+const KROWS=[L('Backquote Digit1 Digit2 Digit3 Digit4 Digit5 Digit6 Digit7 Digit8 Digit9 Digit0 Minus Equal Backspace'),L('Tab KeyQ KeyW KeyE KeyR KeyT KeyY KeyU KeyI KeyO KeyP BracketLeft BracketRight Backslash'),L('CapsLock KeyA KeyS KeyD KeyF KeyG KeyH KeyJ KeyK KeyL Semicolon Quote Enter'),L('ShiftLeft KeyZ KeyX KeyC KeyV KeyB KeyN KeyM Comma Period Slash ShiftRight'),['Space']];
+const KW={Backspace:2,Tab:1.5,Backslash:1.5,CapsLock:1.8,Enter:2.2,ShiftLeft:2.3,ShiftRight:2.7,Space:7};
+const KN={Backspace:'⌫',Tab:'Tab',CapsLock:'Caps',Enter:'Enter',ShiftLeft:'Shift',ShiftRight:'Shift',Space:'Зай'};
+const FING={};[['Backquote Digit1 KeyQ KeyA KeyZ Tab CapsLock ShiftLeft',0],['Digit2 KeyW KeyS KeyX',1],['Digit3 KeyE KeyD KeyC',2],['Digit4 Digit5 KeyR KeyT KeyF KeyG KeyV KeyB',3],['Digit6 Digit7 KeyY KeyU KeyH KeyJ KeyN KeyM',4],['Digit8 KeyI KeyK Comma',5],['Digit9 KeyO KeyL Period',6],['Digit0 Minus Equal KeyP BracketLeft BracketRight Backslash Semicolon Quote Slash Enter ShiftRight Backspace',7],['Space',8]].forEach(([s,f])=>L(s).forEach(c=>FING[c]=f));
+const FNAME=['Зүүн чигчий','Зүүн ядам','Зүүн дунд','Зүүн долоовор','Баруун долоовор','Баруун дунд','Баруун ядам','Баруун чигчий','Эрхий'];
+const FCLS=['f1','f2','f3','f4','f4','f3','f2','f1','f5'];
+const HOMEK=['KeyF','KeyJ'];
+const TLES=[
+{id:'m1',lang:'mn',t:'Үндсэн мөр: зүүн гар',x:'өөө ббб ыыы ййй ааа өбө ыйы аөа бөө йыб ааө өба быа йаө ыөа бөб'},
+{id:'m2',lang:'mn',t:'Үндсэн мөр: баруун гар',x:'ррр ооо ллл ддд ххх ппп рор лдл хох пол дор хор роол лоор дохд'},
+{id:'m3',lang:'mn',t:'Үндсэн мөрийн үгс',x:'ах ор бол хол хөл дал өр бор хар ол долоо хорол ороо хорхой бөөр далд хөдөө'},
+{id:'m4',lang:'mn',t:'Дээд мөр',x:'нар гэр зун үг ус шүд хүн нүүр зураг цуг нэр үнэг хурдан шуурга хүүхэд гараа'},
+{id:'m5',lang:'mn',t:'Доод мөр',x:'чи сар мах тав ам ном төмс тос ямаа сав мянга бичиг утас компьютер чимээ тэмдэг'},
+{id:'m6',lang:'mn',t:'Том үсэг',x:'Монгол Улаанбаатар Дархан Эрдэнэт Сэлэнгэ Хөвсгөл Ховд Төв Өмнөговь Баян-Өлгий'},
+{id:'m7',lang:'mn',t:'Өгүүлбэр',x:'Монгол орон сайхан. Би өдөр бүр ном уншдаг. Эх орноо хайрлаж, хэлээ дээдэлье.'},
+{id:'m8',lang:'mn',t:'МТ нэр томьёо',x:'Компьютер бол мэдээлэл боловсруулах төхөөрөмж. Алгоритм нь алхмуудын дараалал юм. Нууц үгээ хэнд ч бүү хэл.'},
+{id:'m9',lang:'mn',t:'Иргэний ёс зүй',x:'Хүн бүр эрх тэгш. Бусдыг хүндэлж, үнэнээ хэлье. Хууль бүгдэд нэгэн адил үйлчилнэ.'},
+{id:'e1',lang:'en',t:'Home row',x:'asdf jkl; asdf jkl; fjfj dkdk slsl a;a; sad lad fad dad ask flask'},
+{id:'e2',lang:'en',t:'Top and bottom rows',x:'we try to write your report quick zone mix cave move van box'},
+{id:'e3',lang:'en',t:'Pangram',x:'The quick brown fox jumps over the lazy dog.'},
+{id:'e4',lang:'en',t:'IT words',x:'Computer science is the study of data, algorithms and networks.'}];
+const TL={lang:'mn',id:null,text:'',i:0,err:0,errs:new Set(),t0:null,done:false,iv:null};
+const KMAP=()=>TL.lang==='mn'?MNK:ENK;
+function keyFor(ch){const M=KMAP();for(const c in M){if(M[c][0]===ch)return{c,sh:false};if(M[c][1]===ch)return{c,sh:true}}return null}
+function vTyping(){
+ const list=TLES.filter(l=>l.lang===TL.lang);
+ return `<section class="band"><div class="wrap"><h2>Арван хуруугаар шивэх дасгал</h2>
+ <p class="mut">Хуруугаа үндсэн мөрөнд тавина: зүүн гар <b>Й Ы Б Ө</b>, баруун гар <b>Р О Л Д</b>. Ө ба Р товчны товгороор хуруугаа олно. Товчлуур руу биш, дэлгэц рүү харж шивээрэй.</p>
+ <div class="seg" role="group" aria-label="Гарын байрлал" style="margin-bottom:14px"><button data-tlang="mn" aria-pressed="${TL.lang==='mn'}">Монгол гар</button><button data-tlang="en" aria-pressed="${TL.lang==='en'}">Англи гар</button></div>
+ <div class="tlessons">${list.map((l,n)=>{const b=LS.get('tbest_'+l.id,null);return `<button data-tl="${l.id}" aria-pressed="${TL.id===l.id}"><b>${n+1}. ${esc(l.t)}</b><small>${b?`Шилдэг: ${b.wpm} үг/мин · ${b.acc}%`:'Эхлээгүй'}</small></button>`}).join('')}</div>
+ <div class="card"><div class="tstats"><span>Хурд<b id="tw">0</b> үг/мин</span><span>Нарийвчлал<b id="ta">100</b>%</span><span>Алдаа<b id="te">0</b></span><span>Хугацаа<b id="tt">0:00</b></span><div class="bar" style="flex:1 1 140px"><i id="tp" style="width:0"></i></div></div>
+ <div class="tbox"><div id="ttext" aria-live="off"></div><input id="tin" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Шивэх талбар"></div>
+ <div class="thint" id="thint"></div><div class="kb" id="kb" aria-hidden="true"></div>
+ <div class="legend row small"><span class="f1"><i></i>Чигчий</span><span class="f2"><i></i>Ядам</span><span class="f3"><i></i>Дунд</span><span class="f4"><i></i>Долоовор</span><span class="f5"><i></i>Эрхий</span></div></div>
+ <div class="grid" style="margin-top:18px;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))">
+ <div class="card"><h3>Зөв суух дадал</h3><ul><li>Нуруугаа тэгш, хөлөө шалан дээр тавина</li><li>Дэлгэцийн дээд хэсэг нүдний түвшинд байна</li><li>Бугуйгаа өргөж, хуруугаа нугалж барина</li><li>Хурдаас өмнө нарийвчлал: эхлээд 95%-аас дээш</li><li>Өдөр бүр 10–15 минут тогтмол дасгал хий</li></ul>
+ <p class="small mut">Компьютер дээр Монгол гар суугаагүй байсан ч товчны байрлалаар нь танина.</p></div>
+ <div class="card"><h3>Өөрийн текстээр дасгал хийх</h3><label for="tcx">Текст (600 тэмдэгт хүртэл)</label><textarea id="tcx" maxlength="600" placeholder="Хичээлийн текстээ энд буулгана уу"></textarea><div style="margin-top:10px"><button id="tCustom">Энэ текстээр эхлэх</button></div></div></div>
+ </div></section>`;
+}
+function tLoad(id,custom){
+ clearInterval(TL.iv);const l=TLES.find(x=>x.id===id);
+ Object.assign(TL,{id,text:custom||(l?l.x:''),i:0,err:0,errs:new Set(),t0:null,done:false});
+ document.querySelectorAll('[data-tl]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.tl===id));
+ const tx=$('#ttext');if(!tx)return;
+ tx.innerHTML=[...TL.text].map((c,i)=>`<span id="tc${i}">${c===' '?'&nbsp;':esc(c)}</span>`).join('')+'<wbr>';
+ tx.querySelectorAll('span').forEach(s=>{if(s.innerHTML==='&nbsp;')s.insertAdjacentHTML('afterend','<wbr>')});
+ tKb();tMark();tStats();
+}
+function tKb(){const M=KMAP(),kb=$('#kb');if(!kb)return;
+ kb.innerHTML=KROWS.map(r=>`<div class="kr">${r.map(c=>{const v=M[c],lab=KN[c]||(v?v[0].toUpperCase():''),sub=v&&!KN[c]&&v[1]!==v[0].toUpperCase()?`<small>${esc(v[1])}</small>`:'';
+  return `<div class="k ${FCLS[FING[c]]||''} ${HOMEK.includes(c)?'home':''}" id="k_${c}" style="flex-grow:${KW[c]||1}">${esc(lab)}${sub}</div>`}).join('')}</div>`).join('')}
+function tMark(){
+ document.querySelectorAll('#ttext .c').forEach(s=>s.classList.remove('c'));document.querySelectorAll('.k.next').forEach(k=>k.classList.remove('next'));
+ const h=$('#thint');if(TL.i>=TL.text.length){if(h)h.textContent='';return}
+ $('#tc'+TL.i)?.classList.add('c');const ch=TL.text[TL.i],k=keyFor(ch);
+ if(!k){if(h)h.textContent=`Дараагийн: «${ch}»`;return}
+ $('#k_'+k.c)?.classList.add('next');let sh='';
+ if(k.sh){const left=FING[k.c]<=3;const s=left?'ShiftRight':'ShiftLeft';$('#k_'+s)?.classList.add('next');sh=` + ${left?'баруун':'зүүн'} гарын Shift`}
+ if(h)h.textContent=ch===' '?'Дараагийн: зай — эрхий хуруу':`Дараагийн: «${ch}» — ${FNAME[FING[k.c]]} хуруу${sh}`;
+}
+function tStats(){
+ const sec=TL.t0?(Date.now()-TL.t0)/1000:0,wpm=sec>2?Math.round(TL.i/5/(sec/60)):0,acc=TL.i+TL.err?Math.round(TL.i/(TL.i+TL.err)*100):100;
+ const set=(id,v)=>{const e=$(id);if(e)e.textContent=v};
+ set('#tw',wpm);set('#ta',acc);set('#te',TL.err);set('#tt',`${Math.floor(sec/60)}:${String(Math.floor(sec%60)).padStart(2,'0')}`);
+ const p=$('#tp');if(p)p.style.width=(TL.text.length?TL.i/TL.text.length*100:0)+'%';
+ if(!$('#tw'))clearInterval(TL.iv);return{wpm,acc,sec};
+}
+function tType(ch,code){
+ if(TL.done||!TL.text)return;
+ if(!TL.t0){TL.t0=Date.now();TL.iv=setInterval(tStats,500)}
+ const exp=TL.text[TL.i];
+ if(ch===exp){const s=$('#tc'+TL.i);s?.classList.add(TL.errs.has(TL.i)?'x':'d');TL.i++}
+ else{TL.err++;TL.errs.add(TL.i);const k=code&&$('#k_'+code)||(keyFor(ch)&&$('#k_'+keyFor(ch).c));if(k){k.classList.add('bad');setTimeout(()=>k.classList.remove('bad'),220)}}
+ tMark();const st=tStats();
+ if(TL.i>=TL.text.length){TL.done=true;clearInterval(TL.iv);tFinish(st)}
+}
+function tFinish({wpm,acc,sec}){
+ const key='tbest_'+TL.id,b=LS.get(key,null),rec=TL.id!=='custom'&&(!b||wpm>b.wpm&&acc>=b.acc-3||acc>b.acc&&wpm>=b.wpm);
+ if(rec)LS.set(key,{wpm,acc});
+ const lst=TLES.filter(l=>l.lang===TL.lang),nx=lst[lst.findIndex(l=>l.id===TL.id)+1];
+ const msg=acc<90?'Хурдаас илүү нарийвчлалд анхаараарай. Удаан ч гэсэн товчлуур руу харалгүй шивж дасаарай.':wpm<15?'Сайн эхлэл! Өдөр бүр 10 минут дасгал хийвэл хурд тань хурдан нэмэгдэнэ.':wpm<30?'Сайн байна! Нарийвчлалаа хадгалж, хурдаа аажмаар нэмээрэй.':'Маш сайн! Та хурдан бөгөөд нарийвчлалтай шивж байна.';
+ modal(`<h2>Дасгал дууслаа</h2><div class="row" style="gap:32px;margin:10px 0 14px"><div><span class="small mut">Хурд</span><div class="big">${wpm}</div><span class="small">үг/мин</span></div><div><span class="small mut">Нарийвчлал</span><div class="big">${acc}%</div><span class="small">${TL.err} алдаа</span></div><div><span class="small mut">Хугацаа</span><div class="big">${Math.round(sec)}</div><span class="small">секунд</span></div></div>
+ ${rec?'<p class="note">Шинэ дээд амжилт!</p>':''}<p>${msg}</p><div class="row"><button id="tRestart">Дахин оролдох</button>${nx?`<button class="ghost" id="tNext" data-next="${nx.id}">Дараагийн: ${esc(nx.t)}</button>`:''}</div>`);
+}
+function tResolve(e){
+ const exp=TL.text[TL.i],M=KMAP(),v=M[e.code];let mapped=null;
+ if(v){const letter=v[0].toUpperCase()!==v[0];const caps=e.getModifierState&&e.getModifierState('CapsLock');mapped=v[(letter?e.shiftKey!==caps:e.shiftKey)?1:0]}
+ if(e.key===exp||mapped===exp)return exp;
+ return TL.lang==='mn'&&/[а-яёөү]/i.test(e.key)?e.key:(mapped||e.key);
+}
+function initTyping(){
+ if(!TL.id||!TLES.some(l=>l.id===TL.id&&l.lang===TL.lang)&&TL.id!=='custom')TL.id=TLES.find(l=>l.lang===TL.lang).id;
+ if(TL.id==='custom'&&TL.text){const t=TL.text;tLoad('custom',t)}else tLoad(TL.id);
+ const inp=$('#tin');
+ inp.addEventListener('keydown',e=>{if(e.ctrlKey||e.metaKey||e.altKey||e.key==='Tab')return;
+  if(e.key==='Backspace'||e.key==='Enter'){e.preventDefault();return}
+  if(e.key.length!==1)return;e.preventDefault();tType(tResolve(e),e.code)});
+ inp.addEventListener('input',()=>{const v=inp.value;inp.value='';for(const ch of v)tType(ch,null)});
+ if(matchMedia('(pointer:fine)').matches)inp.focus({preventScroll:true});
+}
+
+
+
+function vCases(){return `<section class="band"><div class="wrap">${head('Кэйс: бодит нөхцөл байдал','Нөхцөлийг уншаад сонголтоо хийнэ, дараа нь хэлэлцүүлгийн асуултаар ангиараа ярилцана.')}
+ <div class="grid">${CASES.map(c=>`<div class="card" style="display:flex;flex-direction:column;gap:8px"><span class="tag ${c.s}">${SHORT[c.s]} · ${esc(c.g)}-р анги</span><h3>${esc(c.t)}</h3><p class="mut small" style="margin:0">${esc(c.story.slice(0,96))}…</p><div class="row" style="margin-top:auto"><button data-case="${c.id}">Нээх</button><button class="ghost" data-cdoc="${c.id}">Word</button></div></div>`).join('')}</div></div></section>`}
+function openCase(id){const c=CASES.find(x=>x.id===id),mine=LS.get('vote_'+id,null);
+ modal(`<span class="tag ${c.s}">${SUBJ[c.s]} · ${esc(c.g)}-р анги</span><h2 style="margin-top:10px">${esc(c.t)}</h2><p style="font-size:17px">${esc(c.story)}</p>
+ <h3>Чи юу хийх вэ?</h3><div class="opts">${c.opts.map((o,i)=>`<button data-vote="${i}" data-cid="${c.id}" class="${mine===i?'right':''}">${esc(o)}</button>`).join('')}</div>
+ ${mine!=null?`<h3 style="margin-top:20px">Хэлэлцүүлэг</h3><ol>${c.qs.map(q=>`<li>${esc(q)}</li>`).join('')}</ol><label for="refl">Миний эргэцүүлэл</label><textarea id="refl">${esc(LS.get('refl_'+id,''))}</textarea>`:'<p class="small mut" style="margin-top:12px">Сонголтоо хийсний дараа хэлэлцүүлгийн асуулт нээгдэнэ.</p>'}`);
+ const r=$('#refl');if(r)r.oninput=e=>LS.set('refl_'+id,e.target.value)}
+const caseBlocks=c=>[{t:'h1',x:'Кэйс: '+c.t},{t:'meta',rows:[['Хичээл',SUBJ[c.s]],['Анги',c.g+'-р анги']]},{t:'h2',x:'Нөхцөл байдал'},{t:'p',x:c.story},{t:'h2',x:'Сонголтууд'},{t:'list',items:c.opts},{t:'h2',x:'Хэлэлцүүлгийн асуулт'},...c.qs.flatMap((q,i)=>[{t:'p',x:`${i+1}. ${q}`},{t:'lines',n:2}])];
+
+function vParents(){const g=S.grade,un=unitNow();
+ return `<section class="band"><div class="wrap">${head('Эцэг эхэд','Хүүхдийнхээ ангийг сонгоод энэ үеийн сэдэв, гэрээр хийх ажлыг харна уу.')}<div style="margin-bottom:22px">${gradePins()}</div>
+ <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr))">${['mt','ie'].map(s=>{const U=PROG[s][g][un];return `<div class="card"><span class="tag ${s}">${SUBJ[s]}</span><h3 style="margin-top:10px">${WHEN[un]}: ${esc(U.name)}</h3><ul>${U.lessons.map(l=>`<li>${esc(l)}</li>`).join('')}</ul><b>Гэрээр ярилцах асуулт</b><ul>${HOME_TALK[s].map(q=>`<li>${esc(q)}</li>`).join('')}</ul></div>`}).join('')}</div>
+ <div class="grid" style="margin-top:16px"><div class="card"><h3>Цахим аюулгүй байдал гэртээ</h3><ul><li>Дэлгэцийн цагийг хамтдаа тохиролцох</li><li>Унтлагын өрөөнд утас цэнэглэхгүй байх</li><li>Хүүхэд тань юу тоглож, хэнтэй харилцдагийг сонирхох</li><li>Асуудал гарвал загнахаас өмнө сонсох</li></ul></div>
+ <div class="card"><h3>Хүүхдийн явц</h3><p class="mut">Энэ төхөөрөмж дээр өгсөн сорилын сүүлийн дүн:</p>${(LS.get('hist',[]).slice(-4).map(h=>`<div class="meter"><div class="bar"><i style="width:${h.sc/h.n*100}%"></i></div><b class="mono">${h.sc}/${h.n}</b></div>`).join(''))||'<p class="mut">Одоогоор дүн алга.</p>'}</div></div></div></section>`}
+
+/* ================= COMMAND PALETTE ================= */
+let PIDX=null,psel=0,pres=[];
+function buildIndex(){const a=VIEWS.map(([k,n])=>({t:n,sub:'Хэсэг',go:()=>location.hash=k}));
+ for(const s in PROG)for(const g in PROG[s])PROG[s][g].forEach((U,u)=>{a.push({t:`${U.name}`,sub:`${SHORT[s]} ${g}-р анги · Нэгж ${u+1}`,go:()=>openDoc(s,+g,{type:'unit',u,l:0})});
+  U.lessons.forEach((l,i)=>a.push({t:l,sub:`${SHORT[s]} ${g}-р анги · ${u+1}.${i+1}`,go:()=>openDoc(s,+g,{type:'lesson',u,l:i})}))});
+ for(const s in PROG)for(const g in PROG[s])a.push({t:`${g}-р анги жилийн төлөвлөгөө`,sub:SUBJ[s],go:()=>openDoc(s,+g,{type:'year',u:0,l:0})});
+ WS.forEach(w=>a.push({t:w.t,sub:`${w.kind} · ${w.g}-р анги`,go:()=>{location.hash='materials';setTimeout(()=>openWS(w.id),50)}}));
+ CASES.forEach(c=>a.push({t:c.t,sub:'Кэйс',go:()=>{location.hash='cases';setTimeout(()=>openCase(c.id),50)}}));
+ TLES.forEach(l=>a.push({t:l.t,sub:'Шивэх дасгал',go:()=>{TL.lang=l.lang;TL.id=l.id;location.hash='typing';render()}}));return a}
+function openDoc(s,g,doc){S.subj=s;S.grade=g;S.doc=doc;save();if(location.hash!=='#program')location.hash='program';else render()}
+function openPal(){PIDX=PIDX||buildIndex();$('#palette').classList.add('open');const q=$('#pq');q.value='';palFilter();q.focus()}
+function palFilter(){const v=$('#pq').value.trim().toLowerCase(),words=v.split(/\s+/).filter(Boolean);
+ pres=(words.length?PIDX.filter(x=>{const h=(x.t+' '+x.sub).toLowerCase();return words.every(w=>h.includes(w))}):PIDX.slice(0,9)).slice(0,40);psel=0;palDraw()}
+function palDraw(){$('#pl').innerHTML=pres.length?pres.map((x,i)=>`<li><button data-pi="${i}" class="${i===psel?'sel':''}" role="option" aria-selected="${i===psel}">${esc(x.t)}<small>${esc(x.sub)}</small></button></li>`).join(''):'<li class="empty" style="margin:8px">Илэрц олдсонгүй</li>';
+ $('#pl .sel')?.scrollIntoView({block:'nearest'})}
+$('#pq').addEventListener('input',palFilter);
+$('#pq').addEventListener('keydown',e=>{if(e.key==='ArrowDown'){e.preventDefault();psel=Math.min(pres.length-1,psel+1);palDraw()}else if(e.key==='ArrowUp'){e.preventDefault();psel=Math.max(0,psel-1);palDraw()}else if(e.key==='Enter'&&pres[psel]){e.preventDefault();const x=pres[psel];closeModal();x.go()}});
+addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openPal()}else if(e.key==='Escape')closeModal()});
+
+/* ================= 3D ================= */
+const MODELS=[
+{name:'Компьютерийн дотор',parts:[['Эх хавтан','Бүх эд ангийг холбох үндсэн хавтан.',0x0f8a64,[6,.2,4.4],[0,0,0]],['Төв процессор (CPU)','Командыг гүйцэтгэх «тархи». Секундэд тэрбум үйлдэл хийнэ.',0xd5d9e4,[1.1,.25,1.1],[-1,.25,-.5]],['Сэнс','Процессорыг хөргөнө.',0x2a3150,'fan',[-1,.75,-.5]],['Шуурхай санах ой (RAM)','Ажиллаж буй програмын түр санах ой. Тэжээл тасрахад арилна.',0x2f45ff,[.18,1,2.2],[.6,.6,-.6]],['RAM 2','Хоёр дахь санах ойн самбар.',0x2f45ff,[.18,1,2.2],[.95,.6,-.6]],['Видео карт (GPU)','Зураг, видео, 3D дүрслэлийг боловсруулна.',0xff5b3a,[3.4,.5,1.1],[-.6,.45,1.3]],['SSD хадгалах төхөөрөмж','Файл, програмыг удаан хугацаанд хадгална.',0xffc83a,[1.2,.12,.5],[2,.2,1.4]],['Тэжээлийн блок','Цахилгааныг компьютерт тохирох хүчдэл болгон хувиргана.',0x5a6280,[1.6,1.1,1.4],[2.1,.7,-1.3]]]},
+{name:'Сүлжээний топологи',net:true,parts:[]},
+{name:'Төрийн гурван салаа',parts:[['Ард түмэн','Монгол Улсад төрийн бүх эрх ард түмний мэдэлд байна (Үндсэн хууль).',0xe9edf5,[6.4,.4,3.2],[0,0,0]],['Улсын Их Хурал','Хууль тогтоох эрх мэдэл. 126 гишүүнтэй, хуулиа батална.',0x2f45ff,'col',[-2.2,1.6,0]],['Засгийн газар','Гүйцэтгэх эрх мэдэл. Хуулийг хэрэгжүүлж, төрийн ажлыг удирдана.',0xff5b3a,'col',[0,1.6,0]],['Шүүх','Шүүх эрх мэдэл. Маргааныг хуулийн дагуу хараат бусаар шийднэ.',0x00c08b,'col',[2.2,1.6,0]],['Үндсэн хууль','Улсын дээд хууль — гурван салааг нэг дор барина.',0xffffff,'roof',[0,3.55,0]]]}];
+const NETS={'Од':'star','Цагираг':'ring','Бүрэн холбоот':'mesh','Шугам':'bus'};
+const G3={ok:!!window.THREE,model:0,net:'star',rx:.55,ry:.6,zoom:11,auto:!reduce,sel:null,meshes:[]};
+if(G3.ok){try{
+ const R=new THREE.WebGLRenderer({antialias:true,alpha:true});R.setPixelRatio(Math.min(2,devicePixelRatio));G3.R=R;
+ const sc=new THREE.Scene(),cam=new THREE.PerspectiveCamera(42,1,.1,100);G3.sc=sc;G3.cam=cam;
+ sc.add(new THREE.HemisphereLight(0xe6ebff,0x141c4a,1.05));const dl=new THREE.DirectionalLight(0xffffff,.9);dl.position.set(4,8,6);sc.add(dl);const rim=new THREE.DirectionalLight(0x6f80ff,.5);rim.position.set(-6,2,-6);sc.add(rim);
+ G3.root=new THREE.Group();sc.add(G3.root);G3.ray=new THREE.Raycaster();
+ const el=R.domElement;let drag=null,moved=0;
+ el.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY};moved=0;G3.auto=false;el.setPointerCapture(e.pointerId)});
+ el.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;moved+=Math.abs(dx)+Math.abs(dy);G3.ry+=dx*.01;G3.rx=Math.max(-.4,Math.min(1.35,G3.rx+dy*.01));drag={x:e.clientX,y:e.clientY}});
+ el.addEventListener('pointerup',e=>{if(drag&&moved<6)pick(e);drag=null});
+ el.addEventListener('wheel',e=>{e.preventDefault();G3.zoom=Math.max(6,Math.min(18,G3.zoom+e.deltaY*.01))},{passive:false});
+ const loop=()=>{requestAnimationFrame(loop);if(!G3.host||!G3.host.isConnected)return;if(G3.auto)G3.ry+=.003;
+  G3.root.rotation.set(G3.rx,G3.ry,0);cam.position.set(0,0,G3.zoom);cam.lookAt(0,0,0);if(G3.fan)G3.fan.rotation.y+=.15;R.render(sc,cam)};loop();
+ new ResizeObserver(()=>size3D()).observe(document.body);
+}catch(e){G3.ok=false}}
+function size3D(){if(!G3.ok||!G3.host)return;const w=G3.host.clientWidth,h=G3.host.clientHeight;if(!w||!h)return;G3.R.setSize(w,h,false);G3.cam.aspect=w/h;G3.cam.updateProjectionMatrix()}
+function build3D(){
+ if(!G3.ok)return;const T=THREE,root=G3.root;while(root.children.length)root.remove(root.children[0]);G3.fan=null;G3.meshes=[];G3.sel=null;
+ const grid=new T.GridHelper(16,32,0x4b5dff,0x1c2766);grid.position.y=-.35;root.add(grid);
+ const M=MODELS[G3.model];
+ const add=(geo,col,pos,name,info)=>{const m=new T.Mesh(geo,new T.MeshStandardMaterial({color:col,roughness:.45,metalness:.2}));m.position.set(...pos);m.userData={name,info};root.add(m);G3.meshes.push(m);return m};
+ if(M.net){const N=6,pts=[],typ=G3.net;
+  if(typ==='star'){pts.push([0,0,0]);for(let i=0;i<N;i++){const a=i/N*Math.PI*2;pts.push([Math.cos(a)*3.2,Math.sin(a*2)*.5,Math.sin(a)*3.2])}}
+  else if(typ==='bus'){for(let i=0;i<N;i++)pts.push([-4+i*1.6,i%2?1:-1,0])}else for(let i=0;i<N;i++){const a=i/N*Math.PI*2;pts.push([Math.cos(a)*3,0,Math.sin(a)*3])}
+  pts.forEach((p,i)=>{const hub=typ==='star'&&i===0;add(hub?new T.BoxGeometry(1.2,.6,1.2):new T.SphereGeometry(.45,32,20),hub?0xffc83a:i%2?0x7d8cff:0xff5b3a,p,hub?'Свич (төв төхөөрөмж)':`Компьютер ${typ==='star'?i:i+1}`,hub?'Од топологид бүх төхөөрөмж төвөөр дамжиж холбогдоно. Төв эвдэрвэл сүлжээ тасарна.':'Сүлжээний зангилаа (хост). IP хаягаар танигдана.')});
+  const ln=[],L=(a,b)=>ln.push(new T.Vector3(...pts[a]),new T.Vector3(...pts[b]));
+  if(typ==='star')for(let i=1;i<pts.length;i++)L(0,i);if(typ==='ring')for(let i=0;i<N;i++)L(i,(i+1)%N);if(typ==='mesh')for(let i=0;i<N;i++)for(let j=i+1;j<N;j++)L(i,j);
+  if(typ==='bus'){ln.push(new T.Vector3(-4.6,0,0),new T.Vector3(4.6,0,0));pts.forEach(p=>ln.push(new T.Vector3(p[0],0,0),new T.Vector3(...p)))}
+  root.add(new T.LineSegments(new T.BufferGeometry().setFromPoints(ln),new T.LineBasicMaterial({color:0xffffff})));
+ }else M.parts.forEach(([n,info,col,g,pos])=>{let geo;
+  if(g==='fan')geo=new T.CylinderGeometry(.5,.5,.25,32);else if(g==='col')geo=new T.CylinderGeometry(.55,.65,2.8,32);else if(g==='roof')geo=new T.CylinderGeometry(.01,3.9,1.3,4,1);else geo=new T.BoxGeometry(...g);
+  const m=add(geo,col,pos,n,info);if(g==='fan')G3.fan=m;if(g==='roof')m.rotation.y=Math.PI/4});
+ info3D(null);parts3D();
+}
+function pick(e){const r=G3.R.domElement.getBoundingClientRect();const v=new THREE.Vector2((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);G3.ray.setFromCamera(v,G3.cam);const hit=G3.ray.intersectObjects(G3.meshes)[0];select(hit?hit.object:null)}
+function select(m){G3.meshes.forEach(x=>{x.material.emissive.setHex(0);x.scale.set(1,1,1)});G3.sel=m;if(m){m.material.emissive.setHex(0x2a2a10);m.scale.set(1.08,1.08,1.08)}info3D(m)}
+function info3D(m){const h=G3.host&&G3.host.querySelector('.info3d');if(!h)return;const M=MODELS[G3.model];
+ h.innerHTML=m?`<b>${esc(m.userData.name)}</b>${esc(m.userData.info)}`:`<b>${esc(M.name)}</b>${M.net?'Топологи сонгоод, зангилаа дээр дарна уу.':'Хэсэг дээр дарж тайлбарыг уншина уу.'}`}
+function parts3D(){const el=$('#labParts');if(!el||!G3.ok)return;
+ el.innerHTML=G3.meshes.filter((m,i,a)=>a.findIndex(x=>x.userData.name===m.userData.name)===i).map(m=>`<button class="card" style="color:var(--ink);text-align:start;flex-direction:column;align-items:flex-start;font-weight:400" data-part="${G3.meshes.indexOf(m)}"><b style="color:var(--pri);font-weight:600">${esc(m.userData.name)}</b><span class="small mut">${esc(m.userData.info)}</span></button>`).join('')}
+function mount3D(id){const host=document.getElementById(id);if(!host)return;G3.host=host;
+ if(!G3.ok){host.innerHTML='<div class="nogl">Энэ төхөөрөмж дээр 3D дүрслэл ажиллахгүй байна. Бусад хэсгийг ашиглах боломжтой.</div>';return}
+ host.innerHTML='<div class="info3d"></div><div class="hud"></div>';host.prepend(G3.R.domElement);
+ host.querySelector('.hud').innerHTML=(id==='stageHome'?MODELS.map((m,i)=>`<button class="chip" data-model="${i}" aria-pressed="${G3.model===i}">${m.name}</button>`).join(''):'')+(MODELS[G3.model].net?Object.keys(NETS).map(k=>`<button class="chip" data-net="${NETS[k]}" aria-pressed="${G3.net===NETS[k]}">${k}</button>`).join(''):'')+`<button class="chip" data-zoom="-1" aria-label="Ойртуулах">＋</button><button class="chip" data-zoom="1" aria-label="Холдуулах">－</button>`;
+ size3D();build3D()}
+
+/* ================= ROUTER & EVENTS ================= */
+function render(){
+ const v=(location.hash||'#home').slice(1);S.view=VIEWS.some(x=>x[0]===v)?v:'home';
+ $('#nav').innerHTML=VIEWS.map(([k,n])=>`<a href="#${k}" ${S.view===k?'aria-current="page"':''}>${n}</a>`).join('');
+ $('#app').innerHTML={home:vHome,program:vProgram,test:vTest,materials:vMaterials,lab:vLab,games:vGames,typing:vTyping,cases:vCases,parents:vParents}[S.view]();
+ if(S.view==='home'){mount3D('stageHome');homeAnim()}if(S.view==='lab')mount3D('stageLab');if(S.view==='games')startGame();if(S.view==='typing')initTyping();
+ $('#nav [aria-current]')?.scrollIntoView({block:'nearest',inline:'nearest'});
+}
+addEventListener('hashchange',()=>{closeModal();render();scrollTo(0,0)});
+$('#kOpen').onclick=openPal;
+document.addEventListener('click',e=>{
+ const t=e.target.closest('button');if(!t)return;const d=t.dataset;
+ if(d.close!==undefined)return closeModal();
+ if(t.id==='kOpen2')return openPal();
+ if(d.pi!==undefined){const x=pres[+d.pi];closeModal();return x&&x.go()}
+ if(d.role){S.role=d.role;save();render();return}
+ if(d.subj){S.subj=d.subj;save();render();return}
+ if(d.grade){S.grade=+d.grade;save();render();return}
+ if(d.doc){const p=d.doc.split('-');S.doc={type:p[0],u:+p[1]||0,l:+p[2]||0};render();if(innerWidth<980)$('#paper')?.scrollIntoView({block:'start'});return}
+ if(t.id==='dPrev')return stepDoc(-1);if(t.id==='dNext')return stepDoc(1);
+ if(t.id==='dPrint'){const D=curDoc();return printDoc(D.B,D.name)}
+ if(t.id==='dWord'){const D=curDoc();return wordDoc(D.B,D.name)}
+ if(t.id==='qStart')return runQuiz();
+ if(d.ans!==undefined)return answer(+d.ans);
+ if(d.tdoc!==undefined){const k=d.tdoc==='1',B=testBlocks(k),n=fname(`${SHORT[S.subj]} ${band(S.grade)}-р анги ${k?'Сорилын түлхүүр':'Сорил'}`);return d.fmt==='word'?wordDoc(B,n):printDoc(B,n)}
+ if(d.ws)return openWS(d.ws);
+ if(d.wsdoc){const w=WS.find(x=>x.id===d.wsdoc);const n=fname(`${SHORT[w.s]} ${w.g}-р анги ${w.t}`);return d.fmt==='word'?wordDoc(wsBlocks(w),n):printDoc(wsBlocks(w),n)}
+ if(d.cdoc){const c=CASES.find(x=>x.id===d.cdoc);return wordDoc(caseBlocks(c),fname('Кэйс '+c.t))}
+ if(d.model!==undefined){G3.model=+d.model;if(S.view==='lab')render();else mount3D(G3.host.id);return}
+ if(d.net){G3.net=d.net;mount3D(G3.host.id);return}
+ if(d.zoom){G3.zoom=Math.max(6,Math.min(18,G3.zoom+ +d.zoom*1.5));return}
+ if(d.part!==undefined){select(G3.meshes[+d.part]);G3.host.scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'});return}
+ if(d.game){game.tab=d.game;if(S.view==='games'){document.querySelectorAll('[data-game]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.game===game.tab));startGame()}return}
+ if(d.mc!==undefined){const m=game.m,i=+d.mc;if(t.classList.contains('up')||t.classList.contains('done')||m.open.length>=2)return;
+  t.classList.add('up');m.open.push(i);if(m.open.length===2){m.moves++;$('#mv').textContent=m.moves;const[a,b]=m.open,ba=document.querySelector(`[data-mc="${a}"]`),bb=document.querySelector(`[data-mc="${b}"]`);
+   if(m.cards[a].k===m.cards[b].k){ba.className=bb.className='done';m.open=[];m.done++;if(m.done===PAIRS[S.subj].length)setTimeout(()=>$('#gameBox').insertAdjacentHTML('beforeend',`<p style="margin-top:16px"><b>Баяр хүргэе!</b> ${m.moves} нүүдлээр дуусгалаа. <button data-game="mem">Дахин</button></p>`),300)}
+   else setTimeout(()=>{ba.classList.remove('up');bb.classList.remove('up');m.open=[]},900)}return}
+ if(d.bit!==undefined){const b=game.b,i=+d.bit;b.bits[i]^=1;t.setAttribute('aria-pressed',!!b.bits[i]);t.firstChild.textContent=b.bits[i];
+  const n=b.bits.reduce((s,v,j)=>s+v*(128>>j),0);$('#bn').textContent=n;if(n===b.target){b.lv++;toast('Зөв! Дараагийн тоо');setTimeout(startGame,700)}return}
+ if(t.id==='fT'||t.id==='fF'){const f=game.f;if(f.list[f.i][1]===(t.id==='fT'?1:0))f.sc++;$('#fs').textContent=f.sc;f.i++;showTF();return}
+ if(d.tlang){TL.lang=d.tlang;TL.id=null;render();return}
+ if(d.tl){tLoad(d.tl);$('#tin')?.focus({preventScroll:true});return}
+ if(t.id==='tRestart'){closeModal();tLoad(TL.id,TL.id==='custom'?TL.text:null);$('#tin')?.focus({preventScroll:true});return}
+ if(t.id==='tNext'){closeModal();tLoad(d.next);$('#tin')?.focus({preventScroll:true});return}
+ if(t.id==='tCustom'){const v=($('#tcx').value||'').replace(/\s+/g,' ').trim().slice(0,600);if(!v)return toast('Текст оруулна уу');TL.lang=/[а-яёөү]/i.test(v)?'mn':'en';TL.id='custom';TL.text=v;render();$('#tin')?.focus({preventScroll:true});return}
+ if(d.case)return openCase(d.case);
+ if(d.vote!==undefined){LS.set('vote_'+d.cid,+d.vote);return openCase(d.cid)}
+});
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+$('#palette').addEventListener('click',e=>{if(e.target.id==='palette')closeModal()});
+render();
+(async()=>{try{if(window.claude&&claude.use)C.dl=await claude.use('downloads')}catch(e){}})();
+}
+</script>
+</body>
+</html>
