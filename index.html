@@ -121,6 +121,9 @@ label{font-weight:600;font-size:14.5px;display:block;margin:10px 0 4px}
 .paper ul{margin:4px 0 10px;padding-left:22px}.paper p{white-space:pre-line;max-width:none}
 .paper .ln{border-bottom:1px solid #999;height:28px}
 .flag{display:flex;gap:10px;align-items:flex-start;background:light-dark(#fff4ef,#2a1612);border:1px solid light-dark(#ffd2c4,#5a2a20);color:var(--ink);border-radius:14px;padding:12px 14px;font-size:14px;margin-bottom:16px;max-width:860px;margin-inline:auto}
+.flag.ok{background:light-dark(#ecfbf4,#0d2a20);border-color:light-dark(#b9eed6,#1f5a43)}.flag.ok::before{background:var(--mint)}
+.tch{font:700 12.5px Onest,sans-serif;text-transform:none;color:var(--co);margin:16px 10px 2px}.tsub{font-weight:700;font-size:13.5px;color:var(--mut);margin:10px 10px 2px}
+.tree button small{color:var(--mut);font-weight:500;margin-inline-start:auto;font-family:"JetBrains Mono",monospace;font-size:12px}
 .flag::before{content:"";flex:none;width:8px;height:8px;margin-top:7px;border-radius:50%;background:var(--co)}
 /* quiz, games */
 .q{font-size:20px;font-weight:600;margin:12px 0 14px}
@@ -310,6 +313,12 @@ const WS=[
 const HOME_TALK={mt:['Өнөөдөр компьютерийн ангид юу бүтээсэн бэ?','Интернэтэд ямар мэдээлэл нийтэлж болохгүй вэ?','Чиний мэддэг нэг алгоритм (жишээ нь цай чанах алхмууд) хэлээд өгөөч?'],ie:['Өнөөдөр ангидаа ямар асуудлыг хэлэлцсэн бэ?','Чи шударга бус зүйл харвал юу хийх вэ?','Манай гэр бүлийн үнэт зүйл юу гэж бодож байна?']};
 
 
+BANK['ie|6–7']=[['Үндэсний бичиг, үсгийн баярыг 2004 оноос хойш жил бүр хэзээ тэмдэглэдэг вэ?',['Тавдугаар сарын эхний ням гарагт','Есдүгээр сарын 1-нд','Арванхоёрдугаар сарын 29-нд','Долдугаар сарын 11-нд'],0],['Монгол бахархлын өдөр нь хэний мэндэлсэн өдөр вэ?',['Эзэн Чингис хаан','Өгөөдэй хаан','Хубилай хаан','Өндөр гэгээн Занабазар'],0],['Удирдамжид «сэрэмж» гэж юуг хэлсэн бэ?',['Буруу үйлдэл хийхгүй, зөвийг л хийнэ гэж бодон хянан болгоомжлох','Бусдын алдааг хайх','Шүүмжлэлд гомдох','Магтаалд хөөрөх'],0],['Бие, хэл, сэтгэлийн үйлдлийг ажиглан сэрэмжлэхийг хэдэн төрөлд ангилдаг вэ? (үйлдлийн өмнө, үед, дараа)',['2','3','4','5'],1],['Аль нь мэдрэхүйн эрхтний мэдрэмжид хамаарахгүй вэ?',['Хараа','Сонсгол','Хүрэлцэхүй','Санах ой'],3],['Шүүмжлэлийг хэрхэн хүлээж авахыг хөтөлбөрт заасан бэ?',['Шүүмжлэлийг зөвлөгөө, шаардлагыг хүсэлт хэмээн хүлээж авах','Шууд эсэргүүцэх','Үл тоомсорлох','Гомдож уурлах'],0],['Монгол зарчимд магтах, муушаах үгийн аль тал нь сайн гэдэг вэ?',['Магтах үгийн далд нь, муушаах үгийн ил нь','Магтах үгийн ил нь, муушаах үгийн далд нь','Хоёулаа ил нь','Хоёулаа далд нь'],0]];
+BANK['ie|8–9']=[['Бурхан багшийн их дүйчэн өдрийг хэзээ тэмдэглэдэг вэ?',['Зуны тэргүүн сарын арван тавнд','Өвлийн эхэн сарын шинийн нэгэнд','Хаврын сүүл сарын хорин тавнд','Намрын дунд сарын наймнд'],0],['Өөрийн гэмийг танин мэдэх, засахыг хөтөлбөрт ямар орчинд авч үздэг вэ?',['Гэр бүл, найз нөхөд, сургуулийн орчинд','Зөвхөн сургуульд','Зөвхөн гэрт','Цахим орчинд'],0],['Аль нь хөтөлбөрт дурдсан дээл хувцасны төрөлд ордоггүй вэ?',['Гоёлын','Төр ёсны','Ястны','Спортын'],3],['Монгол мал юуны салшгүй холбоонд өсөн үрждэг гэж хөтөлбөрт заасан бэ?',['Байгаль, хүн, мал гурвын','Хот, хөдөөгийн','Зах зээлийн','Технологийн'],0],['Эцэг малыг зөв сонгох нь юунд чухал вэ?',['Малын удамшилд','Малын үнэд','Тэжээлийн хэмнэлтэд','Малын өнгөнд'],0],['Сэтгэлээ барихад аль хоёрыг хослуулдаг вэ?',['Санах, хянах','Уйлах, инээх','Унтах, сэрэх','Ярих, бичих'],0]];
+BANK['ie|10–12']=[['Билгийн тоолол аль сараас эхэлдэг вэ?',['Барс сар','Луу сар','Хулгана сар','Морин сар'],0],['Монгол цаг тооллоор жил, сар, өдрийг хэдэн жилээр тоолдог вэ?',['10','12','60','9'],1],['Аль нь «Дөрвөн үнэн»-д ордоггүй вэ?',['Зовлон үнэн','Хорихуйн үнэн','Мөрийн үнэн','Баярлахуйн үнэн'],3],['Хөтөлбөрт мэргэжлийн ёс зүйн жишээ болгон аль мэргэжлүүдийг дурдсан бэ?',['Багш, эмч, цагдаа','Тогооч, жолооч, худалдагч','Барилгачин, уурхайчин, малчин','Тамирчин, дуучин, жүжигчин'],0],['10-р ангид «Өөрийгөө таньж, хөгжүүлье» бүлэгт ямар хоёр ойлголтыг дадуулдаг вэ?',['Арга, билиг','Хууль, журам','Мөнгө, хөрөнгө','Спорт, урлаг'],0],['Монгол гэрийн ёсны хүрээнд аль нь хөтөлбөрт ордог вэ?',['Гэр барих, буулгах, ачих ёс','Орон сууцны зээл','Гэрийн үнэ тогтоох','Гэр түрээслэх журам'],0]];
+HOME_TALK.ie=['Өнөөдөр ёс зүйн хичээлээр ямар дасгал хийсэн бэ? Хамтдаа давтаж үзье.','Өнөөдөр бие, хэл, сэтгэлээрээ ямар сайн үйл хийв? Ямар алдаа гаргав, хэрхэн засах вэ?','Манай гэр бүл, ураг удмын уламжлалт ёс заншлаас юуг мэдэх вэ?'];
+PAIRS.ie=[['Ажиглалт','Бие, хэл, сэтгэлээр юу хийж байгаагаа бодох'],['Сэрэмж','Буруу үйлдэл хийхгүй гэж хянан болгоомжлох'],['Мэдрэхүй','Амт, үнэр, сонсгол, хараа, хүрэлцэхүй'],['Угийн бичиг','Ураг удмаа тэмдэглэн хөтөлдөг уламжлал'],['Дөрвөн үнэн','Зовлон, шалтгаан, хорихуй, мөрийн үнэн'],['Билгийн тоолол','Барс сараас эхэлдэг']];
+TF.splice(0,TF.length,...TF.filter(x=>!/Хурал|18 нас|Хүүхэд ч|Ялгаварлан|Татвар/.test(x[0])),['Үндэсний бичиг, үсгийн баярыг тавдугаар сарын эхний ням гарагт тэмдэглэдэг.',1],['Билгийн тоолол луу сараас эхэлдэг.',0],['Шүүмжлэлийг зөвлөгөө хэмээн хүлээж авах нь тэсвэр тэвчээрт суралцахад тустай.',1],['Монгол зарчмаар магтах үгийн ил нь, муушаах үгийн далд нь сайн.',0],['Монгол бахархлын өдөр нь Эзэн Чингис хааны мэндэлсэн өдөр.',1],['«Дөрвөн үнэн»-д зовлон үнэн ордог.',1]);
 const METH={mt:['Үзүүлэн, туршилт','Дадлага ажил (компьютер дээр)','Хосоор ажиллах','Асуудал шийдвэрлэх','Төсөлт ажил','Тархины шуурга','Багаар ажиллах','Алхам алхмаар заавар'],
  ie:['Кейс аргачлал','Хэлэлцүүлэг','Дүрд тоглох','Тархины шуурга','Мэтгэлцээн','Багаар ажиллах','Хосоор ажиллах','Төсөлт ажил']};
 
@@ -369,40 +378,86 @@ function printDoc(B,name){
 const fname=s=>s.replace(/[\\/:*?"<>|]+/g,'').replace(/\s+/g,' ').trim();
 
 /* ================= CURRICULUM DOCS ================= */
+let IE=null,IEERR=false;
+fetch('data/ie.json').then(r=>{if(!r.ok)throw 0;return r.json()}).then(d=>{IE=d;PIDX=null;if(['program','home','parents'].includes(S.view))render()}).catch(()=>{IEERR=true;if(S.view==='program')render()});
+function STRUCT(s,g){
+ if(s==='ie'){if(!IE)return null;const units=[];let cum=0;
+  IE[g].forEach(ch=>ch.subs.forEach(sb=>sb.units.forEach(u=>{const lessons=u.lessons.map(l=>{const o={t:l.objs.map(x=>x.t).join('; '),objs:l.objs,h:l.h,start:cum};cum+=l.h;return o});units.push({ch:ch.n,sub:sb.n,name:u.n,h:u.h,ref:u.ref,guide:u.guide,lessons})})));
+  return{official:true,units,total:cum}}
+ const units=PROG.mt[g].map((U,u)=>({ch:null,sub:null,name:U.name,h:8,lessons:U.lessons.map((t,i)=>({t,h:2,start:(u*4+i)*2,objs:[{t,ex:null}]}))}));
+ return{official:false,units,total:32}}
+const wk=(st,h)=>{const a=Math.floor(st/2)+1,b=Math.ceil((st+h)/2);return a===b?String(a):`${a}–${b}`};
+const MWK=[4,4,4,4,3,4,4,3,3],MNAME=[9,10,11,12,1,2,3,4,5];
+const monthOf=w=>{let c=0;for(let i=0;i<9;i++){c+=MWK[i];if(w<=c)return MNAME[i]}return 5};
+const monthsOf=(st,h)=>{const a=monthOf(Math.floor(st/2)+1),b=monthOf(Math.ceil((st+h)/2));return a===b?`${a}-р сар`:`${a}–${b}-р сар`};
+function schoolWeek(){const d=new Date(),y=d.getMonth()>=7?d.getFullYear():d.getFullYear()-1,st=new Date(y,8,1);const w=Math.floor((d-st)/6048e5)+1;return d.getMonth()>=5&&d.getMonth()<=7?1:Math.max(1,Math.min(33,w))}
+function curUnit(s,g){const st=STRUCT(s,g);if(!st)return null;const h=(schoolWeek()-1)*2;let k=0;st.units.forEach((u,i)=>{if(u.lessons[0].start<=h)k=i});return{st,i:k,u:st.units[k]}}
+function groups(st){if(!st.official)return st.units.map((u,i)=>({n:u.name,when:WHEN[i]}));const m=[];st.units.forEach(u=>{let x=m.find(y=>y.n===u.sub);if(!x){x={n:u.sub,st:u.lessons[0].start,h:0};m.push(x)}x.h+=u.h});return m.map(x=>({n:x.n.replace(/^\d+\.\d+\.\s*/,''),when:monthsOf(x.st,x.h)}))}
+/* --- МТ (жишээ) төлөвлөгөө --- */
 function plan(s,g,u,l){
  const U=PROG[s][g][u],T=U.lessons[l],k=u*4+l,m=METH[s][k%METH[s].length];
- return {T,U,m,
-  zorilt:s==='mt'?`«${T}» сэдвийн үндсэн ойлголтыг тайлбарлаж, компьютер дээр дадлага хийн хэрэглэх.`:`«${T}» сэдвийн үндсэн ойлголтыг тайлбарлаж, амьдралын жишээнд дүн шинжилгээ хийн үнэлэх.`,
-  goal:`Сурагчид «${T}» сэдвийн гол ойлголтыг өөрийн үгээр тайлбарлаж, ${s==='mt'?'практик даалгавар гүйцэтгэн':'кейс, жишээн дээр ярилцан'} хэрэглэх чадвартай болно.`,
-  crit:[`«${T}» сэдвийн гол нэр томьёог зөв тайлбарласан`,s==='mt'?'Практик даалгаврыг алхам алдалгүй гүйцэтгэсэн':'Жишээ нөхцөлд үндэслэлтэй дүгнэлт хийсэн','Хос, багийн ажилд идэвхтэй, хүндэтгэлтэй оролцсон'],
-  mat:s==='mt'?'Компьютер, проектор, ажлын хуудас, сайтын «3D лаб», «Шивэх дасгал»':'Проектор, ажлын хуудас, кейсийн карт, сайтын «Кэйс» хэсэг',
-  flow:[['Сэдэлжүүлэх',`Сэдэвтэй холбоотой асуулт тавьж, өмнөх мэдлэгийг сэргээнэ. Хичээлийн зорилгыг танилцуулна.`,'Асуултад хариулж, таамаглал, туршлагаа хуваалцана.','10 мин'],
+ return {T,U,m,zorilt:`«${T}» сэдвийн үндсэн ойлголтыг тайлбарлаж, компьютер дээр дадлага хийн хэрэглэх.`,
+  goal:`Сурагчид «${T}» сэдвийн гол ойлголтыг өөрийн үгээр тайлбарлаж, практик даалгавар гүйцэтгэн хэрэглэх чадвартай болно.`,
+  crit:[`«${T}» сэдвийн гол нэр томьёог зөв тайлбарласан`,'Практик даалгаврыг алхам алдалгүй гүйцэтгэсэн','Хос, багийн ажилд идэвхтэй, хүндэтгэлтэй оролцсон'],
+  mat:'Компьютер, проектор, ажлын хуудас, сайтын «3D лаб», «Шивэх дасгал»',
+  flow:[['Сэдэлжүүлэх','Сэдэвтэй холбоотой асуулт тавьж, өмнөх мэдлэгийг сэргээнэ. Хичээлийн зорилгыг танилцуулна.','Асуултад хариулж, таамаглал, туршлагаа хуваалцана.','10 мин'],
    ['Шинэ мэдлэг',`«${T}» сэдвийн гол ойлголтыг үзүүлэн, жишээгээр тайлбарлана.`,'Тэмдэглэл хөтөлж, тодруулах асуулт асууна.','25 мин'],
-   ['Дадлага, хэрэглээ',`«${m}» аргаар даалгавар өгч, сурагчдыг чиглүүлж дэмжинэ.`,s==='mt'?'Компьютер дээр даалгавар гүйцэтгэж, үр дүнгээ хадгална.':'Багаараа кейс хэлэлцэж, дүгнэлтээ танилцуулна.','30 мин'],
+   ['Дадлага, хэрэглээ',`«${m}» аргаар даалгавар өгч, сурагчдыг чиглүүлж дэмжинэ.`,'Компьютер дээр даалгавар гүйцэтгэж, үр дүнгээ хадгална.','30 мин'],
    ['Дүгнэлт, үнэлгээ','Гарах тасалбар, 3 асуулттай хурдан сорилоор ойлголтыг шалгана.','Өөрийгөө үнэлж, сурсан зүйлээ нэгтгэн хэлнэ.','15 мин']],
-  home:s==='mt'?'Сэдвээр 3 жишээ олж тэмдэглэх, сайтын шивэх дасгалаас 10 минут хийх.':'Гэр бүлийнхэнтэйгээ сэдвийн талаар ярилцаж, нэг бодит жишээ бичиж ирэх.'};
-}
-function yearBlocks(s,g){const rows=[];PROG[s][g].forEach((U,u)=>U.lessons.forEach((l,j)=>rows.push([j?'':`${u+1}. ${U.name}`,`${u*4+j+1}. ${l}`,'2',j?'':WHEN[u]])));
- return [{t:'h1',x:'Сургалтын жилийн төлөвлөгөө'},{t:'meta',rows:[['Хичээл',SUBJ[s]],['Анги',g+'-р анги'],['Нийт цаг','32 цаг (16 сэдэв × 2 цаг)'],['Хичээлийн жил',schoolYear()],['Багш','']]},
-  {t:'h2',x:'Нэгж, ээлжит хичээлийн хуваарь'},{t:'table',head:['Нэгж','Ээлжит хичээлийн сэдэв','Цаг','Хугацаа'],rows,w:[1500,2300,450,750]},
-  {t:'h2',x:'Үнэлгээ'},{t:'p',x:'Явцын үнэлгээ: ажлын хуудас, гарах тасалбар, ажиглалт.\nНэгжийн үнэлгээ: нэгж бүрийн төгсгөлд цахим эсвэл хэвлэмэл сорил.\nУлирлын үнэлгээ: төсөлт ажил, сорил.'}]}
-function unitBlocks(s,g,u){const U=PROG[s][g][u];
- return [{t:'h1',x:'Нэгж хөтөлбөр'},{t:'meta',rows:[['Хичээл',SUBJ[s]],['Анги',g+'-р анги'],['Нэгжийн нэр',`${u+1}. ${U.name}`],['Цаг',U.lessons.length*2+' цаг'],['Хугацаа',WHEN[u]+', '+schoolYear()],['Багш','']]},
-  {t:'h2',x:'Нэгжийн зорилго'},{t:'p',x:`«${U.name}» нэгжээр сурагчид үндсэн ойлголтыг эзэмшиж, бодит нөхцөлд хэрэглэх, хамтран ажиллах, ёс зүйтэй шийдвэр гаргах чадварт суралцана.`},
-  {t:'h2',x:'Суралцахуйн зорилт'},{t:'list',items:U.lessons.map((l,i)=>plan(s,g,u,i).zorilt)},
-  {t:'h2',x:'Ээлжит хичээлийн хуваарь'},{t:'table',head:['№','Сэдэв','Суралцахуйн зорилт','Цаг','Арга зүй','Үнэлгээ'],rows:U.lessons.map((l,i)=>{const p=plan(s,g,u,i);return [String(i+1),l,p.zorilt,'2',p.m,'Ажиглалт, ажлын хуудас']}),w:[250,1050,1650,300,950,800]},
-  {t:'h2',x:'Нэгжийн үнэлгээ'},{t:'p',x:'Нэгжийн төгсгөлд 6 асуулттай сорил (цахим эсвэл хэвлэмэл), ажлын хуудасны гүйцэтгэл, багийн ажлын танилцуулга.'},
+  home:'Сэдвээр 3 жишээ олж тэмдэглэх, сайтын шивэх дасгалаас 10 минут хийх.'}}
+function mtYear(g){const rows=[];PROG.mt[g].forEach((U,u)=>U.lessons.forEach((l,j)=>rows.push([j?'':`${u+1}. ${U.name}`,`${u*4+j+1}. ${l}`,'2',j?'':WHEN[u]])));
+ return [{t:'h1',x:'Сургалтын жилийн төлөвлөгөө'},{t:'meta',rows:[['Хичээл',SUBJ.mt],['Анги',g+'-р анги'],['Нийт цаг','32 цаг'],['Хичээлийн жил',schoolYear()],['Багш','']]},
+  {t:'h2',x:'Нэгж, ээлжит хичээлийн хуваарь'},{t:'table',head:['Нэгж','Ээлжит хичээлийн сэдэв','Цаг','Хугацаа'],rows,w:[1500,2300,450,750]}]}
+function mtUnit(g,u){const U=PROG.mt[g][u];
+ return [{t:'h1',x:'Нэгж хөтөлбөр'},{t:'meta',rows:[['Хичээл',SUBJ.mt],['Анги',g+'-р анги'],['Нэгжийн нэр',`${u+1}. ${U.name}`],['Цаг','8 цаг'],['Хугацаа',WHEN[u]+', '+schoolYear()],['Багш','']]},
+  {t:'h2',x:'Суралцахуйн зорилт'},{t:'list',items:U.lessons.map((l,i)=>plan('mt',g,u,i).zorilt)},
+  {t:'h2',x:'Ээлжит хичээлийн хуваарь'},{t:'table',head:['№','Сэдэв','Суралцахуйн зорилт','Цаг','Арга зүй','Үнэлгээ'],rows:U.lessons.map((l,i)=>{const p=plan('mt',g,u,i);return [String(i+1),l,p.zorilt,'2',p.m,'Ажиглалт, ажлын хуудас']}),w:[250,1050,1650,300,950,800]},
   {t:'h2',x:'Багшийн тэмдэглэл'},{t:'lines',n:3}]}
-function lessonBlocks(s,g,u,l){const p=plan(s,g,u,l);
- return [{t:'h1',x:'Ээлжит хичээлийн төлөвлөгөө'},{t:'meta',rows:[['Хичээл',SUBJ[s]],['Анги',g+'-р анги'],['Нэгж',`${u+1}. ${p.U.name}`],['Сэдэв',p.T],['Цаг','2 цаг (2 × 40 минут)'],['Огноо',''],['Багш','']]},
+function mtLesson(g,u,l){const p=plan('mt',g,u,l);
+ return [{t:'h1',x:'Ээлжит хичээлийн төлөвлөгөө'},{t:'meta',rows:[['Хичээл',SUBJ.mt],['Анги',g+'-р анги'],['Нэгж',`${u+1}. ${p.U.name}`],['Сэдэв',p.T],['Цаг','2 цаг (2 × 40 минут)'],['Огноо',''],['Багш','']]},
   {t:'h2',x:'Суралцахуйн зорилт'},{t:'p',x:p.zorilt},{t:'h2',x:'Хичээлийн зорилго'},{t:'p',x:p.goal},
   {t:'h2',x:'Үнэлгээний шалгуур'},{t:'list',items:p.crit},{t:'h2',x:'Арга зүй'},{t:'p',x:p.m},{t:'h2',x:'Хэрэглэгдэхүүн'},{t:'p',x:p.mat},
   {t:'h2',x:'Хичээлийн явц'},{t:'table',head:['Үе шат','Багшийн үйл ажиллагаа','Сурагчийн үйл ажиллагаа','Хугацаа'],rows:p.flow,w:[900,1750,1750,600]},
   {t:'h2',x:'Гэрийн даалгавар'},{t:'p',x:p.home},{t:'h2',x:'Багшийн эргэцүүлэл'},{t:'lines',n:3}]}
-function curDoc(){const s=S.subj,g=S.grade,d=S.doc;
- if(d.type==='unit')return{B:unitBlocks(s,g,d.u),name:fname(`${SHORT[s]} ${g}-р анги Нэгж ${d.u+1} ${PROG[s][g][d.u].name}`),crumb:`Нэгж ${d.u+1}`};
- if(d.type==='lesson')return{B:lessonBlocks(s,g,d.u,d.l),name:fname(`${SHORT[s]} ${g}-р анги ${d.u+1}.${d.l+1} ${PROG[s][g][d.u].lessons[d.l]}`),crumb:`Нэгж ${d.u+1} · Хичээл ${d.u*4+d.l+1}`};
- return{B:yearBlocks(s,g),name:fname(`${SHORT[s]} ${g}-р анги Жилийн төлөвлөгөө`),crumb:'Жилийн төлөвлөгөө'}}
+/* --- ИЁЗБ (албан ёсны) төлөвлөгөө --- */
+const IE_SRC='БСШУС-ын сайдын 2019 оны А/390 дүгээр тушаалаар батлагдсан «Иргэний ёс зүйн боловсрол» сургалтын хөтөлбөр, удирдамж';
+const IE_EVAL='Дунд, ахлах ангийн дэд сэдвийн үнэлгээнд сурагчийн өөрийн үнэлгээ 20%, эцэг эхийн үнэлгээ 20%, анги хамт олны үнэлгээ 20%, багшийн үнэлгээ 40% эзэлнэ (хөтөлбөрийн удирдамж).';
+const lc=t=>t.charAt(0).toLowerCase()+t.slice(1);
+function ieYear(g){const st=STRUCT('ie',g),B=[{t:'h1',x:'Сургалтын жилийн төлөвлөгөө'},{t:'meta',rows:[['Хичээл',SUBJ.ie],['Анги',g+'-р анги'],['Нийт цаг',`${st.total} цаг (долоо хоногт 2 цаг, 33 долоо хоног)`],['Хичээлийн жил',schoolYear()],['Хөтөлбөр',IE_SRC],['Багш','']]}];
+ let n=0;const chs=[...new Set(st.units.map(u=>u.ch))];
+ chs.forEach(ch=>{const rows=[];let ps=null,pu=null;st.units.forEach(u=>{if(u.ch!==ch)return;u.lessons.forEach((l,j)=>{n++;rows.push([u.sub!==ps?u.sub:'',j?'':`${u.name} (${u.h} цаг)`,`${n}. ${l.t}`,String(l.h),wk(l.start,l.h)]);ps=u.sub})});
+  B.push({t:'h2',x:ch},{t:'table',head:['Дэд сэдэв','Нэгж хичээл','Ээлжит хичээлийн сэдэв','Цаг','7 хоног'],rows,w:[950,1150,2200,300,400]})});
+ B.push({t:'h2',x:'Тайлбар'},{t:'p',x:'Анги бүрт 6 дэд сэдэв оногдох бөгөөд нэг сэдэвт 11-ээс багагүй цаг оногдоно. Энэхүү хуваарилалтад дэд сэдэв бүрт 11 цаг хуваарилсан. Хичээлийн цагийг сэдэвт хуваарилах нь багшийн мэдэлд байна (хөтөлбөрийн удирдамж).'},{t:'h2',x:'Үнэлгээ'},{t:'p',x:'Оношлох үнэлгээ: хичээлийн жилийн эхэнд.\nЯвцын үнэлгээ: дэд сэдэв бүрээр. '+IE_EVAL});return B}
+function ieUnit(g,ui){const st=STRUCT('ie',g),u=st.units[ui],first=st.units.findIndex(x=>x===u);let n=0;for(let i=0;i<ui;i++)n+=st.units[i].lessons.length;
+ return [{t:'h1',x:'Нэгж хичээлийн хөтөлбөр'},{t:'meta',rows:[['Хичээл',SUBJ.ie],['Анги',g+'-р анги'],['Бүлэг сэдэв',u.ch],['Дэд сэдэв',u.sub],['Нэгж хичээл',u.name],['Цаг',`${u.h} цаг`],['Хугацаа',`${wk(u.lessons[0].start,u.h)}-р долоо хоног (${monthsOf(u.lessons[0].start,u.h)})`],['Багш','']]},
+  {t:'h2',x:'Суралцахуйн зорилт'},{t:'list',items:u.lessons.flatMap(l=>l.objs.map(o=>o.t))},
+  {t:'h2',x:'Ээлжит хичээлийн хуваарь'},{t:'table',head:['№','Ээлжит хичээлийн сэдэв','Цаг','7 хоног','Арга зүй','Үнэлгээ'],rows:u.lessons.map((l,i)=>[String(n+i+1),l.t,String(l.h),wk(l.start,l.h),'Тодорхойлолт, арга, дасгал (ээлжит хичээлийн бүтцээр)','Ажиглалт, асуулга, ярилцлага']),w:[250,1800,300,400,1250,1000]},
+  {t:'h2',x:'Нэгжийн үнэлгээ'},{t:'p',x:'Нэгж хичээлийн үнэлгээ хийх эсэх нь багшийн мэдэлд байна. Үнэлгээ хийсэн тохиолдолд хувийн тэмдэглэл хөтөлнө. '+IE_EVAL},{t:'h2',x:'Багшийн тэмдэглэл'},{t:'lines',n:3}]}
+function sentences(t){return (t||'').split(/(?<=[.!?])\s+(?=[А-ЯӨҮЁ“])/).map(x=>x.trim()).filter(x=>x.length>25&&x.length<280)}
+function ieLesson(g,ui,li){const st=STRUCT('ie',g),u=st.units[ui],l=u.lessons[li];let n=li+1;for(let i=0;i<ui;i++)n+=st.units[i].lessons.length;
+ const exs=l.objs.filter(o=>o.ex),txt=exs.length?exs.map(o=>(l.objs.length>1?o.t+': ':'')+o.ex).join('\n\n'):(u.ref||'');
+ const S2=sentences(txt),good=S2.filter(x=>/ач ту|тустай|аз жаргал|баярл|амар амгалан|хүндэтгэл/i.test(x)&&!/гэм|хор|зовлон/i.test(x)).slice(0,3),bad=S2.filter(x=>/хор уршиг|гэмтэй|гэм нь|зовлон|бэрхшээл|хохирол/i.test(x)).slice(0,3);
+ const topic=l.objs.length>1?u.name:l.t;
+ return [{t:'h1',x:'Ээлжит хичээлийн төлөвлөгөө'},{t:'meta',rows:[['Хичээл',SUBJ.ie],['Анги',g+'-р анги'],['Бүлэг сэдэв',u.ch],['Дэд сэдэв',u.sub],['Нэгж хичээл',u.name],['Ээлжит хичээлийн сэдэв',`${n}. ${l.t}`],['Цаг',`${l.h} цаг (${l.h} × 40 минут)`],['7 хоног',wk(l.start,l.h)],['Огноо',''],['Багш','']]},
+  {t:'h2',x:'Суралцахуйн зорилт (хөтөлбөрөөс)'},{t:'list',items:l.objs.map(o=>o.t)},
+  {t:'h2',x:'1. Тодорхойлолт'},txt?{t:'p',x:txt}:{t:'p',x:'Хөтөлбөрийн удирдамжид энэ агуулгын тодорхойлолт, тайлбар өгөгдөөгүй. Тодорхойлолтыг сурах бичиг, гарын авлагад үндэслэн цөөн үгээр, салаа утгагүй, ойлгомжтой томьёолно.'},...(txt?[]:[{t:'lines',n:3}]),
+  {t:'h2',x:'2. Зорилго'},{t:'p',x:l.objs.map(o=>o.t).join('. ')+'.'},
+  {t:'h2',x:'3. Ач тус, хор уршиг'},{t:'p',x:`Сурагчидтай хамтран «${topic}»-ийг эзэмшвэл ямар ач тустай, эс эзэмшвэл ямар хор уршигтайг тодорхойлж, самбарт хоёр баганаар бичнэ.`},
+  {t:'table',head:['Эзэмшвэл (ач тус)','Эс эзэмшвэл (хор уршиг)'],rows:Array.from({length:Math.max(3,good.length,bad.length)},(_,i)=>[good[i]||'',bad[i]||'']),w:[2500,2500]},
+  {t:'h2',x:'4. Анхаарал төвлөрүүлэх дасгал (2 хүртэл минут)'},{t:'p',x:`Хичээлийн өмнө сурагчид нүдээ анин эргэцүүлнэ: «${topic}» — үүнийг эзэмшвэл надад ямар ач тустай, эс эзэмшвэл ямар хор уршигтай вэ? Мөн «Өнөөдөр би бие, хэл, сэтгэлээрээ ямар буруу үйлдэл хийв, дахин хийхгүй шүү» гэж бодно.`},
+  {t:'h2',x:'5. Харьцуулалт'},{t:'p',x:`Сурагч өөрийгөө энэ хичээлийн ёс суртахууны хэм хэмжээтэй харьцуулж, өнөөгийн түвшнээ тогтооно: «Би ${lc(l.objs[0].t)} чаддаг уу? Хэдийг нь хийж чадаж байна, хэдийг нь хийж сурах хэрэгтэй вэ?»`},
+  {t:'h2',x:'6. Арга'},{t:'list',items:[`1-р шат. Бодол төрүүлэх: «Би ${lc(topic)} хичээнэ шүү» гэж зорилго тавих.`,'2-р шат. Бодлоо хянах: анх бодсон бодлоо алдалгүй хэрэгжүүлж байгаа эсэхээ ажиглан хянах.','3-р шат. Тогтмол дасгал хийх: нэг удаа биш дахин давтан, нэг өдөр биш өдөр бүр тогтмол цагт дадуулах.']},
+  {t:'h2',x:'7. Дасгал'},{t:'p',x:'Сурагчид аргыг гэр бүл, анги хамт олон, сургуулийн бодит нөхцөлд тохируулан хос, багаар олон удаа хэрэглэнэ. Багш дасгал хийхэд гарч болох алдаа, түүнийг засах аргыг урьдчилан тэмдэглэж бэлтгээд «ингэвэл зөв, ингэвэл буруу» гэж чиглүүлнэ.'},
+  {t:'h2',x:'8. Дүгнэлт'},{t:'p',x:'Багш, сурагчид хичээлээр мэдсэн сурснаа ярилцаж, нэгдсэн зөв шийдэлд хүрнэ. Гол түлхүүр үгсийг самбарт хайрцаглан бичиж, сурагчид дэвтэртээ тэмдэглэнэ:'},{t:'list',items:l.objs.map(o=>o.t)},
+  {t:'h2',x:'9. Гэрийн даалгавар'},{t:'p',x:'Хичээл дээр хийсэн дасгалыг өөрөө гурван удаа, гэр бүлийнхэнтэйгээ хамт гурван удаа хийж ирэх. (Ёс зүйн хичээлийн гэрийн даалгавар нь бичих, унших бус, өөрийгөө хянах, ажиглах, эргэцүүлэх хөнгөн дасгал байна.)'},
+  {t:'h2',x:'10. Үнэлгээ'},{t:'p',x:'Сурагчийн эзэмшвэл зохих чадвар хэр зэрэг дадал хэвшил болж буйг ажиглалт, асуулга, ярилцлага, даалгавраар илрүүлнэ. '+IE_EVAL},
+  {t:'h2',x:'Багшийн эргэцүүлэл'},{t:'lines',n:3}]}
+function curDoc(){const s=S.subj,g=S.grade,d=S.doc,st=STRUCT(s,g);if(!st)return null;const U=st.units;
+ const u=Math.min(d.u,U.length-1),l=Math.min(d.l,(U[u]?.lessons.length||1)-1);let n=l+1;for(let i=0;i<u;i++)n+=U[i].lessons.length;
+ const nm=x=>fname(`${SHORT[s]} ${g}-р анги ${x}`).slice(0,110);
+ if(d.type==='unit')return{B:s==='ie'?ieUnit(g,u):mtUnit(g,u),name:nm(`Нэгж ${u+1} ${U[u].name}`),crumb:`Нэгж ${u+1}`};
+ if(d.type==='lesson')return{B:s==='ie'?ieLesson(g,u,l):mtLesson(g,u,l),name:nm(`Хичээл ${n} ${U[u].lessons[l].t}`),crumb:`Нэгж ${u+1} · Хичээл ${n}`};
+ return{B:s==='ie'?ieYear(g):mtYear(g),name:nm('Жилийн төлөвлөгөө'),crumb:'Жилийн төлөвлөгөө'}}
 
 /* ================= VIEWS ================= */
 const VIEWS=[['home','Нүүр'],['program','Хөтөлбөр'],['test','Сорил'],['materials','Материал'],['lab','3D лаб'],['games','Тоглоом'],['typing','Шивэх дасгал'],['cases','Кэйс'],['parents','Эцэг эх']];
@@ -412,7 +467,7 @@ const picker=()=>`<div class="row" style="margin-bottom:22px;gap:14px">${subjSeg
 const head=(title,sub,right='')=>`<div class="secthead"><div><h2>${title}</h2>${sub?`<p class="mut">${sub}</p>`:''}</div>${right}</div>`;
 
 function vHome(){
- const r=S.role,g=S.grade,s=S.subj,un=unitNow(),U=PROG[s][g];
+ const r=S.role,g=S.grade,s=S.subj,st=STRUCT(s,g),cu=curUnit(s,g),cm=curUnit('mt',g),ci=curUnit('ie',g);
  const acts={teacher:[['Жилийн төлөвлөгөө','program'],['Сорил хэвлэх','test'],['Ажлын хуудас','materials']],student:[['Сорил өгөх','test'],['Шивэх дасгал','typing'],['Тоглоом','games']],parent:[['Энэ сарын сэдэв','parents'],['Гэрээр ярилцах','parents'],['Кэйс','cases']]}[r];
  const q=BANK[s+'|'+band(g)][0];
  return `<section class="hero band"><div class="wrap">
@@ -420,21 +475,21 @@ function vHome(){
  <p class="lead">Мэдээллийн технологи ба Иргэний ёс зүйн боловсролын 6–12-р ангийн цахим орчин: хөтөлбөр, ээлжит хичээл, сорил, ажлын хуудас, 3D лаб, тоглоом, кэйс.</p>
  <div class="seg" role="group" aria-label="Би хэн бэ" style="margin:6px 0 14px">${[['teacher','Багш'],['student','Сурагч'],['parent','Эцэг эх']].map(([k,n])=>`<button data-role="${k}" aria-pressed="${r===k}">${n}</button>`).join('')}</div>
  <div class="row">${acts.map((a,i)=>`<a class="btn ${i?'alt':''}" href="#${a[1]}">${a[0]}</a>`).join('')}</div>
- <p class="term">&gt; анги <b>${g}</b> · хичээл <b>${SHORT[s]}</b> · нэгж <b>${un+1}</b><span class="cur"></span></p>
- <div class="stats"><div><b>7</b><span>анги</span></div><div><b>56</b><span>нэгж</span></div><div><b>224</b><span>ээлжит хичээл</span></div><div><b>.docx</b><span>татаж засна</span></div></div></div>
+ <p class="term">&gt; анги <b>${g}</b> · хичээл <b>${SHORT[s]}</b> · долоо хоног <b>${schoolWeek()}</b><span class="cur"></span></p>
+ <div class="stats"><div><b>7</b><span>анги</span></div><div><b>66</b><span>ИЁЗБ цаг / жил</span></div><div><b>${IE?Object.values(IE).reduce((a,G)=>a+G.reduce((b,ch)=>b+ch.subs.reduce((c,sb)=>c+sb.units.reduce((d,u)=>d+u.lessons.length,0),0),0),0):'…'}</b><span>ИЁЗБ ээлжит хичээл</span></div><div><b>.docx</b><span>татаж засна</span></div></div></div>
  <div class="stage" id="stageHome"></div></div></section>
  <section class="band"><div class="wrap">
  ${head('Бүх хэрэгсэл нэг дор',`${SUBJ[s]} · ${g}-р анги`,`<div class="row">${subjSeg()}${gradePins()}</div>`)}
  <div class="bento">
- <a class="tile b2 r2" href="#program"><span class="tag ${s}">Хөтөлбөр</span><h3>${g}-р ангийн бүтэн жил</h3><p>4 нэгж, 16 сэдэв, 32 цаг. Нэгж хөтөлбөр, ээлжит хичээлийн төлөвлөгөөг үзэж, хэвлэж, Word-оор татна.</p>
-  <div class="mini-tl">${U.map((x,i)=>`<div><span class="small mut">${WHEN[i]}</span><i>${esc(x.name)}</i></div>`).join('')}</div><span class="go">Хөтөлбөр нээх →</span></a>
+ <a class="tile b2 r2" href="#program"><span class="tag ${s}">Хөтөлбөр</span><h3>${g}-р ангийн бүтэн жил</h3><p>${st?`${st.units.length} нэгж хичээл, ${st.units.reduce((a,u)=>a+u.lessons.length,0)} ээлжит хичээл, ${st.total} цаг.`:'Ачаалж байна…'} Нэгж, ээлжит хичээлийн төлөвлөгөөг үзэж, хэвлэж, Word-оор татна.</p>
+  <div class="mini-tl">${st?groups(st).map(x=>`<div><span class="small mut">${x.when}</span><i>${esc(x.n)}</i></div>`).join(''):''}</div><span class="go">Хөтөлбөр нээх →</span></a>
  <a class="tile b2" href="#typing"><span class="tag mt">Шивэх дасгал</span><h3>Арван хуруугаар шив</h3><div class="typer" id="typer"></div><span class="go">Дасгал эхлэх →</span></a>
  <a class="tile dark" href="#games"><h3>Бинар код</h3><div class="bitrow" id="bitrow">${'<i>0</i>'.repeat(8)}</div><p id="bitval">= 0</p><span class="go">Тоглох →</span></a>
  <a class="tile" href="#lab"><h3>3D лаб</h3><svg viewBox="0 0 120 70" style="width:100%;max-height:80px" aria-hidden="true"><path d="M60 8 108 32 60 56 12 32Z" fill="var(--pri)" opacity=".18"/><path d="M60 18 88 32 60 46 32 32Z" fill="var(--pri)"/><path d="M32 32v8l28 14v-8Z" fill="var(--pri)" opacity=".6"/><path d="M88 32v8L60 54v-8Z" fill="var(--pri)" opacity=".8"/><path d="M60 26 72 32 60 38 48 32Z" fill="#fff"/></svg><p>Компьютер, сүлжээ, төрийн бүтэц</p><span class="go">Эргүүлж үзэх →</span></a>
  <a class="tile" href="#test"><span class="tag ${s}">Сорил</span><h3 style="font-size:15.5px;line-height:1.35">${esc(q[0])}</h3><p>${q[1].map((o,i)=>`${'АБВГ'[i]}. ${esc(o)}`).join(' · ')}</p><span class="go">Сорил өгөх →</span></a>
  <a class="tile" href="#cases"><span class="tag ie">Кэйс</span><h3>${esc(CASES[1].t)}</h3><p>${esc(CASES[1].story.slice(0,70))}…</p><span class="go">Хэлэлцэх →</span></a>
  <a class="tile b2" href="#materials"><span class="tag mt">Материал</span><h3>Ажлын хуудас, тараах материал</h3><p>Сурагч цахимаар бөглөнө, багш Word эсвэл хэвлэх хувилбараар татна.</p><div class="row" style="margin-top:6px">${WS.slice(0,4).map(w=>`<span class="tag ${w.s}">${esc(w.t)}</span>`).join('')}</div><span class="go">Материал үзэх →</span></a>
- <a class="tile b2 dark" href="#parents"><h3>Эцэг эхэд</h3><p>Хүүхдийн тань энэ сард үзэж буй сэдэв: ${esc(PROG.mt[g][un].name)}, ${esc(PROG.ie[g][un].name)}. Гэрээр ярилцах асуулт, цахим аюулгүй байдлын зөвлөгөө.</p><span class="go">Дэлгэрэнгүй →</span></a>
+ <a class="tile b2 dark" href="#parents"><h3>Эцэг эхэд</h3><p>Хүүхдийн тань энэ үед үзэж буй сэдэв: ${esc(cm?cm.u.name:'')}${ci?', '+esc(ci.u.name):''}. Гэрээр ярилцах асуулт, цахим аюулгүй байдлын зөвлөгөө.</p><span class="go">Дэлгэрэнгүй →</span></a>
  <button class="tile" id="kOpen2" style="font:inherit;text-align:start;align-items:flex-start;cursor:pointer;color:inherit"><h3>Хурдан хайлт</h3><p>Ямар ч анги, сэдэв, ажлын хуудсыг секундэд олно.</p><span class="go mono">⌘K / Ctrl+K</span></button>
  <a class="tile" href="#games"><h3>Тааруулах тоглоом</h3><p>Нэр томьёо ба тайлбарыг хосло. Үнэн үү, худал уу уралдаан.</p><span class="go">Тоглох →</span></a>
  </div></div></section>`;
@@ -447,19 +502,26 @@ function homeAnim(){
 }
 
 function vProgram(){
- const s=S.subj,g=S.grade,d=S.doc,D=curDoc();
+ const s=S.subj,g=S.grade,d=S.doc,st=STRUCT(s,g);
+ const side=`<aside class="side" aria-label="Хөтөлбөрийн бүтэц">${subjSeg()}<div style="margin-top:12px">${gradePins()}</div><div class="tree">`;
+ if(!st)return `<section class="band"><div class="wrap"><div class="docs">${side}</div></aside><div><div class="empty">${IEERR?'Хөтөлбөрийн өгөгдлийг ачаалж чадсангүй. Хуудсаа дахин ачаална уу.':'Хөтөлбөрийг ачаалж байна…'}</div></div></div></div></section>`;
+ const D=curDoc();let ps=null,pc=null,n=0;
  const cur=(t,u,l)=>d.type===t&&(t==='year'||d.u===u&&(t==='unit'||d.l===l))?'aria-current="page"':'';
- return `<section class="band"><div class="wrap"><div class="docs">
- <aside class="side" aria-label="Хөтөлбөрийн бүтэц">${subjSeg()}<div style="margin-top:12px">${gradePins()}</div>
- <div class="tree"><button data-doc="year" ${cur('year')}>Жилийн төлөвлөгөө</button>
- ${PROG[s][g].map((U,u)=>`<button class="u" data-doc="unit-${u}" ${cur('unit',u)}>${u+1}. ${esc(U.name)}<small>${U.lessons.length*2}ц</small></button>${U.lessons.map((l,i)=>`<button class="l" data-doc="lesson-${u}-${i}" ${cur('lesson',u,i)}>${u*4+i+1}. ${esc(l)}</button>`).join('')}`).join('')}</div></aside>
+ const tree=st.units.map((u,ui)=>{let h='';
+  if(st.official&&u.ch!==pc){h+=`<div class="tch">${esc(u.ch)}</div>`;pc=u.ch}
+  if(st.official&&u.sub!==ps){h+=`<div class="tsub">${esc(u.sub)}</div>`;ps=u.sub}
+  const open=d.type!=='year'&&d.u===ui,base=n;n+=u.lessons.length;
+  h+=`<button class="u" data-doc="unit-${ui}" ${cur('unit',ui)} aria-expanded="${open}">${esc(u.name)}<small>${u.h}ц</small></button>`;
+  if(open)h+=u.lessons.map((l,li)=>`<button class="l" data-doc="lesson-${ui}-${li}" ${cur('lesson',ui,li)}>${base+li+1}. ${esc(l.t)}</button>`).join('');
+  return h}).join('');
+ return `<section class="band"><div class="wrap"><div class="docs">${side}<button data-doc="year" ${cur('year')}>Жилийн төлөвлөгөө <small>${st.total}ц</small></button>${tree}</div></aside>
  <div><div class="dbar"><span class="crumb">${esc(SHORT[s])} · ${g}-р анги · <b>${esc(D.crumb)}</b></span>
  <div class="row"><button class="ghost" id="dPrev" aria-label="Өмнөх">←</button><button class="ghost" id="dNext" aria-label="Дараах">→</button><button class="ghost" id="dPrint">Хэвлэх</button><button id="dWord">Word татах</button></div></div>
- <div class="flag">Жишээ агуулга. Албан ёсны хөтөлбөрийн файлыг оруулсны дараа нэгж, ээлжит хичээлийн төлөвлөгөөг агуулгаар нь шинэчилнэ.</div>
+ ${st.official?`<div class="flag ok">Албан ёсны хөтөлбөр: ${esc(IE_SRC)}. Суралцахуйн зорилт, тодорхойлолтыг эх баримтаас өөрчлөлтгүй авсан.</div>`:'<div class="flag">Жишээ агуулга. Мэдээллийн технологийн хөтөлбөрийн файлыг оруулсны дараа агуулгаар нь шинэчилнэ.</div>'}
  <article class="paper" id="paper">${blocksHTML(D.B)}</article></div></div></div></section>`;
 }
-const docSeq=()=>{const a=[{type:'year'}];for(let u=0;u<4;u++){a.push({type:'unit',u});for(let l=0;l<4;l++)a.push({type:'lesson',u,l})}return a};
-function stepDoc(dir){const a=docSeq(),d=S.doc,i=a.findIndex(x=>x.type===d.type&&(x.type==='year'||x.u===d.u&&(x.type==='unit'||x.l===d.l)));const n=a[Math.max(0,Math.min(a.length-1,i+dir))];S.doc={u:0,l:0,...n};render();$('#paper')?.scrollIntoView({block:'start'})}
+const docSeq=()=>{const st=STRUCT(S.subj,S.grade),a=[{type:'year'}];if(!st)return a;st.units.forEach((u,ui)=>{a.push({type:'unit',u:ui});u.lessons.forEach((l,li)=>a.push({type:'lesson',u:ui,l:li}))});return a};
+function stepDoc(dir){const a=docSeq(),d=S.doc,i=a.findIndex(x=>x.type===d.type&&(x.type==='year'||x.u===d.u&&(x.type==='unit'||x.l===d.l)));const nx=a[Math.max(0,Math.min(a.length-1,i+dir))];S.doc={u:0,l:0,...nx};render();$('#paper')?.scrollIntoView({block:'start'})}
 
 let quiz=null;
 const qsFor=()=>BANK[S.subj+'|'+band(S.grade)];
@@ -641,18 +703,20 @@ function openCase(id){const c=CASES.find(x=>x.id===id),mine=LS.get('vote_'+id,nu
  const r=$('#refl');if(r)r.oninput=e=>LS.set('refl_'+id,e.target.value)}
 const caseBlocks=c=>[{t:'h1',x:'Кэйс: '+c.t},{t:'meta',rows:[['Хичээл',SUBJ[c.s]],['Анги',c.g+'-р анги']]},{t:'h2',x:'Нөхцөл байдал'},{t:'p',x:c.story},{t:'h2',x:'Сонголтууд'},{t:'list',items:c.opts},{t:'h2',x:'Хэлэлцүүлгийн асуулт'},...c.qs.flatMap((q,i)=>[{t:'p',x:`${i+1}. ${q}`},{t:'lines',n:2}])];
 
-function vParents(){const g=S.grade,un=unitNow();
+function vParents(){const g=S.grade;
+ const card=s=>{const c=curUnit(s,g);if(!c)return `<div class="card"><span class="tag ${s}">${SUBJ[s]}</span><p class="mut" style="margin-top:10px">Ачаалж байна…</p></div>`;const u=c.u;
+  return `<div class="card"><span class="tag ${s}">${SUBJ[s]}</span><h3 style="margin-top:10px">${esc(u.name)}</h3>${u.sub?`<p class="small mut">${esc(u.sub.replace(/^\d+\.\d+\.\s*/,''))} · ${monthsOf(u.lessons[0].start,u.h)}</p>`:''}<ul>${u.lessons.map(l=>`<li>${esc(l.t)}</li>`).join('')}</ul><b>Гэрээр ярилцах асуулт</b><ul>${HOME_TALK[s].map(q=>`<li>${esc(q)}</li>`).join('')}</ul></div>`};
  return `<section class="band"><div class="wrap">${head('Эцэг эхэд','Хүүхдийнхээ ангийг сонгоод энэ үеийн сэдэв, гэрээр хийх ажлыг харна уу.')}<div style="margin-bottom:22px">${gradePins()}</div>
- <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr))">${['mt','ie'].map(s=>{const U=PROG[s][g][un];return `<div class="card"><span class="tag ${s}">${SUBJ[s]}</span><h3 style="margin-top:10px">${WHEN[un]}: ${esc(U.name)}</h3><ul>${U.lessons.map(l=>`<li>${esc(l)}</li>`).join('')}</ul><b>Гэрээр ярилцах асуулт</b><ul>${HOME_TALK[s].map(q=>`<li>${esc(q)}</li>`).join('')}</ul></div>`}).join('')}</div>
- <div class="grid" style="margin-top:16px"><div class="card"><h3>Цахим аюулгүй байдал гэртээ</h3><ul><li>Дэлгэцийн цагийг хамтдаа тохиролцох</li><li>Унтлагын өрөөнд утас цэнэглэхгүй байх</li><li>Хүүхэд тань юу тоглож, хэнтэй харилцдагийг сонирхох</li><li>Асуудал гарвал загнахаас өмнө сонсох</li></ul></div>
+ <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr))">${card('ie')}${card('mt')}</div>
+ <div class="grid" style="margin-top:16px"><div class="card"><h3>Эцэг эхийн оролцоо</h3><p>Иргэний ёс зүйн боловсролын хичээлийн гэрийн даалгавар нь бичих, унших бус, хичээл дээр хийсэн дасгалыг гэр бүлийнхэнтэйгээ хамт давтах хөнгөн дасгал байдаг. Дэд сэдвийн үнэлгээнд эцэг эхийн үнэлгээ 20% эзэлнэ.</p></div>
+ <div class="card"><h3>Цахим аюулгүй байдал гэртээ</h3><ul><li>Дэлгэцийн цагийг хамтдаа тохиролцох</li><li>Унтлагын өрөөнд утас цэнэглэхгүй байх</li><li>Хүүхэд тань юу тоглож, хэнтэй харилцдагийг сонирхох</li><li>Асуудал гарвал загнахаас өмнө сонсох</li></ul></div>
  <div class="card"><h3>Хүүхдийн явц</h3><p class="mut">Энэ төхөөрөмж дээр өгсөн сорилын сүүлийн дүн:</p>${(LS.get('hist',[]).slice(-4).map(h=>`<div class="meter"><div class="bar"><i style="width:${h.sc/h.n*100}%"></i></div><b class="mono">${h.sc}/${h.n}</b></div>`).join(''))||'<p class="mut">Одоогоор дүн алга.</p>'}</div></div></div></section>`}
 
 /* ================= COMMAND PALETTE ================= */
 let PIDX=null,psel=0,pres=[];
 function buildIndex(){const a=VIEWS.map(([k,n])=>({t:n,sub:'Хэсэг',go:()=>location.hash=k}));
- for(const s in PROG)for(const g in PROG[s])PROG[s][g].forEach((U,u)=>{a.push({t:`${U.name}`,sub:`${SHORT[s]} ${g}-р анги · Нэгж ${u+1}`,go:()=>openDoc(s,+g,{type:'unit',u,l:0})});
-  U.lessons.forEach((l,i)=>a.push({t:l,sub:`${SHORT[s]} ${g}-р анги · ${u+1}.${i+1}`,go:()=>openDoc(s,+g,{type:'lesson',u,l:i})}))});
- for(const s in PROG)for(const g in PROG[s])a.push({t:`${g}-р анги жилийн төлөвлөгөө`,sub:SUBJ[s],go:()=>openDoc(s,+g,{type:'year',u:0,l:0})});
+ for(const s of ['ie','mt'])for(let g=6;g<=12;g++){const st=STRUCT(s,g);if(!st)continue;a.push({t:`${g}-р анги жилийн төлөвлөгөө`,sub:SUBJ[s],go:()=>openDoc(s,g,{type:'year',u:0,l:0})});let n=0;
+  st.units.forEach((u,ui)=>{a.push({t:u.name,sub:`${SHORT[s]} ${g}-р анги · нэгж хичээл`,go:()=>openDoc(s,g,{type:'unit',u:ui,l:0})});u.lessons.forEach((l,li)=>{n++;a.push({t:l.t,sub:`${SHORT[s]} ${g}-р анги · ${n}-р хичээл`,go:()=>openDoc(s,g,{type:'lesson',u:ui,l:li})})})})}
  WS.forEach(w=>a.push({t:w.t,sub:`${w.kind} · ${w.g}-р анги`,go:()=>{location.hash='materials';setTimeout(()=>openWS(w.id),50)}}));
  CASES.forEach(c=>a.push({t:c.t,sub:'Кэйс',go:()=>{location.hash='cases';setTimeout(()=>openCase(c.id),50)}}));
  TLES.forEach(l=>a.push({t:l.t,sub:'Шивэх дасгал',go:()=>{TL.lang=l.lang;TL.id=l.id;location.hash='typing';render()}}));return a}
@@ -734,12 +798,12 @@ document.addEventListener('click',e=>{
  if(t.id==='kOpen2')return openPal();
  if(d.pi!==undefined){const x=pres[+d.pi];closeModal();return x&&x.go()}
  if(d.role){S.role=d.role;save();render();return}
- if(d.subj){S.subj=d.subj;save();render();return}
- if(d.grade){S.grade=+d.grade;save();render();return}
+ if(d.subj){S.subj=d.subj;S.doc={type:'year',u:0,l:0};save();render();return}
+ if(d.grade){S.grade=+d.grade;S.doc={type:'year',u:0,l:0};save();render();return}
  if(d.doc){const p=d.doc.split('-');S.doc={type:p[0],u:+p[1]||0,l:+p[2]||0};render();if(innerWidth<980)$('#paper')?.scrollIntoView({block:'start'});return}
  if(t.id==='dPrev')return stepDoc(-1);if(t.id==='dNext')return stepDoc(1);
- if(t.id==='dPrint'){const D=curDoc();return printDoc(D.B,D.name)}
- if(t.id==='dWord'){const D=curDoc();return wordDoc(D.B,D.name)}
+ if(t.id==='dPrint'){const D=curDoc();return D&&printDoc(D.B,D.name)}
+ if(t.id==='dWord'){const D=curDoc();return D&&wordDoc(D.B,D.name)}
  if(t.id==='qStart')return runQuiz();
  if(d.ans!==undefined)return answer(+d.ans);
  if(d.tdoc!==undefined){const k=d.tdoc==='1',B=testBlocks(k),n=fname(`${SHORT[S.subj]} ${band(S.grade)}-р анги ${k?'Сорилын түлхүүр':'Сорил'}`);return d.fmt==='word'?wordDoc(B,n):printDoc(B,n)}
