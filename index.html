@@ -971,7 +971,7 @@ document.addEventListener('keydown',e=>{const t=e.target;if(!t.classList||!t.cla
 document.addEventListener('input',e=>{const t=e.target;if(t.dataset&&t.dataset.ped)LS.set('pc_'+t.dataset.ped,t.value)});
 
 /* ================= МИНИЙ АНГИ: сервертэй холбогдох ================= */
-const API_DEF='https://techyos-api.onrender.com';
+const API_DEF='https://techyos-s3w1.onrender.com';
 const apiBase=()=>String(LS.get('apibase','')||API_DEF).replace(/\/+$/,'');
 const TCH={tok:LS.get('ttok',''),name:LS.get('tname',''),classes:null,rep:{},loading:false,tab:'a'};
 S.tcls=LS.get('tcls','');

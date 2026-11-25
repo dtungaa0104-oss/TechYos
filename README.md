@@ -15,6 +15,6 @@
 1. **Neon** (neon.com) дээр үнэгүй бүртгэл нээж, шинэ төсөл (project) үүсгэнэ. **Connection string**-ийг (`postgresql://...`) хуулна.
 2. Render дээр `techyos-api` web service үүсгэнэ (Blueprint ашигласан бол автоматаар санал болгоно; гараар бол **New → Web Service**, энэ репо, Root Directory: `server`, Build: `npm install`, Start: `node index.js`, Instance: Free).
 3. **Environment** хэсэгт `DATABASE_URL` = Neon-ы connection string гэж нэмнэ.
-4. Сервер `https://techyos-api.onrender.com` хаягтай байх ёстой. Өөр хаяг гарвал `index.src.html` доторх `API_DEF`-ийг солих хэрэгтэй.
+4. Сервер `https://techyos-s3w1.onrender.com` хаягтай ажиллаж байна (`index.src.html` доторх `API_DEF`).
 
 Сервер анх асахдаа хүснэгтүүдээ өөрөө үүсгэнэ. Үнэгүй багцад 15 минут хандалтгүй бол унтаж, дараагийн хүсэлтэд ≈1 минутын дотор асна.
