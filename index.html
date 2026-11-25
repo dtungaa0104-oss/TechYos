@@ -161,6 +161,11 @@ button.op{cursor:pointer}button.op:hover:not(:disabled){border-color:#1f2fbf;bac
 .sheet textarea{width:100%;font:15px/1.5 Onest,Arial,sans-serif;border:1px solid #cfd5e3;border-radius:8px;padding:10px;background:repeating-linear-gradient(#fff 0 26px,#eef1f7 26px 27px);color:#111}
 .sheet input{font:15px Onest,Arial,sans-serif;padding:9px 12px;border-radius:10px;border:1px solid #cfd5e3;background:#fff;color:#111}.sheet .usel span{color:#555}
 .srub{margin-top:18px;font-size:13.5px;color:#111}.srub table{border-collapse:collapse;width:100%}.srub td,.srub th{border:1px solid #c9cfdd;padding:7px 9px;text-align:left;vertical-align:top;white-space:pre-line}.srub th{background:#eef1ff}
+.labs{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin:0 0 16px}
+.labc{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;background:var(--sur,#fff);color:var(--ink);border:1px solid var(--line,#dde);border-radius:14px;padding:12px 14px;font-weight:400;min-height:0}
+.labc b{font-size:15px}.labc small{font-size:12.5px;opacity:.7;line-height:1.35}.labc[aria-pressed=true]{border-color:var(--pri);box-shadow:0 0 0 2px var(--pri) inset;background:light-dark(#eef1ff,#141a40)}
+.lparts{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px}.lpart{display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;background:var(--sur,#fff);color:var(--ink);border:1px solid var(--line,#dde);border-radius:12px;padding:10px 12px;font-weight:400;min-height:0}
+.lpart b{color:var(--pri);font-size:14px}.lpart span{font-size:12.5px;opacity:.75;line-height:1.4}.lpart[aria-pressed=true]{border-color:var(--pri);background:light-dark(#eef1ff,#141a40)}
 .uap{max-width:860px;margin:0 auto 16px;border:1px solid var(--line,#ccd);border-radius:16px;padding:16px 18px;background:light-dark(#f7f8ff,#141833)}
 .uah{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}.uah h3{font:700 16px Onest,Arial,sans-serif;margin:0}.uac{font:600 13px 'JetBrains Mono',monospace;color:var(--accent,#3b4bff)}
 .ual{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0}.ual>span{font-size:13px;opacity:.8}
@@ -1012,9 +1017,7 @@ function openWS(id){const w=WS.find(x=>x.id===id),ans=LS.get('ws_'+id,{});
  :`<p>${esc(w.intro)}</p><ol class="ws">${w.items.map((q,i)=>`<li><label for="wa${i}">${esc(q)}</label><textarea id="wa${i}" data-wi="${i}">${esc(ans[i]||'')}</textarea></li>`).join('')}</ol><p class="small mut">Хариулт энэ төхөөрөмж дээр хадгалагдана.</p>`)+`<div class="row"><button class="ghost" data-wsdoc="${w.id}" data-fmt="print">Хэвлэх</button><button class="ghost" data-wsdoc="${w.id}" data-fmt="word">Word татах</button></div>`);
  document.querySelectorAll('[data-wi]').forEach(t=>t.oninput=()=>{ans[t.dataset.wi]=t.value;LS.set('ws_'+id,ans)})}
 
-function vLab(){return `<section class="band"><div class="wrap">${head('3D интерактив лаб','Чирж эргүүлнэ, дугуйгаар ойртуулна, хэсэг дээр дарж тайлбар уншина.')}
- <div class="seg" role="group" aria-label="Загвар" style="margin-bottom:14px">${MODELS.map((m,i)=>`<button data-model="${i}" aria-pressed="${G3.model===i}">${m.name}</button>`).join('')}</div>
- <div class="stage" id="stageLab" style="height:clamp(380px,58vw,620px)"></div><div class="grid" style="margin-top:16px" id="labParts"></div></div></section>`}
+
 
 let game={tab:'mem'};
 function vGames(){return `<section class="band"><div class="wrap">${head('Идэвхжүүлэх тоглоом','Хичээлийн эхэнд сэдэлжүүлэх, төгсгөлд бататгах богино тоглоомууд.')}<div class="row" style="margin-bottom:22px;gap:14px">${subjSeg()}${gradePins()}</div>
@@ -1181,56 +1184,293 @@ $('#pq').addEventListener('keydown',e=>{if(e.key==='ArrowDown'){e.preventDefault
 addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openPal()}else if(e.key==='Escape')closeModal()});
 
 /* ================= 3D ================= */
-const MODELS=[
-{name:'Компьютерийн дотор',parts:[['Эх хавтан','Бүх эд ангийг холбох үндсэн хавтан.',0x0f8a64,[6,.2,4.4],[0,0,0]],['Төв процессор (CPU)','Командыг гүйцэтгэх «тархи». Секундэд тэрбум үйлдэл хийнэ.',0xd5d9e4,[1.1,.25,1.1],[-1,.25,-.5]],['Сэнс','Процессорыг хөргөнө.',0x2a3150,'fan',[-1,.75,-.5]],['Шуурхай санах ой (RAM)','Ажиллаж буй програмын түр санах ой. Тэжээл тасрахад арилна.',0x2f45ff,[.18,1,2.2],[.6,.6,-.6]],['RAM 2','Хоёр дахь санах ойн самбар.',0x2f45ff,[.18,1,2.2],[.95,.6,-.6]],['Видео карт (GPU)','Зураг, видео, 3D дүрслэлийг боловсруулна.',0xff5b3a,[3.4,.5,1.1],[-.6,.45,1.3]],['SSD хадгалах төхөөрөмж','Файл, програмыг удаан хугацаанд хадгална.',0xffc83a,[1.2,.12,.5],[2,.2,1.4]],['Тэжээлийн блок','Цахилгааныг компьютерт тохирох хүчдэл болгон хувиргана.',0x5a6280,[1.6,1.1,1.4],[2.1,.7,-1.3]]]},
-{name:'Сүлжээний топологи',net:true,parts:[]},
-{name:'Төрийн гурван салаа',parts:[['Ард түмэн','Монгол Улсад төрийн бүх эрх ард түмний мэдэлд байна (Үндсэн хууль).',0xe9edf5,[6.4,.4,3.2],[0,0,0]],['Улсын Их Хурал','Хууль тогтоох эрх мэдэл. 126 гишүүнтэй, хуулиа батална.',0x2f45ff,'col',[-2.2,1.6,0]],['Засгийн газар','Гүйцэтгэх эрх мэдэл. Хуулийг хэрэгжүүлж, төрийн ажлыг удирдана.',0xff5b3a,'col',[0,1.6,0]],['Шүүх','Шүүх эрх мэдэл. Маргааныг хуулийн дагуу хараат бусаар шийднэ.',0x00c08b,'col',[2.2,1.6,0]],['Үндсэн хууль','Улсын дээд хууль — гурван салааг нэг дор барина.',0xffffff,'roof',[0,3.55,0]]]}];
 const NETS={'Од':'star','Цагираг':'ring','Бүрэн холбоот':'mesh','Шугам':'bus'};
 const G3={ok:!!window.THREE,model:0,net:'star',rx:.55,ry:.6,zoom:11,auto:!reduce,sel:null,meshes:[]};
 if(G3.ok){try{
- const R=new THREE.WebGLRenderer({antialias:true,alpha:true});R.setPixelRatio(Math.min(2,devicePixelRatio));G3.R=R;
+ const R=new THREE.WebGLRenderer({antialias:true,alpha:true});R.setPixelRatio(Math.min(2,devicePixelRatio));R.outputEncoding=THREE.sRGBEncoding;R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.1;R.shadowMap.enabled=true;G3.R=R;
  const sc=new THREE.Scene(),cam=new THREE.PerspectiveCamera(42,1,.1,100);G3.sc=sc;G3.cam=cam;
- sc.add(new THREE.HemisphereLight(0xe6ebff,0x141c4a,1.05));const dl=new THREE.DirectionalLight(0xffffff,.9);dl.position.set(4,8,6);sc.add(dl);const rim=new THREE.DirectionalLight(0x6f80ff,.5);rim.position.set(-6,2,-6);sc.add(rim);
+ sc.add(new THREE.HemisphereLight(0xe6ebff,0x141c4a,1.05));const dl=new THREE.DirectionalLight(0xffffff,1.1);dl.position.set(4,9,6);dl.castShadow=true;dl.shadow.mapSize.set(1024,1024);sc.add(dl);sc.add(new THREE.AmbientLight(0xffffff,.25));const rim=new THREE.DirectionalLight(0x6f80ff,.5);rim.position.set(-6,2,-6);sc.add(rim);
  G3.root=new THREE.Group();sc.add(G3.root);G3.ray=new THREE.Raycaster();
  const el=R.domElement;let drag=null,moved=0;
  el.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY};moved=0;G3.auto=false;el.setPointerCapture(e.pointerId)});
  el.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;moved+=Math.abs(dx)+Math.abs(dy);G3.ry+=dx*.01;G3.rx=Math.max(-.4,Math.min(1.35,G3.rx+dy*.01));drag={x:e.clientX,y:e.clientY}});
- el.addEventListener('pointerup',e=>{if(drag&&moved<6)pick(e);drag=null});
+ el.addEventListener('pointerup',e=>{if(drag&&moved<6)pick(e);G3.ry0=G3.ry;drag=null});
  el.addEventListener('wheel',e=>{e.preventDefault();G3.zoom=Math.max(6,Math.min(18,G3.zoom+e.deltaY*.01))},{passive:false});
- const loop=()=>{requestAnimationFrame(loop);if(!G3.host||!G3.host.isConnected)return;if(G3.auto)G3.ry+=.003;
-  G3.root.rotation.set(G3.rx,G3.ry,0);cam.position.set(0,0,G3.zoom);cam.lookAt(0,0,0);if(G3.fan)G3.fan.rotation.y+=.15;R.render(sc,cam)};loop();
+ const loop=()=>{requestAnimationFrame(loop);if(!G3.host||!G3.host.isConnected)return;if(G3.auto)G3.ry=(G3.ry0||0)+Math.sin(performance.now()/5000)*.75;
+  G3.root.rotation.set(G3.rx,G3.ry,0);cam.position.set(0,0,G3.zoom);cam.lookAt(0,0,0);tick3D(performance.now()/1000);R.render(sc,cam)};loop();
  new ResizeObserver(()=>size3D()).observe(document.body);
 }catch(e){G3.ok=false}}
 function size3D(){if(!G3.ok||!G3.host)return;const w=G3.host.clientWidth,h=G3.host.clientHeight;if(!w||!h)return;G3.R.setSize(w,h,false);G3.cam.aspect=w/h;G3.cam.updateProjectionMatrix()}
-function build3D(){
- if(!G3.ok)return;const T=THREE,root=G3.root;while(root.children.length)root.remove(root.children[0]);G3.fan=null;G3.meshes=[];G3.sel=null;
- const grid=new T.GridHelper(16,32,0x4b5dff,0x1c2766);grid.position.y=-.35;root.add(grid);
- const M=MODELS[G3.model];
- const add=(geo,col,pos,name,info)=>{const m=new T.Mesh(geo,new T.MeshStandardMaterial({color:col,roughness:.45,metalness:.2}));m.position.set(...pos);m.userData={name,info};root.add(m);G3.meshes.push(m);return m};
- if(M.net){const N=6,pts=[],typ=G3.net;
-  if(typ==='star'){pts.push([0,0,0]);for(let i=0;i<N;i++){const a=i/N*Math.PI*2;pts.push([Math.cos(a)*3.2,Math.sin(a*2)*.5,Math.sin(a)*3.2])}}
-  else if(typ==='bus'){for(let i=0;i<N;i++)pts.push([-4+i*1.6,i%2?1:-1,0])}else for(let i=0;i<N;i++){const a=i/N*Math.PI*2;pts.push([Math.cos(a)*3,0,Math.sin(a)*3])}
-  pts.forEach((p,i)=>{const hub=typ==='star'&&i===0;add(hub?new T.BoxGeometry(1.2,.6,1.2):new T.SphereGeometry(.45,32,20),hub?0xffc83a:i%2?0x7d8cff:0xff5b3a,p,hub?'Свич (төв төхөөрөмж)':`Компьютер ${typ==='star'?i:i+1}`,hub?'Од топологид бүх төхөөрөмж төвөөр дамжиж холбогдоно. Төв эвдэрвэл сүлжээ тасарна.':'Сүлжээний зангилаа (хост). IP хаягаар танигдана.')});
-  const ln=[],L=(a,b)=>ln.push(new T.Vector3(...pts[a]),new T.Vector3(...pts[b]));
-  if(typ==='star')for(let i=1;i<pts.length;i++)L(0,i);if(typ==='ring')for(let i=0;i<N;i++)L(i,(i+1)%N);if(typ==='mesh')for(let i=0;i<N;i++)for(let j=i+1;j<N;j++)L(i,j);
-  if(typ==='bus'){ln.push(new T.Vector3(-4.6,0,0),new T.Vector3(4.6,0,0));pts.forEach(p=>ln.push(new T.Vector3(p[0],0,0),new T.Vector3(...p)))}
-  root.add(new T.LineSegments(new T.BufferGeometry().setFromPoints(ln),new T.LineBasicMaterial({color:0xffffff})));
- }else M.parts.forEach(([n,info,col,g,pos])=>{let geo;
-  if(g==='fan')geo=new T.CylinderGeometry(.5,.5,.25,32);else if(g==='col')geo=new T.CylinderGeometry(.55,.65,2.8,32);else if(g==='roof')geo=new T.CylinderGeometry(.01,3.9,1.3,4,1);else geo=new T.BoxGeometry(...g);
-  const m=add(geo,col,pos,n,info);if(g==='fan')G3.fan=m;if(g==='roof')m.rotation.y=Math.PI/4});
- info3D(null);parts3D();
-}
-function pick(e){const r=G3.R.domElement.getBoundingClientRect();const v=new THREE.Vector2((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);G3.ray.setFromCamera(v,G3.cam);const hit=G3.ray.intersectObjects(G3.meshes)[0];select(hit?hit.object:null)}
-function select(m){G3.meshes.forEach(x=>{x.material.emissive.setHex(0);x.scale.set(1,1,1)});G3.sel=m;if(m){m.material.emissive.setHex(0x2a2a10);m.scale.set(1.08,1.08,1.08)}info3D(m)}
-function info3D(m){const h=G3.host&&G3.host.querySelector('.info3d');if(!h)return;const M=MODELS[G3.model];
- h.innerHTML=m?`<b>${esc(m.userData.name)}</b>${esc(m.userData.info)}`:`<b>${esc(M.name)}</b>${M.net?'Топологи сонгоод, зангилаа дээр дарна уу.':'Хэсэг дээр дарж тайлбарыг уншина уу.'}`}
-function parts3D(){const el=$('#labParts');if(!el||!G3.ok)return;
- el.innerHTML=G3.meshes.filter((m,i,a)=>a.findIndex(x=>x.userData.name===m.userData.name)===i).map(m=>`<button class="card" style="color:var(--ink);text-align:start;flex-direction:column;align-items:flex-start;font-weight:400" data-part="${G3.meshes.indexOf(m)}"><b style="color:var(--pri);font-weight:600">${esc(m.userData.name)}</b><span class="small mut">${esc(m.userData.info)}</span></button>`).join('')}
+/* ================= 3D ЛАБ: анги бүрийн сурах бичгийн сэдвээр ================= */
+const LABS=[];const lab=(o)=>LABS.push(o);
+const L3={id:LS.get('lab3','pc_setup'),ex:0,exT:0,labels:true,anim:[],parts:[],sprites:[]};
+function mat(c,o={}){return new THREE.MeshStandardMaterial({color:c,roughness:o.r??.45,metalness:o.m??.15,emissive:o.e??0,emissiveIntensity:o.ei??1,transparent:o.op!=null,opacity:o.op??1,side:o.ds?THREE.DoubleSide:THREE.FrontSide,map:o.map||null,flatShading:!!o.flat})}
+function rbox(w,h,d,r){r=Math.min(r??.06,w/2-.001,h/2-.001,d/2-.001);const s=new THREE.Shape(),x=w/2-r,y=h/2-r;s.moveTo(-x,-y-r*0);s.absarc(x,-y,r,-Math.PI/2,0);s.absarc(x,y,r,0,Math.PI/2);s.absarc(-x,y,r,Math.PI/2,Math.PI);s.absarc(-x,-y,r,Math.PI,Math.PI*1.5);
+ const g=new THREE.ExtrudeGeometry(s,{depth:Math.max(.001,d-2*r),bevelEnabled:true,bevelSize:r,bevelThickness:r,bevelSegments:3,curveSegments:6});g.center();return g}
+function ctex(w,h,draw){const c=document.createElement('canvas');c.width=w;c.height=h;draw(c.getContext('2d'),w,h);const t=new THREE.CanvasTexture(c);t.anisotropy=4;return t}
+function txtSprite(t,col){const tx=ctex(512,96,(x,w,h)=>{x.font='600 40px Onest,Arial,sans-serif';const tw=Math.min(w-20,x.measureText(t).width+44);x.fillStyle='rgba(12,16,40,.82)';const r=26,X=(w-tw)/2;x.beginPath();x.roundRect?x.roundRect(X,14,tw,68,r):x.rect(X,14,tw,68);x.fill();x.fillStyle=col||'#fff';x.textAlign='center';x.textBaseline='middle';x.fillText(t,w/2,49,w-40)});
+ const s=new THREE.Sprite(new THREE.SpriteMaterial({map:tx,depthTest:false,transparent:true}));s.scale.set(2.4,.45,1);s.renderOrder=10;return s}
+function mk(geo,m,pos,rot,sc){const o=new THREE.Mesh(geo,m);if(pos)o.position.set(...pos);if(rot)o.rotation.set(...rot);if(sc)o.scale.set(...sc);o.castShadow=true;o.receiveShadow=true;return o}
+const B=(w,h,d)=>new THREE.BoxGeometry(w,h,d),CY=(a,b,h,s=32)=>new THREE.CylinderGeometry(a,b,h,s),SP=(r,a=32,b=20)=>new THREE.SphereGeometry(r,a,b),TO=(r,t,a=16,b=48,arc=Math.PI*2)=>new THREE.TorusGeometry(r,t,a,b,arc);
+function lineBetween(a,b,col=0xffffff){return new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(...a),new THREE.Vector3(...b)]),new THREE.LineBasicMaterial({color:col}))}
+function rod(a,b,r,m){const A=new THREE.Vector3(...a),Bv=new THREE.Vector3(...b),d=Bv.clone().sub(A),o=mk(CY(r,r,d.length(),8),m);o.position.copy(A).addScaledVector(d,.5);o.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.normalize());return o}
+function tube(pts,r,col){const c=new THREE.CatmullRomCurve3(pts.map(p=>new THREE.Vector3(...p)));return mk(new THREE.TubeGeometry(c,64,r,10,false),mat(col,{r:.6}))}
+function packet(root,path,col,speed=.5,off=0){const s=mk(SP(.12,16,10),mat(col,{e:col,ei:.9}));root.add(s);const P=path.map(p=>new THREE.Vector3(...p));let L=0;const seg=[];for(let i=0;i<P.length-1;i++){const d=P[i].distanceTo(P[i+1]);seg.push(d);L+=d}
+ L3.anim.push(t=>{let u=((t*speed+off)%1)*L;for(let i=0;i<seg.length;i++){if(u<=seg[i]){s.position.lerpVectors(P[i],P[i+1],u/seg[i]);return}u-=seg[i]}})}
+/* ---------- загварууд ---------- */
+lab({id:'pc_setup',s:'mt',g:[6,7],u:'Компьютер',name:'Компьютерын иж бүрдэл',desc:'Оролт, гаралт, боловсруулах, хадгалах төхөөрөмжүүд нэг ширээн дээр.',zoom:12,build(P){
+ const desk=P('Ширээ','Компьютерыг зөв байрлуулах ажлын ширээ. Дэлгэц нүднээс 50–70 см зайтай, нүдний түвшнээс бага зэрэг доор байрлана.',[0,-.2,0],[0,0,0]);desk.add(mk(rbox(9,.2,4.4,.05),mat(0xc9a27a,{r:.7})));
+ const mon=P('Дэлгэц (гаралт)','Компьютерын боловсруулсан мэдээллийг дүрс, бичвэр хэлбэрээр харуулна. Гаралтын төхөөрөмж.',[0,1.75,-1.2],[0,.6,-.6]);
+ mon.add(mk(rbox(4.2,2.5,.14,.06),mat(0x161a24,{r:.35,m:.4})));mon.add(mk(B(3.95,2.25,.02),mat(0x0b1030,{e:0xffffff,ei:.95,map:ctex(512,300,(x,w,h)=>{const g=x.createLinearGradient(0,0,w,h);g.addColorStop(0,'#2f45ff');g.addColorStop(1,'#00c08b');x.fillStyle=g;x.fillRect(0,0,w,h);x.fillStyle='rgba(255,255,255,.9)';for(let i=0;i<5;i++)x.fillRect(24,26+i*48,46,36);x.fillStyle='rgba(0,0,0,.35)';x.fillRect(0,h-28,w,28);x.fillStyle='#fff';x.font='bold 40px Arial';x.fillText('ТехЁс',w/2-60,h/2)})}),[0,0,.075]));
+ mon.add(mk(CY(.12,.12,.9,16),mat(0x2a2f3c,{m:.6}),[0,-1.55,-.05]));mon.add(mk(rbox(1.3,.08,.8,.03),mat(0x2a2f3c,{m:.6}),[0,-1.98,0]));
+ const cam=P('Вэб камер (оролт)','Дүрс, видеог компьютерт оруулна. Онлайн хичээл, видео дуудлагад ашиглана.',[0,3.12,-1.15],[0,.6,0]);cam.add(mk(rbox(.5,.22,.22,.08),mat(0x111318)));cam.add(mk(CY(.07,.07,.05,20),mat(0x3355ff,{m:.8,r:.1}),[0,0,.12],[Math.PI/2,0,0]));
+ const tw=P('Системийн блок (боловсруулах, хадгалах)','Дотроо эх хавтан, төв процессор, санах ой, хадгалах төхөөрөмж, тэжээлийн блоктой. Мэдээллийг боловсруулж, хадгална.',[3.4,1.2,-1],[1.4,0,0]);
+ tw.add(mk(rbox(1.1,2.6,2.2,.06),mat(0x1d2230,{r:.4,m:.5})));tw.add(mk(B(.02,2.3,1.9),mat(0x2f45ff,{op:.35}),[-.56,0,0]));tw.add(mk(CY(.09,.09,.04,24),mat(0x00ff9c,{e:0x00ff9c,ei:1}),[0,.95,1.11],[Math.PI/2,0,0]));
+ for(let i=0;i<3;i++)tw.add(mk(B(.8,.08,.02),mat(0x444b5c),[0,.5-i*.18,1.11]));
+ const kb=P('Гар (оролт)','Үсэг, тоо, тэмдэгт, командыг оруулна. Гарын хурууны үндсэн байрлалаар бичихэд хурд, нарийвчлал нэмэгдэнэ.',[-.3,.02,.9],[0,0,.9]);
+ kb.add(mk(rbox(3.6,.12,1.2,.04),mat(0x22262f,{m:.3})));const km=mat(0xf2f4f8,{r:.6});for(let r=0;r<4;r++)for(let c=0;c<13;c++)kb.add(mk(rbox(.22,.07,.2,.02),km,[-1.55+c*.26+(r%2)*.06,.09,-.4+r*.25]));kb.add(mk(rbox(1.6,.07,.2,.02),km,[0,.09,.55]));
+ const ms=P('Хулгана (оролт)','Дэлгэц дээрх заагчийг удирдаж, сонгох, нээх, чирэх үйлдэл хийнэ.',[2.1,.08,1],[.6,0,.6]);ms.add(mk(SP(.28,32,20),mat(0xeef0f5,{r:.35}),null,null,[.75,.42,1.15]));ms.add(mk(CY(.04,.04,.07,16),mat(0x333a48),[0,.13,-.12],[0,0,Math.PI/2]));
+ const sp=(x,n)=>{const g=P(n,'Дуу, хөгжим, яриаг сонсгоно. Гаралтын төхөөрөмж.',[x,.75,-1.1],[x>0?.8:-.8,0,0]);g.add(mk(rbox(.7,1.3,.7,.08),mat(0x2b2f3a,{r:.5})));g.add(mk(CY(.24,.24,.04,28),mat(0x101216,{r:.9}),[0,.2,.36],[Math.PI/2,0,0]));g.add(mk(CY(.12,.12,.04,24),mat(0x101216),[0,-.35,.36],[Math.PI/2,0,0]))};sp(-2.7,'Чанга яригч (гаралт)');
+ const pr=P('Хэвлэгч (гаралт)','Баримт, зургийг цаасан дээр хэвлэж гаргана.',[-3.6,.55,-.4],[-1.2,0,.3]);pr.add(mk(rbox(1.6,.8,1.2,.08),mat(0xe8eaef,{r:.5})));pr.add(mk(B(1.2,.02,.6),mat(0xffffff,{r:.9}),[0,.42,-.3],[-.5,0,0]));pr.add(mk(B(1.1,.02,.5),mat(0xffffff,{r:.9}),[0,-.1,.75]));
+ const mic=P('Микрофон (оролт)','Дуу, яриаг дуут дохио болгон компьютерт оруулна.',[1.4,.6,-.2],[.5,.4,0]);mic.add(mk(CY(.04,.06,.8,16),mat(0x30343e,{m:.6})));mic.add(mk(SP(.13),mat(0x6b7180,{m:.7,r:.3}),[0,.45,0]));mic.add(mk(CY(.25,.25,.04,24),mat(0x30343e),[0,-.4,0]));
+}});
+lab({id:'keyboard',s:'mt',g:[6],u:'Баримт бичиг боловсруулах',lbl:false,rx:.7,ry:0,name:'Гарын хурууны байрлал',desc:'Хуруу бүрийн хариуцах товчлуурын бүс өнгөөр ялгагдсан гар.',zoom:9,build(P){
+ const Z=[['Зүүн гарын чигчий хуруу',0xff6b6b],['Зүүн гарын нэргүй хуруу',0xffa94d],['Зүүн гарын дунд хуруу',0xffd43b],['Зүүн гарын долоовор хуруу',0x69db7c],['Баруун гарын долоовор хуруу',0x38d9a9],['Баруун гарын дунд хуруу',0x4dabf7],['Баруун гарын нэргүй хуруу',0x9775fa],['Баруун гарын чигчий хуруу',0xf783ac]];
+ const base=P('Гарын суурь','Гарын хурууны үндсэн байрлал: хоёр гарын долоовор хуруу товгортой товчлуурууд дээр, бусад хуруу тэдгээрийн хажууд дараалан байрлана.',[0,-.15,0],[0,-.5,0]);base.add(mk(rbox(8.2,.25,3,.08),mat(0x23272f,{m:.3})));
+ const zone=c=>c<=1?0:c===2?1:c===3?2:c<=5?3:c<=7?4:c===8?5:c===9?6:7;const groups=Z.map(([n,col],i)=>P(n,`${n}: өнгөөр тэмдэглэсэн баганын товчлууруудыг дарна. Гарыг харалгүй, хуруу бүрээ өөрийн бүсэд байлгаж бичнэ.`,[0,0,0],[0,.25+i*.02,0]));
+ for(let r=0;r<4;r++)for(let c=0;c<12;c++){const zi=zone(c),g=groups[zi];g.add(mk(rbox(.52,.18,.52,.05),mat(Z[zi][1],{r:.55}),[-3.3+c*.6+r*.15,.12,-1.05+r*.62]));if(r===2&&(c===3||c===6))g.add(mk(B(.18,.03,.04),mat(0x111111),[-3.3+c*.6+r*.15,.22,-1.05+r*.62+.12]))}
+ const th=P('Эрхий хуруу — Space','Хоёр гарын эрхий хуруу зай авах (Space) товчлуур дээр байрлана.',[0,0,0],[0,.4,0]);th.add(mk(rbox(3.4,.18,.5,.05),mat(0xdee2e6,{r:.55}),[.2,.12,1.42]));
+ const sh=P('Тусгай товчлуурууд','Shift, Enter, Backspace, Tab, Caps Lock-ыг чигчий хуруугаар дарна. Том үсгийг эсрэг гарын Shift-ээр бичнэ.',[0,0,0],[0,.4,0]);[[-4.05,-1.05,.9],[-4.05,.19,1.1],[3.95,-.43,1],[4.1,.81,1.2]].forEach(([x,z,w])=>sh.add(mk(rbox(w,.18,.52,.05),mat(0x868e96,{r:.55}),[x,.12,z])));
+}});
+lab({id:'mouse',s:'mt',g:[6],u:'Компьютер',name:'Хулгана',desc:'Хулганы бүтэц, товчлуур бүрийн үүрэг.',zoom:6,build(P){
+ const body=P('Их бие','Гарын алганд тохирсон хэлбэртэй. Доод талын мэдрэгч хөдөлгөөнийг заагчийн хөдөлгөөн болгоно.',[0,0,0],[0,-.6,0]);body.add(mk(SP(1,48,32),mat(0xe9ecf2,{r:.3}),[0,0,.25],null,[.95,.5,1.5]));
+ const lb=P('Зүүн товчлуур','Нэг товших — сонгох; ойрхон хоёр товших — файл, программ нээх; дарж чирэх — зөөх, сонгох.',[0,0,0],[-.5,.6,0]);lb.add(mk(SP(1,32,16,0,Math.PI),mat(0xf8f9fb,{r:.25}),[-.25,.08,-.55],null,[.48,.5,.75]));
+ const rb=P('Баруун товчлуур','Нэмэлт (контекст) цэсийг гаргана.',[0,0,0],[.5,.6,0]);rb.add(mk(SP(1,32,16),mat(0xf8f9fb,{r:.25}),[.25,.08,-.55],null,[.48,.5,.75]));
+ const wh=P('Гүйлгэх дугуй','Хуудсыг дээш, доош гүйлгэнэ. Дарахад дунд товчлуурын үүрэг гүйцэтгэнэ.',[0,.52,-.55],[0,1,0]);wh.add(mk(CY(.16,.16,.12,24),mat(0x3a4150,{r:.8}),null,[0,0,Math.PI/2]));
+ const sn=P('Оптик мэдрэгч','Гэрэл тусгаж гадаргууг секундэд мянга мянган удаа зураг авч, хөдөлгөөнийг тодорхойлно.',[0,-.5,.1],[0,-1.2,0]);sn.add(mk(CY(.12,.12,.05,24),mat(0xff2b2b,{e:0xff2b2b,ei:1})));
+ const cb=P('Кабель / утасгүй холболт','USB кабелиар эсвэл утасгүй (Bluetooth, радио) холбогдоно.',[0,0,0],[0,0,-.8]);cb.add(tube([[0,0,-1.2],[0,-.1,-2],[.4,-.3,-2.8],[1,-.4,-3.4]],.06,0x2a2f3a));
+}});
+lab({id:'storage',s:'mt',g:[7,11],u:'Компьютер / Хадгалах төхөөрөмж',name:'Хадгалах төхөөрөмжүүд',desc:'Хатуу диск (HDD), SSD, флаш диск, санах ойн карт, оптик диск.',zoom:11,build(P){
+ const hdd=P('Хатуу диск (HDD)','Соронзон бүрхүүлтэй эргэлддэг дискэн дээр уншиж, бичих толгойгоор өгөгдлийг хадгална. Багтаамж их, үнэ хямд боловч SSD-ээс удаан.',[-2.6,0,0],[-1.5,0,0]);
+ hdd.add(mk(rbox(2.6,.35,3.4,.08),mat(0x9aa3b2,{m:.85,r:.3})));const pl=mk(CY(1.05,1.05,.04,64),mat(0xd9dee8,{m:1,r:.08}),[0,.22,-.35]);hdd.add(pl);hdd.add(mk(CY(.18,.18,.1,24),mat(0x6b7280,{m:.9}),[0,.25,-.35]));
+ const arm=new THREE.Group();arm.position.set(.9,.27,1.05);arm.add(mk(B(.12,.04,1.5),mat(0xc0c6d2,{m:.9}),[0,0,-.7]));arm.add(mk(CY(.16,.16,.1,20),mat(0x4b5260,{m:.8})));hdd.add(arm);L3.anim.push(t=>{pl.rotation.y=t*6;arm.rotation.y=-.35+Math.sin(t*1.7)*.18});
+ const ssd=P('SSD (хатуу төлөвт хөтөч)','Хөдөлгөөнт эд ангигүй, флаш санах ойн чипүүдэд хадгална. Хурдан, чимээгүй, цохилтод тэсвэртэй.',[.4,0,-.6],[0,0,-1.2]);ssd.add(mk(rbox(1.6,.12,2.4,.04),mat(0x1f2433,{m:.5})));for(let i=0;i<4;i++)ssd.add(mk(B(.5,.05,.45),mat(0x111318,{r:.3}),[-.35+(i%2)*.7,.09,-.6+Math.floor(i/2)*.7]));ssd.add(mk(B(1.4,.02,.5),mat(0xffc83a,{m:.6}),[0,.08,.8]));
+ const m2=P('M.2 NVMe SSD','Эх хавтанд шууд суурилагддаг жижиг SSD. SATA SSD-ээс хэд дахин хурдан.',[.4,0,1.6],[0,0,1]);m2.add(mk(B(2.2,.05,.5),mat(0x0d6b4a,{r:.5})));for(let i=0;i<3;i++)m2.add(mk(B(.42,.06,.36),mat(0x14161c),[-.6+i*.55,.05,0]));m2.add(mk(B(.15,.05,.5),mat(0xd4a017,{m:.8}),[1.12,0,0]));
+ const usb=P('Флаш диск (USB)','Флаш санах ойтой, USB портоор холбогддог зөөврийн хадгалах төхөөрөмж.',[2.6,0,-.8],[1.2,0,-.6]);usb.add(mk(rbox(.6,.3,1.6,.12),mat(0x2f45ff,{r:.35})));usb.add(mk(B(.45,.18,.55),mat(0xc9ced8,{m:1,r:.2}),[0,0,1.05]));
+ const sd=P('Санах ойн карт (SD)','Камер, утсанд ашиглагдах жижиг флаш санах ой.',[2.7,0,.9],[1.2,0,.6]);sd.add(mk(rbox(.9,.06,1.1,.04),mat(0x22252e)));sd.add(mk(B(.7,.02,.3),mat(0xffffff,{r:.6}),[0,.04,0]));
+ const cd=P('Оптик диск (CD/DVD)','Лазер туяагаар уншиж, бичдэг диск. Одоо бага хэрэглэгддэг.',[0,-.1,3.4],[0,0,1.4]);const disc=mk(CY(1,1,.03,64),mat(0xdfe6f2,{m:1,r:.05}));cd.add(disc);cd.add(mk(CY(.18,.18,.04,24),mat(0x9aa3b2),[0,.01,0]));L3.anim.push(t=>disc.rotation.y=t*2);
+}});
+lab({id:'layers',s:'mt',g:[7],u:'Зураг боловсруулах технологи',name:'Давхаргат зураг',desc:'Paint.NET-ийн давхаргууд хэрхэн давхарлагдаж нэг зураг үүсгэдгийг харуулна.',zoom:10,build(P){
+ const mkL=(name,info,z,draw,exz)=>{const g=P(name,info,[0,0,z],[0,0,exz]);g.add(mk(B(4.8,3.2,.02),mat(0xffffff,{op:.98,map:ctex(512,340,draw),ds:true,r:.9})));g.add(mk(B(4.9,3.3,.01),mat(0x2f45ff,{op:.15}),[0,0,-.02]));return g};
+ mkL('Давхарга 1 — Дэвсгэр','Хамгийн доод давхарга. Тэнгэр, газрын дэвсгэр өнгө.',-.06,(x,w,h)=>{const g=x.createLinearGradient(0,0,0,h);g.addColorStop(0,'#7cc4ff');g.addColorStop(.62,'#d8efff');g.addColorStop(.62,'#7bc86c');g.addColorStop(1,'#4c9a43');x.fillStyle=g;x.fillRect(0,0,w,h);x.fillStyle='#ffd43b';x.beginPath();x.arc(420,70,36,0,7);x.fill()},-1.8);
+ mkL('Давхарга 2 — Мод, уул','Дунд давхарга. Тусад нь зөөж, засаж болно. Дэвсгэргүй (тунгалаг) хэсэг нь доорх давхаргыг харуулна.',0,(x,w,h)=>{x.clearRect(0,0,w,h);x.fillStyle='#5b6b7a';x.beginPath();x.moveTo(0,215);x.lineTo(120,90);x.lineTo(240,215);x.fill();x.fillStyle='#8a5a2b';x.fillRect(330,170,22,70);x.fillStyle='#2f9e44';x.beginPath();x.arc(341,150,52,0,7);x.fill()},0);
+ mkL('Давхарга 3 — Шувуу, бичвэр','Хамгийн дээд давхарга бусдынхаа өмнө харагдана. Давхаргын дарааллыг Layers цонхонд өөрчилнө.',.06,(x,w,h)=>{x.clearRect(0,0,w,h);x.strokeStyle='#222';x.lineWidth=6;for(const [a,b] of [[160,80],[210,110]]){x.beginPath();x.moveTo(a-22,b);x.quadraticCurveTo(a-10,b-14,a,b);x.quadraticCurveTo(a+10,b-14,a+22,b);x.stroke()}x.fillStyle='#fff';x.font='bold 34px Arial';x.fillText('Миний нутаг',150,310)},1.8);
+}});
+lab({id:'bits',s:'mt',g:[7],u:'Мэдээлэл, загвар',name:'Бит ба байт',desc:'8 бит нэг байт болдог; 01000001 = 65 = «A» тэмдэгт.',zoom:10,build(P){
+ const v='01000001';for(let i=0;i<8;i++){const on=v[i]==='1',w=2**(7-i);const g=P(`Бит ${i+1}: ${v[i]} (жин ${w})`,`Хоёртын тооны ${i+1}-р орон. Жин нь 2^${7-i} = ${w}. ${on?'1 тул '+w+'-г нийлбэрт нэмнэ.':'0 тул нэмэхгүй.'}`,[-3.15+i*.9,0,0],[0,(i-3.5)*.25,0]);
+  g.add(mk(rbox(.75,.75,.75,.1),mat(on?0x00c08b:0x2a3150,{e:on?0x00c08b:0,ei:.25})));g.add(mk(B(.5,.5,.02),mat(0xffffff,{map:ctex(128,128,(x,W,H)=>{x.fillStyle=on?'#00c08b':'#2a3150';x.fillRect(0,0,W,H);x.fillStyle='#fff';x.font='bold 96px Arial';x.textAlign='center';x.textBaseline='middle';x.fillText(v[i],W/2,H/2+4)})}),[0,0,.39]));
+  g.add(mk(B(.6,.3,.02),mat(0xffffff,{map:ctex(128,64,(x,W,H)=>{x.fillStyle='#0c1028';x.fillRect(0,0,W,H);x.fillStyle='#9fb0ff';x.font='bold 40px Arial';x.textAlign='center';x.textBaseline='middle';x.fillText(String(w),W/2,H/2)})}),[0,-.7,.2]))}
+ const by=P('1 байт = 8 бит','8 битийн дараалал нэг байт. 64 + 1 = 65 нь ASCII хүснэгтээр «A» үсэг. 1 Кб = 1024 байт.',[0,1.2,0],[0,.8,0]);by.add(mk(rbox(7.6,.12,.9,.05),mat(0xffc83a,{op:.85})));
+}});
+lab({id:'pc_inside',s:'mt',g:[8,11,12],u:'Компьютер / Техник хангамж',name:'Компьютерын дотоод бүтэц',desc:'Эх хавтан, процессор, хөргөгч, RAM, видео карт, SSD, тэжээлийн блок.',zoom:11,build(P){
+ const mb=P('Эх хавтан','Бүх эд ангийг холбож, хооронд нь өгөгдөл дамжуулах үндсэн хавтан.',[0,0,0],[0,-.6,0]);mb.add(mk(rbox(6.2,.12,4.6,.04),mat(0x0f6b4f,{r:.55})));
+ for(let i=0;i<14;i++)mb.add(mk(B(.04,.01,4),mat(0xd4a017,{m:.8}),[-2.9+i*.12,.07,0]));for(let i=0;i<4;i++)mb.add(mk(B(2.8,.1,.12),mat(0x1b1d24),[-.3,.1,.6+i*.35]));
+ const cpu=P('Төв процессор (CPU)','Программын командыг гүйцэтгэж, тооцоолол хийдэг «тархи». Давтамж (GHz), цөмийн тоогоор хүчин чадал нь тодорхойлогдоно.',[-1.2,.16,-1.1],[0,.7,0]);cpu.add(mk(B(1,.06,1),mat(0x2b5c3a)));cpu.add(mk(rbox(.82,.08,.82,.03),mat(0xc9ced8,{m:1,r:.25}),[0,.07,0]));
+ const cool=P('Хөргөгч, сэнс','Процессорын дулааныг хөнгөн цагаан сэрвээгээр тарааж, сэнсээр хөргөнө. Хэт халахаас хамгаална.',[-1.2,.75,-1.1],[0,1.8,0]);for(let i=0;i<11;i++)cool.add(mk(B(1.2,.9,.03),mat(0xb8c0cc,{m:.9,r:.3}),[0,0,-.5+i*.1]));const fan=new THREE.Group();fan.position.set(0,.55,0);fan.add(mk(CY(.55,.55,.1,32),mat(0x22262f,{op:.85})));for(let i=0;i<7;i++){const b=mk(B(.48,.02,.16),mat(0x2f45ff),[0,.03,0],[0,i/7*Math.PI*2,.25]);b.geometry.translate(.25,0,0);fan.add(b)}cool.add(fan);L3.anim.push(t=>fan.rotation.y=t*14);
+ const ram=P('Шуурхай санах ой (RAM)','Ажиллаж буй программ, өгөгдлийг түр хадгална. Тэжээл тасрахад арилна. GB-ээр хэмжинэ.',[.4,.62,-1.2],[0,1.4,-.4]);[0,.32].forEach(x=>{ram.add(mk(B(.12,1,2.6),mat(0x0e3d8c,{r:.4}),[x,0,0]));for(let k=0;k<6;k++)ram.add(mk(B(.04,.35,.3),mat(0x111318),[x+.08,.05,-1.05+k*.42]));ram.add(mk(B(.13,.08,2.6),mat(0xd4a017,{m:.8}),[x,-.52,0]))});
+ const gpu=P('Видео карт (GPU)','Дэлгэцийн дүрс, видео, 3D зургийг боловсруулна. Зураг, видео засварлах, тоглоомд чухал.',[-.4,.55,1],[0,1,1.4]);gpu.add(mk(rbox(4,.5,1.3,.06),mat(0x1a1d26,{m:.5})));[-1,.8].forEach(x=>{const f=mk(CY(.48,.48,.06,32),mat(0x2a2f3c),[x,-.28,0]);gpu.add(f);L3.anim.push(t=>f.rotation.y=t*10)});gpu.add(mk(B(3.2,.03,.04),mat(0xff5b3a,{e:0xff5b3a,ei:.8}),[0,.26,.64]));
+ const ssd=P('M.2 SSD','Үйлдлийн систем, программ, файлыг хадгална. Эх хавтанд шууд суурилна.',[1.8,.12,.2],[1.2,0,0]);ssd.add(mk(B(1.6,.05,.4),mat(0x111318)));ssd.add(mk(B(.3,.06,.36),mat(0xffc83a,{m:.6}),[.3,.03,0]));
+ const psu=P('Тэжээлийн блок (PSU)','Хувьсах гүйдлийг эд ангиудад тохирох тогтмол хүчдэл болгон хувиргана. Ваттаар (W) хэмжинэ.',[2.3,.7,-1.4],[1.6,.4,-.6]);psu.add(mk(rbox(1.5,1.2,1.6,.06),mat(0x2e3340,{m:.6})));psu.add(mk(CY(.5,.5,.03,32),mat(0x111318),[0,.61,0]));
+ const sata=P('Холболтын портууд','USB, HDMI, аудио, сүлжээний (RJ‑45) портууд — гадаад төхөөрөмжийг холбоно.',[-2.9,.4,0],[-1.2,0,0]);[-1.3,-.7,-.1,.5,1.1].forEach((z,i)=>sata.add(mk(B(.25,.3,.45),mat([0x2f45ff,0x222,0x00c08b,0xffc83a,0xc9ced8][i],{m:.4}),[0,0,z])));
+}});
+lab({id:'sw_layers',s:'mt',g:[8],u:'Компьютер',name:'Программ хангамжийн ангилал',desc:'Техник хангамж → үйлдлийн систем → үйлчилгээний → хэрэглээний программ → хэрэглэгч.',zoom:10,build(P){
+ const L=[['Техник хангамж','Компьютерын биет эд ангиуд: процессор, санах ой, диск, дэлгэц.',0x5a6280],['Үйлдлийн систем','Техник хангамжийг удирдаж, программуудыг ажиллуулах орчин бүрдүүлнэ. Жишээ: Windows, Linux, Android.',0x2f45ff],['Үйлчилгээний программ','Компьютерын хэвийн ажиллагааг хангана: вирусийн эсрэг, архивлагч (WinRAR), диск цэвэрлэгч, драйвер.',0x00c08b],['Хэрэглээний программ','Хэрэглэгчийн ажлыг гүйцэтгэнэ: MS Word, Excel, Paint.NET, хөтөч, тоглоом.',0xff5b3a],['Программчлалын систем','Шинэ программ зохиох хэрэгсэл: Scratch, Small Basic, Python.',0xffc83a]];
+ L.forEach(([n,info,c],i)=>{const g=P(n,info,[0,-1.6+i*.8,0],[0,i*.45-.9,0]);g.add(mk(rbox(5.2-i*.6,.55,3.2-i*.3,.1),mat(c,{r:.4,op:.92})))});
+ const u=P('Хэрэглэгч','Хэрэглэгч хэрэглээний программаар дамжуулан компьютертэй харилцана.',[0,2.8,0],[0,1.6,0]);u.add(mk(SP(.32),mat(0xffd8b0),[0,.55,0]));u.add(mk(CY(.25,.4,.8,24),mat(0x2f45ff)));
+}});
+lab({id:'rgb',s:'mt',g:[8],u:'Зураг боловсруулах технологи',name:'RGB өнгөний загвар',desc:'Улаан, ногоон, цэнхэр (0–255) гэрлийг хольж бүх өнгийг гаргана.',zoom:9,build(P){
+ const C=[['Хар (0, 0, 0)',0x000000,[0,0,0]],['Улаан (255, 0, 0)',0xff0000,[1,0,0]],['Ногоон (0, 255, 0)',0x00ff00,[0,1,0]],['Цэнхэр (0, 0, 255)',0x0000ff,[0,0,1]],['Шар (255, 255, 0)',0xffff00,[1,1,0]],['Ягаан (255, 0, 255)',0xff00ff,[1,0,1]],['Цэнхэр ногоон (0, 255, 255)',0x00ffff,[0,1,1]],['Цагаан (255, 255, 255)',0xffffff,[1,1,1]]];
+ const cube=P('RGB шоо','Тэнхлэг бүр нэг үндсэн өнгө (0–255). Шооны дотор цэг бүр нэг өнгө. Нийт 256³ ≈ 16.7 сая өнгө.',[0,0,0],[0,0,0]);const geo=B(3,3,3),col=[];const pos=geo.attributes.position;for(let i=0;i<pos.count;i++){col.push(pos.getX(i)/3+.5,pos.getY(i)/3+.5,pos.getZ(i)/3+.5)}geo.setAttribute('color',new THREE.Float32BufferAttribute(col,3));
+ cube.add(new THREE.Mesh(geo,new THREE.MeshBasicMaterial({vertexColors:true,transparent:true,opacity:.55})));cube.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo),new THREE.LineBasicMaterial({color:0xffffff})));
+ C.forEach(([n,c,[r,g,b]])=>{const p=P(n,`${n}: R=${r*255}, G=${g*255}, B=${b*255}. ${r+g+b===0?'Гэрэл огт байхгүй.':r+g+b===3?'Гурван өнгө бүрэн хольсон.':r+g+b===2?'Хоёр үндсэн өнгийг хольсон.':'Үндсэн өнгө.'}`,[(r-.5)*3,(g-.5)*3,(b-.5)*3],[(r-.5)*1.2,(g-.5)*1.2,(b-.5)*1.2]);p.add(mk(SP(.3),mat(c,{e:c,ei:.35,r:.3})))});
+}});
+function flowModel(P,steps,links){const N=steps.map(([n,info,shape,pos,col])=>{const g=P(n,info,pos,[0,0,pos[0]*.15]);let geo;
+  if(shape==='oval'){geo=CY(.55,.55,.3,40);const m=mk(geo,mat(col),null,[Math.PI/2,0,0],[1.9,1,.8]);g.add(m)}
+  else if(shape==='para'){const s=new THREE.Shape();s.moveTo(-1,-.4);s.lineTo(.75,-.4);s.lineTo(1,.4);s.lineTo(-.75,.4);s.closePath();const e=new THREE.ExtrudeGeometry(s,{depth:.3,bevelEnabled:true,bevelSize:.03,bevelThickness:.03});e.center();g.add(mk(e,mat(col)))}
+  else if(shape==='rhomb'){const s=new THREE.Shape();s.moveTo(0,-.65);s.lineTo(1.1,0);s.lineTo(0,.65);s.lineTo(-1.1,0);s.closePath();const e=new THREE.ExtrudeGeometry(s,{depth:.3,bevelEnabled:true,bevelSize:.03,bevelThickness:.03});e.center();g.add(mk(e,mat(col)))}
+  else g.add(mk(rbox(2,.8,.3,.05),mat(col)));
+  const lbl=txtSprite(n.replace(/^\d+\.\s*/,''),'#fff');lbl.position.set(0,0,.3);lbl.scale.set(2,.38,1);g.add(lbl);return pos});
+ links.forEach(([a,b,via])=>{const pts=[N[a],...(via||[]),N[b]];for(let i=0;i<pts.length-1;i++)G3.root.add(lineBetween(pts[i],pts[i+1],0x9fb0ff))});return N}
+lab({id:'flow_branch',s:'mt',g:[8,9],u:'Үйлдлийн дараалал',name:'Салаалсан алгоритмын блок схем',desc:'Хөнгөлөлт тооцох алгоритм: S > 50000 бол 10% хасна.',zoom:13,build(P){
+ const N=flowModel(P,[['1. Эхлэл','Алгоритмын эхлэл — зууван дүрс.','oval',[0,3.6,0],0x00c08b],['2. Оролт: S','Худалдан авалтын дүнг оруулна — параллелограмм.','para',[0,2.2,0],0x2f45ff],['3. S > 50000 ?','Нөхцөл шалгах — ромб. Үнэн бол баруун, худал бол зүүн салаа.','rhomb',[0,.6,0],0xffc83a],['4. T = S − S·0.1','Үнэн салаа: 10% хөнгөлөлт тооцно — тэгш өнцөгт.','box',[2.6,-.9,0],0xff5b3a],['5. T = S','Худал салаа: хөнгөлөлтгүй.','box',[-2.6,-.9,0],0x7d8cff],['6. Гаралт: T','Төлөх дүнг хэвлэнэ — параллелограмм.','para',[0,-2.4,0],0x2f45ff],['7. Төгсгөл','Алгоритмын төгсгөл.','oval',[0,-3.8,0],0x00c08b]],[[0,1],[1,2],[2,3,[[2.6,.6,0]]],[2,4,[[-2.6,.6,0]]],[3,5,[[2.6,-2.4,0]]],[4,5,[[-2.6,-2.4,0]]],[5,6]]);
+ packet(G3.root,[N[0],N[1],N[2],[2.6,.6,0],N[3],[2.6,-2.4,0],N[5],N[6]].map(p=>[p[0],p[1],.35]),0xffffff,.12);
+}});
+lab({id:'flow_loop',s:'mt',g:[9,11],u:'Үйлдлийн дараалал / Давталт',name:'Давталттай алгоритмын блок схем',desc:'1-ээс n хүртэлх тоонуудын нийлбэр: s = s + i.',zoom:13,build(P){
+ const N=flowModel(P,[['1. Эхлэл','Эхлэл.','oval',[0,3.8,0],0x00c08b],['2. Оролт: n','Хэдэн хүртэл нэмэхийг оруулна.','para',[0,2.5,0],0x2f45ff],['3. s = 0, i = 1','Анхны утга олгох.','box',[0,1.2,0],0x7d8cff],['4. i ≤ n ?','Давталтын нөхцөл. Үнэн бол давталтын бие гүйцэтгэгдэнэ.','rhomb',[0,-.2,0],0xffc83a],['5. s = s + i; i = i + 1','Давталтын бие: нийлбэрт нэмээд тоолуурыг 1-ээр ихэсгэнэ.','box',[3,-.2,0],0xff5b3a],['6. Гаралт: s','Нөхцөл худал болоход нийлбэрийг хэвлэнэ.','para',[0,-1.9,0],0x2f45ff],['7. Төгсгөл','Төгсгөл.','oval',[0,-3.3,0],0x00c08b]],[[0,1],[1,2],[2,3],[3,4],[4,3,[[3,1.0,0],[0,.55,0]]],[3,5],[5,6]]);
+ packet(G3.root,[N[3],N[4],[3,1.0,0],[0,.55,0],N[3]].map(p=>[p[0],p[1],.35]),0xffffff,.25);
+}});
+lab({id:'network',s:'mt',g:[9,12],u:'Компьютерын сүлжээ',name:'Сүлжээний топологи',net:true,desc:'Од, цагираг, гол шугамт, бүрэн холбоот топологи; өгөгдлийн багц дамжих нь.',zoom:12,build(P){
+ const N=6,pts=[],typ=G3.net;
+ if(typ==='star'){pts.push([0,0,0]);for(let i=0;i<N;i++){const a=i/N*Math.PI*2;pts.push([Math.cos(a)*3.4,0,Math.sin(a)*3.4])}}else if(typ==='bus'){for(let i=0;i<N;i++)pts.push([-4+i*1.6,0,i%2?1.4:-1.4])}else for(let i=0;i<N;i++){const a=i/N*Math.PI*2;pts.push([Math.cos(a)*3.2,0,Math.sin(a)*3.2])}
+ pts.forEach((p,i)=>{const hub=typ==='star'&&i===0;const g=P(hub?'Свич (төв төхөөрөмж)':`Компьютер ${typ==='star'?i:i+1}`,hub?'Од топологид бүх төхөөрөмж свичээр дамжиж холбогдоно. Нэг компьютер эвдэрсэн ч бусад нь ажиллана; свич эвдэрвэл сүлжээ тасарна.':'Сүлжээний зангилаа. Сүлжээний карт, IP хаягаар танигдана.',p,[p[0]*.15,0,p[2]*.15]);
+  if(hub){g.add(mk(rbox(1.6,.35,1,.05),mat(0x22262f,{m:.5})));for(let k=0;k<8;k++)g.add(mk(B(.12,.1,.02),mat(0x00ff9c,{e:0x00ff9c}),[-.6+k*.17,.05,.51]))}
+  else{g.add(mk(rbox(1,.65,.06,.03),mat(0x161a24),[0,.55,0]));g.add(mk(B(.9,.55,.01),mat(0x2f45ff,{e:0x2f45ff,ei:.6}),[0,.55,.035]));g.add(mk(B(.08,.3,.08),mat(0x2a2f3c),[0,.12,0]));g.add(mk(rbox(.9,.05,.4,.02),mat(0x30343e),[0,-.02,.35]))}});
+ const P3=p=>[p[0],.1,p[2]],lines=[];const L=(a,b)=>{G3.root.add(lineBetween(P3(pts[a]),P3(pts[b]),0xffffff));lines.push([a,b])};
+ if(typ==='star')for(let i=1;i<pts.length;i++)L(0,i);if(typ==='ring')for(let i=0;i<N;i++)L(i,(i+1)%N);if(typ==='mesh')for(let i=0;i<N;i++)for(let j=i+1;j<N;j++)L(i,j);
+ if(typ==='bus'){G3.root.add(lineBetween([-4.6,.1,0],[4.6,.1,0],0xffc83a));pts.forEach(p=>G3.root.add(lineBetween([p[0],.1,0],P3(p),0xffffff)));packet(G3.root,[[-4.6,.1,0],[4.6,.1,0]],0xff5b3a,.3)}
+ else if(typ==='star'){packet(G3.root,[P3(pts[1]),P3(pts[0]),P3(pts[4])],0xff5b3a,.35);packet(G3.root,[P3(pts[2]),P3(pts[0]),P3(pts[5])],0xffc83a,.35,.5)}
+ else if(typ==='ring'){packet(G3.root,[...pts,pts[0]].map(P3),0xff5b3a,.15)}else{packet(G3.root,[P3(pts[0]),P3(pts[3])],0xff5b3a,.4);packet(G3.root,[P3(pts[1]),P3(pts[4])],0xffc83a,.4,.3)}
+}});
+lab({id:'lan',s:'mt',g:[9,12],u:'Компьютерын сүлжээ',name:'Дотоод сүлжээний төхөөрөмж',desc:'Ангийн LAN: свич, чиглүүлэгч, UTP кабель, RJ‑45, хэвлэгч.',zoom:12,build(P){
+ const sw=P('Свич (Switch)','Дотоод сүлжээний төхөөрөмжүүдийг холбож, өгөгдлийг зөвхөн хүлээн авагч руу нь дамжуулна.',[0,0,0],[0,.8,0]);sw.add(mk(rbox(3,.45,1.2,.05),mat(0x1d2230,{m:.6})));for(let k=0;k<12;k++){sw.add(mk(B(.18,.16,.05),mat(0x0b0d12),[-1.25+k*.22,0,.61]));sw.add(mk(B(.06,.04,.02),mat(k%3?0x00ff9c:0xffc83a,{e:k%3?0x00ff9c:0xffc83a}),[-1.25+k*.22,.14,.62]))}
+ const rt=P('Чиглүүлэгч (Router)','Дотоод сүлжээг интернэт буюу өөр сүлжээтэй холбож, багцын замыг чиглүүлнэ. Wi‑Fi цацна.',[0,0,-3],[0,.6,-1]);rt.add(mk(rbox(1.8,.35,1.1,.08),mat(0xeef0f5)));[-.6,.6].forEach(x=>rt.add(mk(CY(.05,.05,1.2,12),mat(0x22262f),[x,.75,-.45])));
+ const pcs=[[-3.2,0,1.8],[-1.1,0,2.6],[1.1,0,2.6],[3.2,0,1.8]];pcs.forEach((p,i)=>{const g=P(`Компьютер ${i+1}`,'Сүлжээний карттай компьютер UTP кабелиар свичтэй холбогдоно.',p,[p[0]*.2,0,.8]);g.add(mk(rbox(1.1,.75,.06,.03),mat(0x161a24),[0,.6,0]));g.add(mk(B(1,.62,.01),mat(0x2f45ff,{e:0x2f45ff,ei:.5}),[0,.6,.035]));g.add(mk(B(.1,.3,.1),mat(0x2a2f3c),[0,.12,0]))});
+ const pr=P('Хэвлэгч (сүлжээний)','Сүлжээнд холбосон хэвлэгчийг бүх компьютер хамтран ашиглана.',[4,0,-1],[1,0,0]);pr.add(mk(rbox(1.3,.6,1,.06),mat(0xe8eaef)));
+ const cab=P('UTP кабель ба RJ‑45','Мушгиа хос зэс утастай сүлжээний кабель. Үзүүрт нь RJ‑45 холбогч зүүнэ.',[0,0,0],[0,0,0]);pcs.forEach(p=>cab.add(tube([[p[0],.1,p[2]-.1],[p[0]*.5,.05,1.2],[p[0]*.15,.05,.7]],.04,0x2f8cff)));cab.add(tube([[4,.1,-1],[2,.05,-.6],[1.3,.05,-.2]],.04,0x2f8cff));cab.add(tube([[0,.1,-2.4],[0,.05,-1.2],[0,.05,-.6]],.04,0xffc83a));
+ const rj=P('RJ‑45 холбогч','8 зүүтэй, тунгалаг хуванцар холбогч. Сүлжээний картын порт руу «тас» гэж суулгана.',[-1.8,.6,-1.2],[-1,.6,-.6]);rj.add(mk(rbox(.35,.28,.6,.04),mat(0xdfe8ff,{op:.6})));for(let k=0;k<8;k++)rj.add(mk(B(.025,.05,.4),mat(0xd4a017,{m:.9}),[-.12+k*.034,.12,0]));
+ packet(G3.root,[[-3.2,.15,1.6],[0,.15,.6],[4,.15,-.9]],0xff5b3a,.3);
+}});
+lab({id:'raster_vector',s:'mt',g:[8,9],u:'Зураг боловсруулах технологи',name:'Растер ба вектор зураг',desc:'Растер нь пикселээс, вектор нь математик дүрсээс бүрдэнэ.',zoom:11,build(P){
+ const r=P('Растер (цэгэн) зураг','Пикселийн тороос бүрдэнэ. Томруулахад шат хэлбэртэй «сарнина». Гэрэл зураг, Paint.NET. Төрөл: JPG, PNG, BMP.',[-2.6,0,0],[-1.2,0,0]);const n=16;for(let i=0;i<n;i++)for(let j=0;j<n;j++){const x=i-n/2+.5,y=j-n/2+.5,d=Math.hypot(x,y);if(d<7&&d>4.6)r.add(mk(B(.22,.22,.22),mat(0xff5b3a,{flat:true}),[x*.24,y*.24,0]))}
+ const v=P('Вектор зураг','Цэг, шугам, муруйн математик томьёогоор хадгалагдана. Томруулахад ирмэг нь тод хэвээр. Лого, бэлгэ тэмдэг. Төрөл: SVG, AI.',[2.6,0,0],[1.2,0,0]);v.add(mk(TO(1.4,.28,32,128),mat(0x2f45ff,{r:.25})));
+ const px=P('Пиксел','Растер зургийн хамгийн жижиг нэгж. 3000×2000 зураг 6 сая пикселтэй. Нягтрал — 1 инч дэх пикселийн тоо (ppi).',[-2.6,2.4,0],[-1,1,0]);px.add(mk(B(.5,.5,.5),mat(0xffc83a,{e:0xffc83a,ei:.3})));
+}});
+lab({id:'cell',s:'mt',g:[9,12],u:'Үүрэн холбоо',name:'Үүрэн холбооны сүлжээ',desc:'Зургаан өнцөгт үүр, суурь станц, гар утас; 1G–5G.',zoom:13,build(P){
+ const hex=(x,z,c)=>{const g=mk(CY(2,2,.05,6),mat(c,{op:.35}),[x,-.3,z]);G3.root.add(g)};const H=[[0,0],[3.46,0],[-3.46,0],[1.73,3],[-1.73,3],[1.73,-3],[-1.73,-3]];H.forEach(([x,z],i)=>hex(x,z,[0x2f45ff,0x00c08b,0xffc83a,0xff5b3a,0x7d8cff,0xf783ac,0x38d9a9][i]));
+ H.slice(0,4).forEach(([x,z],i)=>{const g=P(`Суурь станц ${i+1}`,'Үүрийн төвд байрлах антент цамхаг. Тухайн үүр доторх утаснуудтай радио долгионоор холбогдож, үндсэн сүлжээ рүү дамжуулна.',[x,0,z],[0,.5,0]);g.add(mk(CY(.06,.18,3,8),mat(0xc9ced8,{m:.8}),[0,1.2,0]));[0,2.1,4.2].forEach(a=>g.add(mk(B(.12,.6,.25),mat(0xeef0f5),[Math.cos(a)*.22,2.5,Math.sin(a)*.22],[0,-a,0])));g.add(mk(SP(.08),mat(0xff2b2b,{e:0xff2b2b}),[0,2.9,0]))});
+ const ph=[[1.2,1.4],[-2.4,-.8],[2.8,-1.2]];ph.forEach(([x,z],i)=>{const g=P(`Гар утас ${i+1}`,'Хамгийн ойрын суурь станцтай холбогдоно. Хөдлөхөд дараагийн үүрийн станц руу дуудлага тасралтгүй шилжинэ (handover).',[x,0,z],[0,.3,0]);g.add(mk(rbox(.35,.7,.06,.05),mat(0x111318),[0,.4,0]));g.add(mk(B(.3,.6,.01),mat(0x2f45ff,{e:0x2f45ff,ei:.6}),[0,.4,.035]))});
+ packet(G3.root,[[1.2,.6,1.4],[0,2.6,0],[3.46,2.6,0],[2.8,.6,-1.2]],0xffffff,.3);
+ const gen=P('1G → 5G','1G — аналог яриа; 2G — дижитал яриа, SMS; 3G — мобайл интернэт; 4G — өндөр хурдны интернэт, видео дуудлага; 5G — маш өндөр хурд, бага хоцролт, IoT.',[0,3.6,-4],[0,1,-1]);gen.add(mk(rbox(4,.3,.3,.05),mat(0xffc83a,{op:.8})));
+}});
+lab({id:'db',s:'mt',g:[10],u:'Өгөгдлийн сангийн үндэс',name:'Өгөгдлийн сангийн бүтэц',desc:'Хүснэгт, талбар, бичлэг, анхдагч түлхүүр, хүснэгт хоорондын холбоо.',zoom:13,build(P){
+ const table=(name,x,fields,rows,pk)=>{const t=P(`Хүснэгт «${name}»`,`«${name}» хүснэгт: ${fields.join(', ')} талбартай. Мөр бүр — нэг бичлэг.`,[x,0,0],[x*.25,0,0]);fields.forEach((f,j)=>{t.add(mk(B(1.15,.4,.5),mat(j===0?0xffc83a:0x2f45ff),[-1.2+j*1.2,1.6,0]));const s=txtSprite(f,'#fff');s.scale.set(1.2,.24,1);s.position.set(-1.2+j*1.2,1.6,.3);t.add(s)});for(let r=0;r<rows;r++)fields.forEach((f,j)=>t.add(mk(B(1.15,.36,.4),mat(j===0?0xfff3bf:0xeef1ff,{r:.7}),[-1.2+j*1.2,1.1-r*.42,0])));return t};
+ table('Ном',-3.2,['НомID','Нэр','Зохиогч'],5,0);table('Зээл',3.2,['ЗээлID','НомID','Огноо'],5,0);
+ const fld=P('Талбар (багана)','Ижил төрлийн мэдээллийг агуулна. Өгөгдлийн төрөлтэй: Short Text, Number, Date/Time, AutoNumber…',[-3.2,-1.6,.6],[0,-.8,.6]);fld.add(mk(B(1.2,.12,.12),mat(0x00c08b,{e:0x00c08b,ei:.4})));
+ const rec=P('Бичлэг (мөр)','Нэг объектын (жишээ нь нэг номын) тухай хамааралтай мэдээлэл.',[0,.68,.4],[0,0,1]);rec.add(mk(B(10,.06,.06),mat(0xff5b3a,{e:0xff5b3a,ei:.5})));
+ const pk=P('Анхдагч түлхүүр (Primary Key)','Бичлэг бүрийг давхцалгүй ялгах талбар (НомID). Ихэвчлэн AutoNumber төрөлтэй.',[-4.4,2.2,0],[-1,1,0]);pk.add(mk(TO(.18,.06,12,24),mat(0xffc83a,{m:.8}),null,[Math.PI/2,0,0]));pk.add(mk(B(.5,.08,.08),mat(0xffc83a,{m:.8}),[.4,0,0]));
+ const rel=P('Холбоо (Relationship)','«Ном».НомID ↔ «Зээл».НомID — нэг ном олон удаа зээлдэгдэж болно (нэг-олон холбоо).',[0,1.9,0],[0,1.2,0]);rel.add(tube([[-4.4,1.9,0],[-1,2.6,0],[1,2.6,0],[3.2,1.9,0]],.05,0x00c08b));
+}});
+lab({id:'video',s:'mt',g:[10],u:'Мультимедиа',name:'Видео ба кадр (fps)',desc:'Видео нь дараалсан кадраас бүрдэнэ; 30 fps = секундэд 30 кадр.',zoom:12,build(P){
+ const n=8,frames=[];for(let i=0;i<n;i++){const y=Math.abs(Math.sin(i/(n-1)*Math.PI))*1.2;const g=P(`Кадр ${i+1}`,`Хөдөлгөөнт дүрсийн нэг агшин. Дараалсан кадрыг хурдан солиход хөдөлгөөн мэт харагдана.`,[-3.85+i*1.1,0,0],[0,0,(i-3.5)*.35]);
+  g.add(mk(B(1,1.4,.04),mat(0x111318)));g.add(mk(B(.86,1.1,.02),mat(0xffffff,{map:ctex(128,160,(x,W,H)=>{x.fillStyle='#bfe3ff';x.fillRect(0,0,W,H);x.fillStyle='#6bc46d';x.fillRect(0,H-26,W,26);x.fillStyle='#ff5b3a';x.beginPath();x.arc(W/2,H-38-y*70,16,0,7);x.fill()})}),[0,0,.03]));frames.push(g)}
+ const strip=P('Киноны тууз','Кадрын хурд (fps), кадрын хэмжээ (1280×720), өнгийн гүн (24 bit), шахалтын стандарт (MPEG‑4) — видео файлын үзүүлэлтүүд.',[0,0,-.05],[0,-1.4,0]);strip.add(mk(B(9.2,1.8,.02),mat(0x22262f)));for(let i=0;i<24;i++){strip.add(mk(B(.14,.12,.03),mat(0xeef0f5),[-4.4+i*.38,.8,0]));strip.add(mk(B(.14,.12,.03),mat(0xeef0f5),[-4.4+i*.38,-.8,0]))}
+ L3.anim.push(t=>{const k=Math.floor(t*4)%n;frames.forEach((f,i)=>f.children[0].material.emissive.setHex(i===k?0x2f45ff:0))});
+}});
+lab({id:'security',s:'mt',g:[10,9],u:'МХХТ / Мэдээллийн аюулгүй байдал',name:'Мэдээллийн аюулгүй байдал',desc:'Галт хана, нууц үг, шифрлэлт, нөөцлөлт халдлагаас хамгаална.',zoom:12,build(P){
+ const pc=P('Таны компьютер','Хувийн мэдээлэл, файлууд. Үйлдлийн систем, программаа тогтмол шинэчилнэ.',[-3,0,0],[-1.2,0,0]);pc.add(mk(rbox(1.6,1.1,.08,.04),mat(0x161a24),[0,.9,0]));pc.add(mk(B(1.5,1,.01),mat(0x00c08b,{e:0x00c08b,ei:.5}),[0,.9,.045]));pc.add(mk(B(.12,.4,.12),mat(0x2a2f3c),[0,.2,0]));
+ const fw=P('Галт хана (Firewall)','Сүлжээний урсгалыг дүрмийн дагуу шүүж, зөвшөөрөлгүй хандалтыг хаана.',[0,0,0],[0,0,0]);for(let r=0;r<5;r++)for(let c=0;c<4;c++)fw.add(mk(rbox(.55,.36,.5,.03),mat(0xc0532f,{r:.8}),[0,.2+r*.4,-.9+c*.6+(r%2)*.3]));
+ const lk=P('Нууц үг, түгжээ','Урт, үсэг-тоо-тэмдэгт холилдсон нууц үг; хоёр шатлалт баталгаажуулалт. Хурууны хээ, царай таних — биометр хамгаалалт.',[-3,2.3,0],[-1,1,0]);lk.add(mk(rbox(.7,.55,.3,.06),mat(0xffc83a,{m:.8,r:.25})));lk.add(mk(TO(.22,.06,12,24,Math.PI),mat(0xc9ced8,{m:.9}),[0,.3,0]));
+ const bk=P('Нөөц хуулбар (Backup)','Чухал файлыг үүлэн сан, гадаад дискэнд тогтмол нөөцөлнө.',[-3,-.4,1.8],[-1,0,1]);bk.add(mk(CY(.5,.5,.6,24),mat(0x2f45ff)));
+ const hk=P('Халдагч, хортой программ','Вирус, фишинг холбоос, хуурамч программ. Танихгүй эх сурвалжийн файл, холбоосыг нээхгүй.',[3.2,.9,0],[1.2,0,0]);hk.add(mk(SP(.6),mat(0xff2b2b,{e:0x660000,r:.4})));[0,1,2,3,4,5].forEach(a=>hk.add(mk(CY(.05,.12,.5,8),mat(0xff2b2b),[Math.cos(a)*.65,Math.sin(a)*.65,0],[0,0,a-Math.PI/2])));
+ L3.anim.push(t=>{hk.position.x=3.2+Math.sin(t*2)*.6})
+ packet(G3.root,[[3,1,0],[.4,1,0]],0xff2b2b,.6);
+}});
+lab({id:'cpu_die',s:'mt',g:[11,12],u:'Компьютерын системийн үндэс',name:'Төв процессорын (ТББ) бүтэц',desc:'Цөм, АЛТ, удирдлагын төхөөрөмж, регистр, кэш санах ой.',zoom:10,build(P){
+ const pkg=P('Процессорын суурь (бүрхүүл)','Чипийг хамгаалж, эх хавтантай олон зуун хөлөөр холбоно.',[0,-.4,0],[0,-1.2,0]);pkg.add(mk(rbox(5,.2,5,.05),mat(0x2b5c3a)));for(let i=0;i<14;i++)for(let j=0;j<14;j++)if(i<2||i>11||j<2||j>11)pkg.add(mk(CY(.04,.04,.2,6),mat(0xd4a017,{m:1}),[-2.1+i*.32,-.2,-2.1+j*.32]));
+ for(let k=0;k<4;k++){const x=(k%2?1:-1)*1.05,z=(k<2?-1:1)*.75;const c=P(`Цөм ${k+1}`,'Бие даан командыг гүйцэтгэх боловсруулах нэгж. Олон цөм нь олон программыг зэрэг ажиллуулна.',[x,0,z],[x*.6,.6,z*.6]);c.add(mk(B(1.8,.12,1.3),mat(0x3d4a7a,{m:.6,r:.3})));
+  c.add(mk(B(.7,.06,.5),mat(0xff5b3a,{e:0xff5b3a,ei:.25}),[-.4,.09,-.25]));c.add(mk(B(.7,.06,.5),mat(0x00c08b,{e:0x00c08b,ei:.25}),[.4,.09,-.25]));c.add(mk(B(1.5,.06,.35),mat(0xffc83a,{e:0xffc83a,ei:.2}),[0,.09,.35]))}
+ const alu=P('АЛТ (арифметик логик төхөөрөмж)','Нэмэх, хасах, үржих, харьцуулах зэрэг арифметик, логик үйлдлийг гүйцэтгэнэ (улаан).',[-1.45,.3,-1],[-1,1.3,-1]);alu.add(mk(B(.2,.2,.2),mat(0xff5b3a)));
+ const cu=P('Удирдлагын төхөөрөмж (УТ)','Командыг санах ойгоос уншиж, тайлж, бусад хэсгийг удирдана (ногоон).',[-.65,.3,-1],[0,1.3,-1]);cu.add(mk(B(.2,.2,.2),mat(0x00c08b)));
+ const rg=P('Регистр','ТББ доторх хамгийн хурдан, маш бага багтаамжтай санах ой — тухайн агшинд боловсруулж буй өгөгдлийг барина (шар).',[-1.05,.3,-.4],[0,1.3,0]);rg.add(mk(B(.2,.2,.2),mat(0xffc83a)));
+ const l3=P('Кэш санах ой (L3)','Цөмүүдийн хамтран ашиглах хурдан санах ой. RAM-аас хурдан тул байнга хэрэгтэй өгөгдлийг энд хадгална.',[0,0,0],[0,.3,0]);l3.add(mk(B(4.1,.1,.25),mat(0x7d8cff,{m:.5}),[0,0,0]));
+ const mc=P('Санах ойн хянагч','ТББ-ийг RAM-тай холбож, өгөгдөл солилцоог удирдана.',[0,0,2],[0,.3,1.2]);mc.add(mk(B(3.8,.1,.4),mat(0x9aa3b2,{m:.7})));
+}});
+lab({id:'vonneumann',s:'mt',g:[11,12],u:'Компьютерын системийн үндэс / архитектур',name:'Фон Нейманы архитектур',desc:'Оролт → ТББ (УТ, АЛТ) ↔ санах ой → гаралт; шинээр өгөгдөл дамжина.',zoom:13,build(P){
+ const box=(n,info,pos,c,w=2.2)=>{const g=P(n,info,pos,[pos[0]*.2,0,pos[2]*.2]);g.add(mk(rbox(w,1.1,1.3,.1),mat(c,{r:.35})));const s=txtSprite(n.split(' (')[0]);s.position.set(0,.95,0);s.scale.set(2.2,.42,1);g.add(s);return g};
+ box('Оролтын төхөөрөмж','Гар, хулгана, сканер, микрофон — мэдээллийг компьютерт оруулна.',[-4.5,0,0],0x00c08b);
+ const cpu=box('ТББ (төв боловсруулах байгууламж)','Удирдлагын төхөөрөмж ба АЛТ-аас бүрдэнэ. Командыг санах ойгоос уншиж гүйцэтгэнэ.',[0,0,0],0x2f45ff,3.2);cpu.add(mk(B(1.2,.5,1.35),mat(0x00c08b),[-.75,-.1,0]));cpu.add(mk(B(1.2,.5,1.35),mat(0xff5b3a),[.75,-.1,0]));
+ box('Үндсэн санах ой (RAM)','Программ ба өгөгдөл хоёулаа нэг санах ойд хадгалагдана — Фон Нейманы гол зарчим.',[0,0,-3],0xffc83a);
+ box('Хадгалах төхөөрөмж','SSD, HDD — мэдээллийг удаан хугацаанд хадгална.',[0,0,3],0x7d8cff);
+ box('Гаралтын төхөөрөмж','Дэлгэц, хэвлэгч, чанга яригч — үр дүнг хэрэглэгчид гаргана.',[4.5,0,0],0xff5b3a);
+ const bus=P('Шин (bus)','Хаягийн, өгөгдлийн, удирдлагын шин — бүрэлдэхүүн хэсгүүдийн хооронд мэдээлэл дамжуулах зам.',[0,-.8,0],[0,-.8,0]);bus.add(mk(CY(.08,.08,9.6,12),mat(0xffffff,{op:.7}),null,[0,0,Math.PI/2]));bus.add(mk(CY(.08,.08,6.4,12),mat(0xffffff,{op:.7}),null,[Math.PI/2,0,0]));
+ packet(G3.root,[[-4.5,-.8,0],[0,-.8,0],[0,-.8,-3],[0,-.8,0],[4.5,-.8,0]],0xffc83a,.2);packet(G3.root,[[0,-.8,3],[0,-.8,0],[0,-.8,-3]],0x00ff9c,.25,.5);
+}});
+lab({id:'ports',s:'mt',g:[11],u:'Компьютерын системийн үндэс',name:'Холболтын портууд',desc:'USB‑A, USB‑C, HDMI, RJ‑45, аудио — зөөврийн компьютерын хажуу тал.',zoom:9,build(P){
+ const lap=P('Зөөврийн компьютер','Холболтын портуудаар гадаад төхөөрөмж холбогдоно.',[0,0,0],[0,-.6,0]);lap.add(mk(rbox(7,.35,3.8,.1),mat(0xb8c0cc,{m:.8,r:.3})));lap.add(mk(rbox(7,.12,3.8,.08),mat(0xa7afbb,{m:.8,r:.3}),[0,1.6,-2.2],[-1.25,0,0]));
+ const port=(n,info,x,w,h,c,plug)=>{const g=P(n,info,[x,0,1.9],[x*.1,.6,1.2]);g.add(mk(B(w,h,.05),mat(0x0b0d12),[0,0,.0]));g.add(mk(rbox(w*.9,h*.9,.7,.03),mat(c,{m:.5}),[0,0,.9]));if(plug)g.add(mk(rbox(w*1.6,h*2.2,1,.08),mat(0x22262f),[0,0,1.7]));};
+ port('USB‑A','Флаш диск, хулгана, гар, хэвлэгч холбоно. USB 3.0 — 5 Гбит/с.',-2.6,.6,.2,0x2f45ff,1);port('USB‑C','Хоёр талаас нь суулгадаг. Өгөгдөл, цэнэг, дэлгэцийн дохиог нэг кабелиар дамжуулна.',-1.6,.4,.14,0xc9ced8,1);
+ port('HDMI','Дэлгэц, проектор, телевиз рүү дүрс ба дууг дижитал хэлбэрээр дамжуулна.',-.4,.7,.22,0xd4a017,1);port('RJ‑45 (Ethernet)','Утастай сүлжээний холболт. UTP кабелийн RJ‑45 холбогч зүүнэ.',1,.5,.4,0xdfe8ff,1);port('Аудио (3.5 мм)','Чихэвч, чанга яригч, микрофон холбоно.',2.1,.2,.2,0x00c08b,1);
+ const wl=P('Утасгүй холболт','Wi‑Fi — сүлжээ; Bluetooth — ойрын төхөөрөмж (чихэвч, хулгана); инфра улаан — алсын удирдлага.',[2.8,1,-.5],[1,1,0]);[.3,.55,.8].forEach(r=>wl.add(mk(TO(r,.03,8,32,Math.PI/2),mat(0x2f45ff,{e:0x2f45ff,ei:.5}),null,[0,0,Math.PI/4])));
+}});
+lab({id:'html_dom',s:'mt',g:[11],u:'Мультимедиа / Веб',name:'HTML баримтын бүтэц (мод)',desc:'<html> → <head>, <body> → <h1>, <p>, <img>, <a>, <table> → <tr> → <td>.',zoom:13,build(P){
+ const nodes=[['<html>','Баримтын үндэс — бусад бүх тэмдэглэгээг агуулна.',[0,3.6,0],0xff5b3a],['<head>','Хуудасны мэдээлэл: <title>, кодчилол, CSS холбоос. Хуудсанд шууд харагдахгүй.',[-3,2.2,0],0xffc83a],['<body>','Хуудсанд харагдах агуулга.',[2,2.2,0],0x00c08b],['<title>','Хөтчийн табанд харагдах гарчиг.',[-3,.8,0],0xffd43b],['<h1>','Хамгийн том гарчиг (h1–h6).',[-.6,.8,0],0x2f45ff],['<p>','Догол мөр (бичвэр).',[.9,.8,0],0x2f45ff],['<img>','Зураг: src — файлын зам, width — өргөн.',[2.4,.8,0],0x2f45ff],['<a>','Холбоос: href="хуудас.html".',[3.9,.8,0],0x2f45ff],['<table>','Хүснэгт.',[5.4,.8,0],0x7d8cff],['<tr>','Хүснэгтийн мөр.',[5.4,-.6,0],0x9775fa],['<td>','Хүснэгтийн нүд. 3 мөр × 2 баганатай бол 6 нүд.',[4.6,-2,0],0xb197fc],['<td> ','Хүснэгтийн нүд.',[6.2,-2,0],0xb197fc]];
+ const pos=nodes.map(([n,info,p,c])=>{const g=P(n.trim(),info,p,[p[0]*.08,p[1]*.08,0]);g.add(mk(rbox(1.3,.6,.4,.12),mat(c,{r:.35})));const s=txtSprite(n.trim());s.position.set(0,0,.25);s.scale.set(1.5,.29,1);g.add(s);return p});
+ [[0,1],[0,2],[1,3],[2,4],[2,5],[2,6],[2,7],[2,8],[8,9],[9,10],[9,11]].forEach(([a,b])=>G3.root.add(lineBetween(pos[a],pos[b],0x9fb0ff)));G3.root.position.x=-1.2;
+}});
+lab({id:'turtle',s:'mt',g:[11],u:'Програмчлалын үндэс. Давталт, график',name:'Яст мэлхийн график',desc:'For i = 1 To 4: Turtle.Move(100), Turtle.TurnRight() → квадрат.',zoom:10,build(P){
+ const pl=P('Зургийн талбар (GraphicsWindow)','Яст мэлхий явсан замаараа шугам зурна.',[0,-.3,0],[0,-.6,0]);pl.add(mk(rbox(8,.1,8,.05),mat(0xf5f7fb,{r:.9})));
+ const tr=P('Яст мэлхий (Turtle)','Turtle.Move(n) — урагш n алхам; TurnRight()/TurnLeft() — 90° эргэх; Turn(a) — a градус эргэх; PenUp/PenDown — үзэгээ өргөх/буулгах.',[0,0,0],[0,.8,0]);
+ tr.add(mk(SP(.5,32,16),mat(0x2f9e44,{r:.4}),[0,.1,0],null,[1,.5,1.2]));tr.add(mk(SP(.18),mat(0x69db7c),[0,.15,.7]));[[.35,.45],[-.35,.45],[.35,-.45],[-.35,-.45]].forEach(([x,z])=>tr.add(mk(SP(.12),mat(0x69db7c),[x,0,z])));
+ const sq=[[-2.5,0,-2.5],[2.5,0,-2.5],[2.5,0,2.5],[-2.5,0,2.5],[-2.5,0,-2.5]];const path=P('Зурсан зам (квадрат)','4 удаа «100 алхам урагш, 90° баруун эргэ» → квадрат. 3 удаа 120° эргэвэл — гурвалжин, 360/n градусаар n удаа — зөв олон өнцөгт.',[0,-.2,0],[0,0,0]);
+ for(let i=0;i<4;i++){const a=sq[i],b=sq[i+1];path.add(mk(B(Math.abs(b[0]-a[0])+.08,.04,Math.abs(b[2]-a[2])+.08),mat(0xff5b3a),[(a[0]+b[0])/2,0,(a[2]+b[2])/2]))}
+ L3.anim.push(t=>{const u=(t*.12)%1*4,i=Math.floor(u),f=u-i,a=sq[i],b=sq[i+1];tr.position.set(a[0]+(b[0]-a[0])*f,0,a[2]+(b[2]-a[2])*f);tr.rotation.y=-i*Math.PI/2+Math.PI/2});
+}});
+lab({id:'cloud',s:'mt',g:[12],u:'МХХТ / Үүлэн технологи',name:'Үүлэн технологи',desc:'Төхөөрөмжүүд интернэтээр дата төвийн сервер, хадгалах санд хандана.',zoom:13,build(P){
+ const cl=P('Үүл (Cloud)','Интернэтээр дамжуулан тооцоолол, хадгалах сан, программыг үйлчилгээ хэлбэрээр авах. Жишээ: Google Drive, OneDrive.',[0,2.4,0],[0,1.2,0]);[[0,0,0,1],[1.1,-.2,0,.8],[-1.1,-.2,0,.8],[.5,.5,0,.8],[-.5,.45,0,.75],[1.9,-.35,0,.55],[-1.9,-.35,0,.55]].forEach(([x,y,z,r])=>cl.add(mk(SP(r),mat(0xf1f4ff,{r:.9}),[x,y,z])));
+ const dc=P('Дата төв (сервер)','Мянга мянган сервер, хадгалах төхөөрөмж бүхий байр. Өгөгдлийг олон газарт нөөцөлж, тасралтгүй ажиллуулна.',[0,-.6,-2.5],[0,-.4,-1.2]);for(let k=0;k<4;k++){dc.add(mk(rbox(.9,2.2,1,.04),mat(0x1d2230,{m:.6}),[-1.5+k*1,0,0]));for(let s=0;s<8;s++)dc.add(mk(B(.6,.03,.02),mat(s%2?0x00ff9c:0x2f45ff,{e:s%2?0x00ff9c:0x2f45ff}),[-1.5+k*1,-.9+s*.25,.51]))}
+ const dev=[['Компьютер',[-4,-.5,1.5]],['Гар утас',[0,-.5,3]],['Таблет',[4,-.5,1.5]]];dev.forEach(([n,p])=>{const g=P(n,'Интернэтэд холбогдсон аль ч төхөөрөмжөөс үүлэн дэх файл, программд хандана.',p,[p[0]*.15,0,.6]);g.add(mk(rbox(n==='Гар утас'?.45:1.3,n==='Гар утас'?.85:.9,.06,.05),mat(0x161a24)));g.add(mk(B(n==='Гар утас'?.38:1.2,n==='Гар утас'?.75:.8,.01),mat(0x2f45ff,{e:0x2f45ff,ei:.5}),[0,0,.035]))});
+ dev.forEach(([n,p],i)=>{G3.root.add(lineBetween(p,[p[0]*.25,1.6,0],0x9fb0ff));packet(G3.root,[p,[p[0]*.25,1.6,0]],0xffc83a,.4,i*.33)});G3.root.add(lineBetween([0,1.4,0],[0,.6,-2.5],0x9fb0ff));
+}});
+lab({id:'robot',s:'mt',g:[12],u:'МХХТ / Робот технологи',ry:-1.1,lbl:false,name:'Робот гар',desc:'Мэдрэгч, хөдөлгүүр (актуатор), удирдлага — робот технологийн бүрэлдэхүүн.',zoom:10,build(P){
+ const base=P('Суурь','Роботыг бэхлэх суурь. Дотор нь удирдлагын хянагч (контроллер) байрлана.',[0,-1.2,0],[0,-.6,0]);base.add(mk(CY(1.2,1.4,.5,40),mat(0x2b2f3a,{m:.6})));
+ const j1=new THREE.Group();j1.position.set(0,-.9,0);G3.root.add(j1);const s1=P('Эргэх үе (хөдөлгүүр 1)','Цахилгаан хөдөлгүүр (актуатор) — роботыг тэнхлэгээр нь эргүүлнэ.',[0,0,0],[0,.2,0],j1);s1.add(mk(CY(.6,.6,.6,32),mat(0xff8c1a,{m:.4})));
+ const j2=new THREE.Group();j2.position.set(0,.4,0);j1.add(j2);const a1=P('Мөр ба гар 1','Үе мөчний хөдөлгүүр. Програмд заасан өнцгөөр нугална.',[0,0,0],[0,.2,0],j2);a1.add(mk(SP(.38),mat(0x22262f,{m:.6})));a1.add(mk(rbox(.45,2,.45,.1),mat(0xff8c1a,{m:.4}),[0,1,0]));
+ const j3=new THREE.Group();j3.position.set(0,2,0);j2.add(j3);const a2=P('Тохой ба гар 2','Хоёр дахь үе — хүний тохойтой адил.',[0,0,0],[0,.2,0],j3);a2.add(mk(SP(.32),mat(0x22262f,{m:.6})));a2.add(mk(rbox(.38,1.6,.38,.1),mat(0xff8c1a,{m:.4}),[0,.8,0]));
+ const j4=new THREE.Group();j4.position.set(0,1.6,0);j3.add(j4);const gr=P('Барьц (гүйцэтгэх хэсэг)','Эд зүйлийг барих, зөөх үзүүр. Хувцас оёх, гагнах, будах зэрэг өөр багаж суурилуулж болно.',[0,0,0],[0,.3,0],j4);gr.add(mk(B(.6,.18,.3),mat(0x30343e,{m:.7})));[-.22,.22].forEach(x=>gr.add(mk(B(.08,.5,.2),mat(0xc9ced8,{m:.9}),[x,.32,0])));
+ const sn=P('Мэдрэгч (камер)','Орчноо мэдрэх: камер, зай хэмжигч, хүрэлцэх мэдрэгч. Хиймэл оюун ухаан мэдрэгчийн өгөгдлөөр шийдвэр гаргана.',[0,.2,.18],[0,.2,.3],j4);sn.add(mk(SP(.1),mat(0x2f45ff,{e:0x2f45ff,ei:.8})));
+ L3.anim.push(t=>{j1.rotation.y=Math.sin(t*.6)*1.2;j2.rotation.z=-.5+Math.sin(t*.9)*.35;j3.rotation.z=-.9+Math.sin(t*1.1)*.4;j4.rotation.z=.4})
+}});
+lab({id:'array2d',s:'mt',g:[12],u:'Програмчлалын үндэс',name:'Хоёр хэмжээст массив',desc:'a[i][j] — i-р мөр, j-р баганын элемент.',zoom:11,build(P){
+ const R=4,C=5,vals=[[3,8,1,6,4],[7,2,9,5,0],[4,6,3,8,1],[2,9,7,1,5]];for(let i=0;i<R;i++)for(let j=0;j<C;j++){const g=P(`a[${i+1}][${j+1}] = ${vals[i][j]}`,`${i+1}-р мөр, ${j+1}-р баганын элемент. Хандах: a[${i+1}][${j+1}]. Мөрийг гадна, баганыг дотор давталтаар гүйлгэнэ.`,[-2.4+j*1.2,1.8-i*1.2,0],[(j-2)*.25,(1.5-i)*.25,0]);
+  g.add(mk(rbox(1,1,1,.1),mat(i===1?0xffc83a:j===2?0x00c08b:0x2f45ff,{r:.35,op:.95})));const s=txtSprite(String(vals[i][j]));s.scale.set(1.6,.3,1);s.position.set(0,0,.55);g.add(s)}
+ const row=P('Мөр (i = 2)','Шараар тэмдэглэсэн — 2-р мөрийн бүх элемент: For j = 1 To 5.',[0,0,0],[0,0,0]);const col=P('Багана (j = 3)','Ногооноор тэмдэглэсэн — 3-р баганын бүх элемент: For i = 1 To 4.',[0,0,0],[0,0,0]);
+}});
+/* --- ИЁЗБ --- */
+lab({id:'ger',s:'ie',g:[6,7,8,9,10,11,12],u:'Монгол ахуй, ёс заншил',name:'Монгол гэр',desc:'Хана, унь, тооно, багана, хаалга, туурга — гэрийн бүтэц ба ёс.',zoom:11,build(P){
+ const fl=P('Шал ба хоймор','Хаалганы эсрэг талын хүндэт хэсэг — хоймор. Баруун тал — эрэгтэй, зүүн тал — эмэгтэй хүний тал гэж уламжлалт ёсоор ялгана.',[0,-.3,0],[0,-.6,0]);fl.add(mk(CY(3.3,3.3,.12,48),mat(0xb5835a,{r:.8})));
+ const hana=P('Хана','Нугалж, дэлгэдэг сараалж хана. Гэрийн дугуй хүрээг бүрдүүлнэ. Таван ханатай гэр түгээмэл.',[0,.8,0],[0,0,0]);const n=64;for(let i=0;i<n;i++){const a=i/n*Math.PI*2;if(Math.abs(a-Math.PI/2)<.25)continue;const p1=[Math.cos(a)*3,.0,Math.sin(a)*3];hana.add(mk(B(.04,2.2,.04),mat(0xd9480f),[p1[0],0,p1[2]],[0,-a,i%2?.45:-.45]))}
+ const uni=P('Унь','Ханыг тоонотой холбох урт мод. Гэрийн дээврийн налууг бүрдүүлнэ.',[0,0,0],[0,.8,0]);const um=mat(0xe8590c);for(let i=0;i<48;i++){const a=i/48*Math.PI*2,x=Math.cos(a),z=Math.sin(a);uni.add(rod([x*3,1.9,z*3],[x*.78,3.4,z*.78],.03,um))}
+ const too=P('Тооно','Гэрийн оройн дугуй цонх. Гэрэл, агаар орж, утаа гарна. Тооно — гэр бүлийн бэлгэдэл.',[0,3.4,0],[0,1.4,0]);too.add(mk(TO(.75,.1,12,40),mat(0xf08c00,{r:.5}),null,[Math.PI/2,0,0]));for(let i=0;i<4;i++)too.add(mk(B(1.5,.06,.06),mat(0xf08c00),[0,0,0],[0,i*Math.PI/4,0]));
+ const bag=P('Багана','Тооног тулах хоёр багана. Багана, тоонотой хүндэтгэлтэй харьцана — түших, алхахгүй байх ёс бий.',[0,1.5,0],[0,.6,0]);[-.35,.35].forEach(x=>bag.add(mk(B(.12,3.6,.12),mat(0xf08c00),[x,.05,0])));
+ const hal=P('Хаалга','Ихэвчлэн урд зүг рүү харуулна. Хаалганы тотгон дээр гишгэхгүй, хаалгыг тас хаахгүй байх ёстой.',[0,.6,3.05],[0,0,1.2]);hal.add(mk(rbox(1.1,1.8,.12,.03),mat(0xe03131,{r:.5})));hal.add(mk(B(.8,1.4,.02),mat(0xf59f00),[0,0,.07]));
+ const tuurga=P('Туурга, дээвэр (эсгий)','Хана, униа эсгийгээр бүрж, цагаан бүрээсээр бүтээнэ. Улирлаас хамааран давхаргыг нэмж, хасна.',[0,1.8,0],[0,2.6,0]);tuurga.add(mk(new THREE.CylinderGeometry(3.1,3.1,2.2,48,1,true),mat(0xfafafa,{op:.35,ds:true}),[0,-1,0]));tuurga.add(mk(new THREE.CylinderGeometry(.8,3.15,1,48,1,true),mat(0xfafafa,{op:.35,ds:true}),[0,.6,0]));
+ const zuuh=P('Голомт, зуух','Гэрийн голд байрлах гал голомт — гэр бүлийн өв залгамжлалын бэлгэдэл. Гал руу хог хаяхгүй, ус асгахгүй.',[0,.1,0],[0,.4,0]);zuuh.add(mk(rbox(.8,.7,.8,.06),mat(0x343a40,{m:.7})));zuuh.add(mk(CY(.1,.1,2.6,12),mat(0x495057,{m:.7}),[0,1.6,0]));
+}});
+lab({id:'state',s:'ie',g:[9,10,11,12],u:'Төр, иргэн',name:'Төрийн гурван салаа',desc:'Хууль тогтоох, гүйцэтгэх, шүүх эрх мэдэл; Үндсэн хууль.',zoom:13,build(P){
+ const b=P('Ард түмэн','Монгол Улсад төрийн бүх эрх ард түмний мэдэлд байна (Үндсэн хууль).',[0,-.6,0],[0,-.6,0]);b.add(mk(rbox(7,.4,3.6,.06),mat(0xe9edf5)));for(let i=0;i<3;i++)b.add(mk(rbox(7.4-i*.2,.15,4-i*.2,.03),mat(0xdfe4ee),[0,-.28-i*.15,0]));
+ [['Улсын Их Хурал','Хууль тогтоох эрх мэдэл. 126 гишүүнтэй, хуулиа батална.',0x2f45ff,-2.3],['Засгийн газар','Гүйцэтгэх эрх мэдэл. Хуулийг хэрэгжүүлж, төрийн ажлыг удирдана.',0xff5b3a,0],['Шүүх','Шүүх эрх мэдэл. Маргааныг хуулийн дагуу хараат бусаар шийднэ.',0x00c08b,2.3]].forEach(([n,info,c,x])=>{const g=P(n,info,[x,1.1,0],[x*.3,0,0]);g.add(mk(CY(.55,.65,3,32),mat(c,{r:.35})));g.add(mk(rbox(1.5,.2,1.5,.04),mat(0xffffff),[0,1.6,0]));g.add(mk(rbox(1.5,.2,1.5,.04),mat(0xffffff),[0,-1.6,0]));const s=txtSprite(n);s.position.set(0,2.1,0);g.add(s)});
+ const r=P('Үндсэн хууль','Улсын дээд хууль — гурван салааг тэнцвэртэй барина.',[0,3.3,0],[0,1.2,0]);r.add(mk(B(6.4,.25,2.2),mat(0xffffff,{r:.4}),[0,-.2,0]));const sh=new THREE.Shape();sh.moveTo(-3.3,0);sh.lineTo(3.3,0);sh.lineTo(0,1.1);sh.closePath();const pe=new THREE.ExtrudeGeometry(sh,{depth:2,bevelEnabled:false});pe.translate(0,0,-1);r.add(mk(pe,mat(0xf1f3f5,{r:.4})));
+}});
+/* ---------- барих, удирдах ---------- */
+const labsFor=(s,g)=>LABS.filter(m=>m.s===s&&m.g.includes(+g));
+function curLab(){const L=labsFor(S.subj,S.grade);let m=LABS.find(x=>x.id===L3.id);if(!m||!L.includes(m))m=L[0]||LABS[0];return m}
+function build3D(){if(!G3.ok)return;const T=THREE,root=G3.root;while(root.children.length)root.remove(root.children[0]);root.position.set(0,0,0);G3.meshes=[];G3.sel=null;L3.anim=[];L3.parts=[];L3.sprites=[];
+ const grid=new T.GridHelper(20,40,0x4b5dff,0x1c2766);grid.position.y=-1.6;grid.material.opacity=.35;grid.material.transparent=true;root.add(grid);
+ const M=curLab();G3.zoom=M.zoom||11;G3.rx=M.rx??.38;G3.ry=G3.ry0=M.ry??-.3;
+ const P=(name,info,pos,ex,parent)=>{const g=new T.Group();g.position.set(...(pos||[0,0,0]));g.userData={part:1,name,info,base:new T.Vector3(...(pos||[0,0,0])),ex:new T.Vector3(...(ex||[0,0,0]))};(parent||root).add(g);L3.parts.push(g);return g};
+ M.build(P);
+ L3.parts.forEach(g=>{g.traverse(o=>{if(o.isMesh){o.userData.owner=g;G3.meshes.push(o)}});if(g.children.some(o=>o.isSprite))return;const bb=new T.Box3().setFromObject(g);if(bb.isEmpty())return;const s=txtSprite(g.userData.name.length>30?g.userData.name.slice(0,29)+'…':g.userData.name);const c=bb.getCenter(new T.Vector3());g.worldToLocal(c.setY(bb.max.y+.35));s.position.copy(c);s.visible=L3.labels&&M.lbl!==false;s.userData.lbl=1;g.add(s);L3.sprites.push(s)});
+ info3D(null);parts3D()}
+function pick(e){const r=G3.R.domElement.getBoundingClientRect();const v=new THREE.Vector2((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);G3.ray.setFromCamera(v,G3.cam);const hit=G3.ray.intersectObjects(G3.meshes,false).find(h=>h.object.visible);select(hit?hit.object.userData.owner:null)}
+function select(g){L3.parts.forEach(p=>p.traverse(o=>{if(o.isMesh&&o.material.emissive){if(o.userData.e0===undefined)o.userData.e0=o.material.emissive.getHex();o.material.emissive.setHex(o.userData.e0)}}));G3.sel=g;
+ if(g)g.traverse(o=>{if(o.isMesh&&o.material.emissive)o.material.emissive.setHex(0x3a3a12)});info3D(g);document.querySelectorAll('[data-part]').forEach(b=>b.setAttribute('aria-pressed',L3.parts[+b.dataset.part]===g))}
+function info3D(g){const h=G3.host&&G3.host.querySelector('.info3d');if(!h)return;const M=curLab();
+ h.innerHTML=g?`<b>${esc(g.userData.name)}</b>${esc(g.userData.info)}`:`<b>${esc(M.name)}</b>${esc(M.desc)} ${M.net?'Топологи сонгоно уу.':'Хэсэг дээр дарж тайлбарыг уншина уу.'}`}
+function parts3D(){const el=$('#labParts');if(!el||!G3.ok)return;const seen=new Set();
+ el.innerHTML=L3.parts.map((p,i)=>{if(seen.has(p.userData.name))return '';seen.add(p.userData.name);return `<button class="lpart" data-part="${i}" aria-pressed="false"><b>${esc(p.userData.name)}</b><span>${esc(p.userData.info)}</span></button>`}).join('')}
+function tick3D(t){L3.ex+=(L3.exT-L3.ex)*.08;L3.parts.forEach(p=>{const u=p.userData;p.position.copy(u.base).addScaledVector(u.ex,L3.ex*1.25)});L3.anim.forEach(f=>f(t))}
 function mount3D(id){const host=document.getElementById(id);if(!host)return;G3.host=host;
  if(!G3.ok){host.innerHTML='<div class="nogl">Энэ төхөөрөмж дээр 3D дүрслэл ажиллахгүй байна. Бусад хэсгийг ашиглах боломжтой.</div>';return}
- host.innerHTML='<div class="info3d"></div><div class="hud"></div>';host.prepend(G3.R.domElement);
- host.querySelector('.hud').innerHTML=(id==='stageHome'?MODELS.map((m,i)=>`<button class="chip" data-model="${i}" aria-pressed="${G3.model===i}">${m.name}</button>`).join(''):'')+(MODELS[G3.model].net?Object.keys(NETS).map(k=>`<button class="chip" data-net="${NETS[k]}" aria-pressed="${G3.net===NETS[k]}">${k}</button>`).join(''):'')+`<button class="chip" data-zoom="-1" aria-label="Ойртуулах">＋</button><button class="chip" data-zoom="1" aria-label="Холдуулах">－</button>`;
+ host.innerHTML='<div class="info3d"></div><div class="hud"></div>';host.prepend(G3.R.domElement);const M=curLab();
+ host.querySelector('.hud').innerHTML=(id==='stageHome'?labsFor(S.subj,S.grade).slice(0,4).map(m=>`<button class="chip" data-lab="${m.id}" aria-pressed="${M.id===m.id}">${esc(m.name)}</button>`).join(''):'')+(M.net?Object.keys(NETS).map(k=>`<button class="chip" data-net="${NETS[k]}" aria-pressed="${G3.net===NETS[k]}">${k}</button>`).join(''):'')+
+  `<button class="chip" data-l3="ex" aria-pressed="${L3.exT>0}">Задлах</button><button class="chip" data-l3="lbl" aria-pressed="${L3.labels}">Нэр</button><button class="chip" data-l3="rot" aria-pressed="${G3.auto}">Эргүүлэх</button><button class="chip" data-zoom="-1" aria-label="Ойртуулах">＋</button><button class="chip" data-zoom="1" aria-label="Холдуулах">－</button>`;
  size3D();build3D()}
+function vLab(){const L=labsFor(S.subj,S.grade),M=curLab();
+ return `<section class="band"><div class="wrap">${head('3D интерактив лаб',`${SUBJ[S.subj]} · ${S.grade}-р анги — сурах бичгийн сэдвээр. Чирж эргүүлнэ, дугуйгаар ойртуулна, хэсэг дээр дарж тайлбар уншина.`)}${picker()}
+ <div class="labs">${L.map(m=>`<button class="labc" data-lab="${m.id}" aria-pressed="${m.id===M.id}"><span class="tag ${m.s}">${esc(m.u)}</span><b>${esc(m.name)}</b><small>${esc(m.desc)}</small></button>`).join('')||'<p class="mut">Энэ ангид 3D загвар алга.</p>'}</div>
+ <div class="stage" id="stageLab" style="height:clamp(400px,60vw,640px)"></div>
+ <h3 style="margin:18px 0 8px">Бүрэлдэхүүн хэсгүүд</h3><div class="lparts" id="labParts"></div></div></section>`}
+
 
 /* ================= ROUTER & EVENTS ================= */
 function render(){
@@ -1280,10 +1520,11 @@ document.addEventListener('click',e=>{
  if(d.ws)return openWS(d.ws);
  if(d.wsdoc){const w=WS.find(x=>x.id===d.wsdoc);const n=fname(`${SHORT[w.s]} ${w.g}-р анги ${w.t}`);return d.fmt==='word'?wordDoc(wsBlocks(w),n):printDoc(wsBlocks(w),n)}
  if(d.cdoc){const c=CASES.find(x=>x.id===d.cdoc);return wordDoc(caseBlocks(c),fname('Кэйс '+c.t))}
- if(d.model!==undefined){G3.model=+d.model;if(S.view==='lab')render();else mount3D(G3.host.id);return}
+ if(d.lab){L3.id=d.lab;LS.set('lab3',d.lab);G3.auto=!reduce;L3.exT=0;if(S.view==='lab'){const y=scrollY;render();scrollTo(0,y)}else mount3D(G3.host.id);return}
+ if(d.l3){if(d.l3==='ex')L3.exT=L3.exT?0:1;if(d.l3==='lbl'){L3.labels=!L3.labels;L3.sprites.forEach(x=>x.visible=L3.labels)}if(d.l3==='rot')G3.auto=!G3.auto;t.setAttribute('aria-pressed',d.l3==='ex'?L3.exT>0:d.l3==='lbl'?L3.labels:G3.auto);return}
  if(d.net){G3.net=d.net;mount3D(G3.host.id);return}
  if(d.zoom){G3.zoom=Math.max(6,Math.min(18,G3.zoom+ +d.zoom*1.5));return}
- if(d.part!==undefined){select(G3.meshes[+d.part]);G3.host.scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'});return}
+ if(d.part!==undefined){select(L3.parts[+d.part]);G3.host.scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'});return}
  if(d.game){game.tab=d.game;if(S.view==='games'){document.querySelectorAll('[data-game]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.game===game.tab));startGame()}return}
  if(d.mc!==undefined){const m=game.m,i=+d.mc;if(t.classList.contains('up')||t.classList.contains('done')||m.open.length>=2)return;
   t.classList.add('up');m.open.push(i);if(m.open.length===2){m.moves++;$('#mv').textContent=m.moves;const[a,b]=m.open,ba=document.querySelector(`[data-mc="${a}"]`),bb=document.querySelector(`[data-mc="${b}"]`);
