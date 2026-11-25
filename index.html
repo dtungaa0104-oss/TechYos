@@ -989,7 +989,7 @@ function vProgram(){
  <div><div class="dbar"><span class="crumb">${esc(SHORT[s])} · ${g}-р анги · <b>${esc(D.crumb)}</b></span>
  <div class="row"><button class="ghost" id="dPrev" aria-label="Өмнөх">←</button><button class="ghost" id="dNext" aria-label="Дараах">→</button><button class="ghost" id="dPrint">Хэвлэх</button><button id="dWord">Word татах</button></div></div>
  ${!st.official?'<div class="flag">Жишээ агуулга.</div>':s==='mt'?`<div class="flag ok">Хөтөлбөр: ${esc(mtSrc(g))}. Ээлжит хичээлийн сэдэв, зорилгыг Мэдээлэл зүйн ЭХЦ-ээс авч, хөтөлбөрийн суралцахуйн зорилттой холбосон.</div>`:`<div class="flag ok">Албан ёсны хөтөлбөр: ${esc(IE_SRC)}. Суралцахуйн зорилт, тодорхойлолтыг эх баримтаас өөрчлөлтгүй, ээлжит хичээлийн сэдэв, цаг, зорилгыг ЭХЦК-ын жилийн төлөвлөлтөөс (2021) авсан.</div>`}
- ${d.type==='unit'?uaPanel(s,g,Math.min(d.u,st.units.length-1)):''}<article class="paper" id="paper">${blocksHTML(D.B)}</article></div></div></div></section>`;
+ <article class="paper" id="paper">${blocksHTML(D.B)}</article></div></div></div></section>`;
 }
 const docSeq=()=>{const st=STRUCT(S.subj,S.grade),a=[{type:'year'}];if(!st)return a;st.units.forEach((u,ui)=>{a.push({type:'unit',u:ui});u.lessons.forEach((l,li)=>a.push({type:'lesson',u:ui,l:li}))});return a};
 function stepDoc(dir){const a=docSeq(),d=S.doc,i=a.findIndex(x=>x.type===d.type&&(x.type==='year'||x.u===d.u&&(x.type==='unit'||x.l===d.l)));const nx=a[Math.max(0,Math.min(a.length-1,i+dir))];S.doc={u:0,l:0,...nx};render();$('#paper')?.scrollIntoView({block:'start'})}
