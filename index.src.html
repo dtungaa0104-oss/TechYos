@@ -249,6 +249,7 @@ table.plain{border-collapse:collapse;width:100%}table.plain th,table.plain td{te
  .mem{grid-template-columns:repeat(3,minmax(0,1fr))}.bits button{font-size:18px;min-height:64px}.k{height:36px;font-size:12px;border-radius:6px}.kr,.kb{gap:3px}.k small{display:none}
 .paper td,.paper th{font-size:12.5px;padding:5px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.kcard{display:flex;flex-direction:column;gap:8px}.ksrc{font-size:12.5px;color:var(--mut,#667);margin:2px 0 0}.kunit{margin:26px 0 12px;font-size:18px}.ktip{background:color-mix(in srgb,var(--pri) 8%,transparent);border-left:3px solid var(--pri);padding:10px 14px;border-radius:8px;margin:14px 0}.pins sup.kc{font-size:10px;opacity:.6;margin-left:2px}
 </style>
 </head>
 <body>
@@ -707,7 +708,7 @@ function curDoc(){const s=S.subj,g=S.grade,d=S.doc,st=STRUCT(s,g);if(!st)return 
  return{B:s==='ie'?ieYear(g):O?mtoYear(g):mtYear(g),name:nm('Жилийн төлөвлөгөө'),crumb:'Жилийн төлөвлөгөө'}}
 
 /* ================= VIEWS ================= */
-const VIEWS=[['home','Нүүр'],['program','Хөтөлбөр'],['test','Үнэлгээ'],['materials','Материал'],['lab','3D лаб'],['games','Тоглоом'],['typing','Шивэх дасгал'],['cases','Кэйс'],['parents','Эцэг эх']];
+const VIEWS=[['home','Нүүр'],['program','Хөтөлбөр'],['test','Үнэлгээ'],['materials','Материал'],['lab','3D лаб'],['games','Тоглоом'],['typing','Шивэх дасгал'],['cases','Кейс'],['parents','Эцэг эх']];
 const subjSeg=()=>`<div class="seg" role="group" aria-label="Хичээл">${Object.keys(SUBJ).map(k=>`<button data-subj="${k}" aria-pressed="${S.subj===k}">${SUBJ[k]}</button>`).join('')}</div>`;
 const gradePins=()=>`<div class="pins" role="group" aria-label="Анги">${[6,7,8,9,10,11,12].map(g=>`<button data-grade="${g}" aria-pressed="${S.grade==g}" aria-label="${g}-р анги">${g}</button>`).join('')}</div>`;
 const picker=()=>`<div class="row" style="margin-bottom:22px;gap:14px">${subjSeg()}${gradePins()}</div>`;
@@ -715,11 +716,11 @@ const head=(title,sub,right='')=>`<div class="secthead"><div><h2>${title}</h2>${
 
 function vHome(){
  const r=S.role,g=S.grade,s=S.subj,st=STRUCT(s,g),cu=curUnit(s,g),cm=curUnit('mt',g),ci=curUnit('ie',g);
- const acts={teacher:[['Жилийн төлөвлөгөө','program'],['Үнэлгээ','test'],['Ажлын хуудас','materials']],student:[['Цахим сорил','test'],['Шивэх дасгал','typing'],['Тоглоом','games']],parent:[['Энэ сарын сэдэв','parents'],['Гэрээр ярилцах','parents'],['Кэйс','cases']]}[r];
+ const acts={teacher:[['Жилийн төлөвлөгөө','program'],['Үнэлгээ','test'],['Ажлын хуудас','materials']],student:[['Цахим сорил','test'],['Шивэх дасгал','typing'],['Тоглоом','games']],parent:[['Энэ сарын сэдэв','parents'],['Гэрээр ярилцах','parents'],['Кейс','cases']]}[r];
  const q=BANK[s+'|'+band(g)][0];
  return `<section class="hero band"><div class="wrap">
  <div><h1>Ухаалаг иргэн. <em>Ухаалаг технологи.</em></h1>
- <p class="lead">Мэдээллийн технологи ба Иргэний ёс зүйн боловсролын 6–12-р ангийн цахим орчин: хөтөлбөр, ээлжит хичээл, сорил, ажлын хуудас, 3D лаб, тоглоом, кэйс.</p>
+ <p class="lead">Мэдээллийн технологи ба Иргэний ёс зүйн боловсролын 6–12-р ангийн цахим орчин: хөтөлбөр, ээлжит хичээл, сорил, ажлын хуудас, 3D лаб, тоглоом, кейс.</p>
  <div class="seg" role="group" aria-label="Би хэн бэ" style="margin:6px 0 14px">${[['teacher','Багш'],['student','Сурагч'],['parent','Эцэг эх']].map(([k,n])=>`<button data-role="${k}" aria-pressed="${r===k}">${n}</button>`).join('')}</div>
  <div class="row">${acts.map((a,i)=>`<a class="btn ${i?'alt':''}" href="#${a[1]}">${a[0]}</a>`).join('')}</div>
  <p class="term">&gt; анги <b>${g}</b> · хичээл <b>${SHORT[s]}</b> · долоо хоног <b>${schoolWeek()}</b><span class="cur"></span></p>
@@ -734,7 +735,7 @@ function vHome(){
  <a class="tile dark" href="#games"><h3>Бинар код</h3><div class="bitrow" id="bitrow">${'<i>0</i>'.repeat(8)}</div><p id="bitval">= 0</p><span class="go">Тоглох →</span></a>
  <a class="tile" href="#lab"><h3>3D лаб</h3><svg viewBox="0 0 120 70" style="width:100%;max-height:80px" aria-hidden="true"><path d="M60 8 108 32 60 56 12 32Z" fill="var(--pri)" opacity=".18"/><path d="M60 18 88 32 60 46 32 32Z" fill="var(--pri)"/><path d="M32 32v8l28 14v-8Z" fill="var(--pri)" opacity=".6"/><path d="M88 32v8L60 54v-8Z" fill="var(--pri)" opacity=".8"/><path d="M60 26 72 32 60 38 48 32Z" fill="#fff"/></svg><p>Компьютер, сүлжээ, төрийн бүтэц</p><span class="go">Эргүүлж үзэх →</span></a>
  <a class="tile" href="#test"><span class="tag ${s}">Сорил</span><h3 style="font-size:15.5px;line-height:1.35">${esc(q[0])}</h3><p>${q[1].map((o,i)=>`${'АБВГ'[i]}. ${esc(o)}`).join(' · ')}</p><span class="go">Цахим сорил →</span></a>
- <a class="tile" href="#cases"><span class="tag ie">Кэйс</span><h3>${esc(CASES[1].t)}</h3><p>${esc(CASES[1].story.slice(0,70))}…</p><span class="go">Хэлэлцэх →</span></a>
+ <a class="tile" href="#cases"><span class="tag ie">Кейс</span><h3>${esc(CASES[1].t)}</h3><p>${esc(CASES[1].story.slice(0,70))}…</p><span class="go">Хэлэлцэх →</span></a>
  <a class="tile b2" href="#materials"><span class="tag mt">Материал</span><h3>Ажлын хуудас, тараах материал</h3><p>Сурагч цахимаар бөглөнө, багш Word эсвэл хэвлэх хувилбараар татна.</p><div class="row" style="margin-top:6px">${WS.slice(0,4).map(w=>`<span class="tag ${w.s}">${esc(w.t)}</span>`).join('')}</div><span class="go">Материал үзэх →</span></a>
  <a class="tile b2 dark" href="#parents"><h3>Эцэг эхэд</h3><p>Хүүхдийн тань энэ үед үзэж буй сэдэв: ${esc(cm?cm.u.name:'')}${ci?', '+esc(ci.u.name):''}. Гэрээр ярилцах асуулт, цахим аюулгүй байдлын зөвлөгөө.</p><span class="go">Дэлгэрэнгүй →</span></a>
  <button class="tile" id="kOpen2" style="font:inherit;text-align:start;align-items:flex-start;cursor:pointer;color:inherit"><h3>Хурдан хайлт</h3><p>Ямар ч анги, сэдэв, ажлын хуудсыг секундэд олно.</p><span class="go mono">⌘K / Ctrl+K</span></button>
@@ -941,14 +942,26 @@ function endTF(){clearInterval(game.t);const b=$('#gameBox');if(b)b.innerHTML=`<
 
 /*@TYPING@*/
 
-function vCases(){return `<section class="band"><div class="wrap">${head('Кэйс: бодит нөхцөл байдал','Нөхцөлийг уншаад сонголтоо хийнэ, дараа нь хэлэлцүүлгийн асуултаар ангиараа ярилцана.')}
- <div class="grid">${CASES.map(c=>`<div class="card" style="display:flex;flex-direction:column;gap:8px"><span class="tag ${c.s}">${SHORT[c.s]} · ${esc(c.g)}-р анги</span><h3>${esc(c.t)}</h3><p class="mut small" style="margin:0">${esc(c.story.slice(0,96))}…</p><div class="row" style="margin-top:auto"><button data-case="${c.id}">Нээх</button><button class="ghost" data-cdoc="${c.id}">Word</button></div></div>`).join('')}</div></div></section>`}
+function vCases(){const s=S.subj,g=+S.grade,L=CASES.filter(c=>c.s===s&&c.g===g),st=STRUCT(s,g);
+ const order=st?st.units.map(u=>u.name):[];const groups=[];L.forEach(c=>{let G=groups.find(x=>x.u===c.u);if(!G)groups.push(G={u:c.u,cs:[]});G.cs.push(c)});
+ const ix=u=>{const k=order.findIndex(n=>n===u||n.replace(/^[\d.]+\s*/,'')===u.replace(/^[\d.]+\s*/,''));return k<0?99:k};groups.sort((a,b)=>ix(a.u)-ix(b.u));
+ const cnt=k=>CASES.filter(c=>c.s===s&&c.g===k).length;
+ const pins=`<div class="pins" role="group" aria-label="Анги">${[6,7,8,9,10,11,12].map(k=>`<button data-grade="${k}" aria-pressed="${g===k}" aria-label="${k}-р анги, ${cnt(k)} кейс">${k}<sup class="kc">${cnt(k)}</sup></button>`).join('')}</div>`;
+ const card=c=>{const done=LS.get('vote_'+c.id,null)!=null;return `<div class="card kcard"><div class="row" style="gap:6px;justify-content:space-between"><span class="tag ${c.s}">${SHORT[c.s]} · ${c.g}-р анги</span>${done?'<span class="small" style="color:var(--ok,#0a7)">✓ Хэлэлцсэн</span>':''}</div><h3>${esc(c.t)}</h3><p class="mut small" style="margin:0">${esc(c.story.slice(0,120))}…</p><p class="ksrc">📖 ${esc(c.src)}</p><div class="row" style="margin-top:auto"><button data-case="${c.id}">Нээх</button><button class="ghost" data-cdoc="${c.id}">Word</button></div></div>`};
+ return `<section class="band"><div class="wrap">${head('Кейс: сурах бичгийн нөхцөл байдал','Сурах бичгийн агуулгад суурилсан бодит нөхцөл байдал. Нөхцөлийг уншаад сонголтоо хийнэ, дараа нь хэлэлцүүлгийн асуултаар ангиараа ярилцана.')}
+ <div class="row" style="margin-bottom:18px;gap:14px">${subjSeg()}${pins}</div>
+ <div class="row" style="justify-content:space-between;margin-bottom:8px"><p class="mut" style="margin:0"><b>${SUBJ[s]} · ${g}-р анги</b> — ${L.length} кейс, ${groups.length} нэгж</p>${L.length?`<div class="row" style="gap:8px"><button class="ghost" data-callc="word">Бүгдийг Word</button><button class="ghost" data-callc="print">Хэвлэх</button></div>`:''}</div>
+ ${L.length?groups.map(G=>`<h3 class="kunit">${esc(G.u)} <span class="mut small">· ${G.cs.length} кейс</span></h3><div class="grid">${G.cs.map(card).join('')}</div>`).join(''):`<div class="card"><p class="mut">Энэ ангид кейс алга. Өөр анги сонгоно уу.</p></div>`}
+ ${s==='ie'&&![8,9].includes(g)&&L.length?'<p class="small mut" style="margin-top:18px">Тайлбар: ИЁЗБ-ын энэ ангийн сурах бичиг сайтад ороогүй тул кейсийг сургалтын хөтөлбөрийн ээлжит хичээлийн сэдвээр боловсруулав.</p>':''}
+ </div></section>`}
 function openCase(id){const c=CASES.find(x=>x.id===id),mine=LS.get('vote_'+id,null);
- modal(`<span class="tag ${c.s}">${SUBJ[c.s]} · ${esc(c.g)}-р анги</span><h2 style="margin-top:10px">${esc(c.t)}</h2><p style="font-size:17px">${esc(c.story)}</p>
- <h3>Чи юу хийх вэ?</h3><div class="opts">${c.opts.map((o,i)=>`<button data-vote="${i}" data-cid="${c.id}" class="${mine===i?'right':''}">${esc(o)}</button>`).join('')}</div>
- ${mine!=null?`<h3 style="margin-top:20px">Хэлэлцүүлэг</h3><ol>${c.qs.map(q=>`<li>${esc(q)}</li>`).join('')}</ol><label for="refl">Миний эргэцүүлэл</label><textarea id="refl">${esc(LS.get('refl_'+id,''))}</textarea>`:'<p class="small mut" style="margin-top:12px">Сонголтоо хийсний дараа хэлэлцүүлгийн асуулт нээгдэнэ.</p>'}`);
+ modal(`<span class="tag ${c.s}">${SUBJ[c.s]} · ${esc(c.g)}-р анги</span> <span class="small mut">${esc(c.u)}</span><h2 style="margin-top:10px">${esc(c.t)}</h2><p style="font-size:17px">${esc(c.story)}</p><p class="ksrc">📖 ${esc(c.src)}</p>
+ <h3>Чи юу хийх вэ?</h3><div class="opts">${c.opts.map((o,i)=>`<button data-vote="${i}" data-cid="${c.id}" class="${mine===i?'right':''}">${ABC[i]}. ${esc(o)}</button>`).join('')}</div>
+ ${mine!=null?`<h3 style="margin-top:20px">Хэлэлцүүлэг</h3><ol>${c.qs.map(q=>`<li>${esc(q)}</li>`).join('')}</ol>${c.tip?`<div class="ktip"><b>Багшид:</b> ${esc(c.tip)}</div>`:''}<label for="refl">Миний эргэцүүлэл</label><textarea id="refl">${esc(LS.get('refl_'+id,''))}</textarea>`:'<p class="small mut" style="margin-top:12px">Сонголтоо хийсний дараа хэлэлцүүлгийн асуулт нээгдэнэ.</p>'}`);
  const r=$('#refl');if(r)r.oninput=e=>LS.set('refl_'+id,e.target.value)}
-const caseBlocks=c=>[{t:'h1',x:'Кэйс: '+c.t},{t:'meta',rows:[['Хичээл',SUBJ[c.s]],['Анги',c.g+'-р анги']]},{t:'h2',x:'Нөхцөл байдал'},{t:'p',x:c.story},{t:'h2',x:'Сонголтууд'},{t:'list',items:c.opts},{t:'h2',x:'Хэлэлцүүлгийн асуулт'},...c.qs.flatMap((q,i)=>[{t:'p',x:`${i+1}. ${q}`},{t:'lines',n:2}])];
+const caseBody=c=>[{t:'h2',x:'Кейс: '+c.t},{t:'meta',rows:[['Хичээл',SUBJ[c.s]],['Анги',c.g+'-р анги'],['Нэгж',c.u],['Эх сурвалж',c.src]]},{t:'h2',x:'Нөхцөл байдал'},{t:'p',x:c.story},{t:'h2',x:'Сонголтууд'},{t:'list',items:c.opts.map((o,i)=>ABC[i]+'. '+o)},{t:'h2',x:'Хэлэлцүүлгийн асуулт'},...c.qs.flatMap((q,i)=>[{t:'p',x:`${i+1}. ${q}`},{t:'lines',n:2}]),...(c.tip?[{t:'h2',x:'Багшид зориулсан тэмдэглэл'},{t:'p',x:c.tip}]:[])];
+const caseBlocks=c=>{const B=caseBody(c);B[0]={t:'h1',x:'Кейс: '+c.t};return B};
+const caseAllBlocks=(s,g)=>{const L=CASES.filter(c=>c.s===s&&c.g===+g);return [{t:'h1',x:`${SUBJ[s]} · ${g}-р анги — Кейсүүд`},{t:'p',x:`Нийт ${L.length} кейс. Сурах бичгийн агуулгад суурилсан нөхцөл байдал, сонголт, хэлэлцүүлгийн асуулт.`},...L.flatMap(caseBody)]};
 
 function vParents(){const g=S.grade;
  const card=s=>{const c=curUnit(s,g);if(!c)return `<div class="card"><span class="tag ${s}">${SUBJ[s]}</span><p class="mut" style="margin-top:10px">Ачаалж байна…</p></div>`;const u=c.u;
@@ -965,7 +978,7 @@ function buildIndex(){const a=VIEWS.map(([k,n])=>({t:n,sub:'Хэсэг',go:()=>l
  for(const s of ['ie','mt'])for(let g=6;g<=12;g++){const st=STRUCT(s,g);if(!st)continue;a.push({t:`${g}-р анги жилийн төлөвлөгөө`,sub:SUBJ[s],go:()=>openDoc(s,g,{type:'year',u:0,l:0})});let n=0;
   st.units.forEach((u,ui)=>{a.push({t:u.name,sub:`${SHORT[s]} ${g}-р анги · нэгж хичээл`,go:()=>openDoc(s,g,{type:'unit',u:ui,l:0})});u.lessons.forEach((l,li)=>{n++;a.push({t:l.t,sub:`${SHORT[s]} ${g}-р анги · ${n}-р хичээл`,go:()=>openDoc(s,g,{type:'lesson',u:ui,l:li})})})})}
  WS.forEach(w=>a.push({t:w.t,sub:`${w.kind} · ${w.g}-р анги`,go:()=>{location.hash='materials';setTimeout(()=>openWS(w.id),50)}}));
- CASES.forEach(c=>a.push({t:c.t,sub:'Кэйс',go:()=>{location.hash='cases';setTimeout(()=>openCase(c.id),50)}}));
+ CASES.forEach(c=>a.push({t:c.t,sub:`Кейс · ${SHORT[c.s]} ${c.g}-р анги`,go:()=>{S.subj=c.s;S.grade=c.g;location.hash='cases';render();setTimeout(()=>openCase(c.id),50)}}));
  TLES.forEach(l=>a.push({t:l.t,sub:'Шивэх дасгал',go:()=>{TL.lang=l.lang;TL.id=l.id;location.hash='typing';render()}}));return a}
 function openDoc(s,g,doc){S.subj=s;S.grade=g;S.doc=doc;save();if(location.hash!=='#program')location.hash='program';else render()}
 function openPal(){PIDX=PIDX||buildIndex();$('#palette').classList.add('open');const q=$('#pq');q.value='';palFilter();q.focus()}
@@ -1358,7 +1371,8 @@ document.addEventListener('click',e=>{
  if(d.tdoc!==undefined){const k=d.tdoc==='1',B=testBlocks(k),n=fname(`${SHORT[S.subj]} ${band(S.grade)}-р анги ${k?'Сорилын түлхүүр':'Сорил'}`);return d.fmt==='word'?wordDoc(B,n):printDoc(B,n)}
  if(d.ws)return openWS(d.ws);
  if(d.wsdoc){const w=WS.find(x=>x.id===d.wsdoc);const n=fname(`${SHORT[w.s]} ${w.g}-р анги ${w.t}`);return d.fmt==='word'?wordDoc(wsBlocks(w),n):printDoc(wsBlocks(w),n)}
- if(d.cdoc){const c=CASES.find(x=>x.id===d.cdoc);return wordDoc(caseBlocks(c),fname('Кэйс '+c.t))}
+ if(d.cdoc){const c=CASES.find(x=>x.id===d.cdoc);return wordDoc(caseBlocks(c),fname('Кейс '+c.t))}
+ if(d.callc){const B=caseAllBlocks(S.subj,S.grade),n=fname(`${SHORT[S.subj]} ${S.grade}-р анги Кейс`);return d.callc==='word'?wordDoc(B,n):printDoc(B,n)}
  if(d.lab){L3.id=d.lab;LS.set('lab3',d.lab);G3.auto=!reduce;L3.exT=0;if(S.view==='lab'){const y=scrollY;render();scrollTo(0,y)}else mount3D(G3.host.id);return}
  if(d.l3){if(d.l3==='ex')L3.exT=L3.exT?0:1;if(d.l3==='lbl'){L3.labels=!L3.labels;L3.sprites.forEach(x=>x.visible=L3.labels)}if(d.l3==='rot')G3.auto=!G3.auto;t.setAttribute('aria-pressed',d.l3==='ex'?L3.exT>0:d.l3==='lbl'?L3.labels:G3.auto);return}
  if(d.net){G3.net=d.net;mount3D(G3.host.id);return}
